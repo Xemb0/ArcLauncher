@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         android:minSdkVersion="30"
         tools:ignore="QueryAllPackagesPermission" />
