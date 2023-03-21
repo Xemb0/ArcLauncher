@@ -49,9 +49,9 @@
             <GridView
                 android:id="@+id/drawerGrid"
                 android:layout_width="match_parent"
-                android:layout_height="510dp"
+                android:layout_height="540dp"
                 android:layout_gravity="center"
-                android:numColumns="4"
+                android:numColumns="5"
                 android:stretchMode="columnWidth" />
         </LinearLayout>
 
