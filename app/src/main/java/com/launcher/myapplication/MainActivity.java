@@ -84,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Swipe Up", Toast.LENGTH_SHORT).show();
+                            View mBottomSheet = findViewById(R.id.bottomSheet);
+                            final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                         }
                         result = true;
                     }
