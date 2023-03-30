@@ -3,6 +3,7 @@ package com.launcher.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -112,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
         RecyclerView mDrawerGridView = findViewById(R.id.recycalview);
-        StaggeredGridLayoutManager mGridLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.HORIZONTAL); // 2 is number of items per row
-        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        mDrawerGridView.setLayoutManager(new CircleLayoutManager(this));
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 new ResolveInfo.DisplayNameComparator(pm));
         Adapter adapter = new Adapter(this, installedAppList, pm);
         mDrawerGridView.setAdapter(adapter);
-        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
 
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(false);
