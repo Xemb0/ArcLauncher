@@ -4,8 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             View mBottomSheet = findViewById(R.id.bottomSheet);
                             final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         }
                         result = true;
                     }
@@ -103,48 +109,31 @@ public class MainActivity extends AppCompatActivity {
 // add this to your onCreate method
 
 
-    List<AppObject> installedAppList = new ArrayList<>();
+
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
-        final GridView mDrawerGridView = findViewById(R.id.drawerGrid);
+        RecyclerView mDrawerGridView = findViewById(R.id.recycalview);
+        mDrawerGridView.setLayoutManager(new CircleLayoutManager(this));
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        PackageManager pm = this.getPackageManager();
+        Intent main = new Intent(Intent.ACTION_MAIN, null);
+        main.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
+        Collections.sort(installedAppList,
+                new ResolveInfo.DisplayNameComparator(pm));
+        Adapter adapter = new Adapter(this, installedAppList, pm);
+        mDrawerGridView.setAdapter(adapter);
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setPeekHeight(300);
+     float x=  mBottomSheetBehavior.calculateSlideOffset();
+        mBottomSheetBehavior.setDraggable(true);
+        mBottomSheetBehavior.setPeekHeight(400);
 
-        installedAppList = getInstalledAppList();
 
 
-        mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), installedAppList));
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if(newState==BottomSheetBehavior.STATE_HIDDEN && mDrawerGridView.getChildAt(0).getY()!=0)
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                if(newState==BottomSheetBehavior.STATE_DRAGGING && mDrawerGridView.getChildAt(0).getY()!=0)
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-    }private List<AppObject> getInstalledAppList() {
-        List<AppObject> list = new ArrayList<>();
-
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> untreatedAppList = getApplicationContext().getPackageManager().queryIntentActivities(intent, 0);
-
-        for(ResolveInfo untreatedApp : untreatedAppList){
-            String appName = untreatedApp.activityInfo.loadLabel(getPackageManager()).toString();
-            String appPackageName = untreatedApp.activityInfo.packageName;
-            Drawable appImage = untreatedApp.activityInfo.loadIcon(getPackageManager());
-
-            AppObject app = new AppObject(appPackageName, appName, appImage, true);
-            list.add(app); // Add the app to the list
-        }
-        return list;
     }
 
 

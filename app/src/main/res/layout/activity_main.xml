@@ -30,7 +30,7 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#5C000000"
+        android:background="@drawable/bg_bottomsheet"
         style="@style/Widget.Design.BottomSheet.Modal"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -41,21 +41,21 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100sp"
                 android:orientation="horizontal"
                 android:id="@+id/topDrawerLayout">
 
+
+
+
             </LinearLayout>
 
-            <GridView
-                android:id="@+id/drawerGrid"
-                android:layout_width="match_parent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycalview"
                 android:layout_height="540dp"
-                android:layout_gravity="center"
-                android:hapticFeedbackEnabled="true"
 
-                android:numColumns="5"
-                android:stretchMode="columnWidth" />
+                android:layout_width="match_parent"
+               />
         </LinearLayout>
 
     </FrameLayout>
