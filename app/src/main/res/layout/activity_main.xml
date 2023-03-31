@@ -50,14 +50,30 @@
 
             </LinearLayout>
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycalview"
-                android:layout_height="540dp"
+                android:layout_height="300sp"
+                android:layout_width="match_parent"
+                    android:background="#37000000"
+               />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:background="#00000000"
+                android:id="@+id/recycalview2"
+                android:layout_height="300sp"
 
                 android:layout_width="match_parent"
-               />
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycalview3"
+                android:layout_height="300sp"
+
+                android:layout_width="match_parent"
+                />
         </LinearLayout>
 
     </FrameLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

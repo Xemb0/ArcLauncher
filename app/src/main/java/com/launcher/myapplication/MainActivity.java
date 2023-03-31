@@ -25,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -113,7 +114,13 @@ public class MainActivity extends AppCompatActivity {
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
         RecyclerView mDrawerGridView = findViewById(R.id.recycalview);
+        RecyclerView mDrawerGridView2 = findViewById(R.id.recycalview2);
+        RecyclerView mDrawerGridView3 = findViewById(R.id.recycalview3);
         mDrawerGridView.setLayoutManager(new CircleLayoutManager(this));
+        mDrawerGridView2.setLayoutManager(new CircleLayoutManager(this));
+        mDrawerGridView2.addItemDecoration(new ItemDecorator(-200));
+        mDrawerGridView3.setLayoutManager(new CircleLayoutManager(this));
+
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
@@ -123,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 new ResolveInfo.DisplayNameComparator(pm));
         Adapter adapter = new Adapter(this, installedAppList, pm);
         mDrawerGridView.setAdapter(adapter);
+        mDrawerGridView2.setAdapter(adapter);
+        mDrawerGridView3.setAdapter(adapter);
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
 
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
