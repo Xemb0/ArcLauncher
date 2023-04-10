@@ -46,18 +46,24 @@
                 android:id="@+id/topDrawerLayout">
 
 
-
-
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycalview"
-                android:layout_height="540dp"
+                android:layout_height="@dimen/_200sdp"
 
                 android:layout_width="match_parent"
                />
         </LinearLayout>
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/up_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow"
+        app:layout_anchor="@+id/bottomSheet"
+        app:layout_anchorGravity="top|center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

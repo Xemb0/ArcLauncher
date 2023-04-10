@@ -2,6 +2,7 @@ package com.launcher.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -31,13 +33,30 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeDrawer();
+        // Get the view that represents your launcher app
+
         gestureDetector = new GestureDetector(this, new GestureListener());
+        // Get the current wallpaper
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Drawable wallpaperDrawable = wallpaperManager.getDrawable();
+
+// Set the wallpaper as the background of your launcher app
+
 
     }
     @Override
@@ -67,9 +86,13 @@ public class MainActivity extends AppCompatActivity {
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
-                            Toast.makeText(getApplicationContext(), "Swipe Right", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Swipe Left", Toast.LENGTH_SHORT).show();
+                            // Open the dialer application
+                            Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
+                            startActivity(dialerIntent);
+                        } else {  Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+                            startActivity(intent);
+
                         }
                         result = true;
                     }
