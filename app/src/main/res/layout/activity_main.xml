@@ -54,11 +54,27 @@
 
                 android:layout_width="match_parent"
                />
-            <com.marcinmoskala.arcseekbar.ArcSeekBar
-                android:layout_width="300dp"
-                android:id="@+id/seekbar"
-                android:layout_gravity="center"
-                android:layout_height="150dp" />
+
+            <com.launcher.myapplication.ArcSeekBarContainer
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <com.marcinmoskala.arcseekbar.ArcSeekBar
+                    android:id="@+id/seekArc"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:progressBackgroundColor="@color/black"
+                    app:progressBackgroundWidth="20dp"
+                    app:progress="100"
+                    android:layout_margin="20sp"
+                    android:paddingBottom="10sp"
+                    android:layout_marginBottom="100sp"
+                    app:progressWidth="20dp"
+                    app:roundEdges="true"
+                    android:nestedScrollingEnabled="false" />
+
+            </com.launcher.myapplication.ArcSeekBarContainer>
         </LinearLayout>
 
     </FrameLayout>

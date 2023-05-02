@@ -160,6 +160,27 @@ public class MainActivity extends AppCompatActivity {
      float x=  mBottomSheetBehavior.calculateSlideOffset();
         mBottomSheetBehavior.setDraggable(true);
         mBottomSheetBehavior.setPeekHeight(400);
+        mBottomSheet.setOnTouchListener(new View.OnTouchListener() {
+            private float startY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    startY = event.getY();
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    float endY = event.getY();
+                    if (endY - startY > 0 && endY > mBottomSheet.getHeight() * 0.5f) {
+                        // Dismiss the bottom sheet only if the user swipes down on the bottom 20% of the sheet
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        });
 
 
 
