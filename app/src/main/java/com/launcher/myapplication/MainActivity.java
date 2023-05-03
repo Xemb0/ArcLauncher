@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void invoke(int i) {
 
-              layoutManager.scrollToPosition(i);
+              layoutManager.smoothScrollToPosition(null,null,i);
 
             }
         });
