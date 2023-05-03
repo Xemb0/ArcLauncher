@@ -52,29 +52,28 @@
                 android:id="@+id/recycalview"
                 android:layout_height="@dimen/_200sdp"
 
+
                 android:layout_width="match_parent"
                />
 
-            <com.launcher.myapplication.ArcSeekBarContainer
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+
 
                 <com.marcinmoskala.arcseekbar.ArcSeekBar
                     android:id="@+id/seekArc"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="150dp"
                     app:progressBackgroundColor="@color/black"
-                    app:progressBackgroundWidth="20dp"
-                    app:progress="100"
+                    app:progressBackgroundWidth="10dp"
+                    app:progress="1"
+
                     android:layout_margin="20sp"
                     android:paddingBottom="10sp"
-                    android:layout_marginBottom="100sp"
-                    app:progressWidth="20dp"
+                    android:layout_marginBottom="300sp"
+                    app:progressWidth="60dp"
                     app:roundEdges="true"
-                    android:nestedScrollingEnabled="false" />
+                    android:nestedScrollingEnabled="true" />
 
-            </com.launcher.myapplication.ArcSeekBarContainer>
+
         </LinearLayout>
 
     </FrameLayout>

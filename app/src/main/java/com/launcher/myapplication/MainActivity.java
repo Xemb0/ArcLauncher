@@ -25,6 +25,8 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.marcinmoskala.arcseekbar.ArcSeekBar;
+import com.marcinmoskala.arcseekbar.ProgressListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,6 +43,36 @@ public class MainActivity extends AppCompatActivity {
         initializeDrawer();
 
         //seekbar
+
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        PackageManager pm = this.getPackageManager();
+        Intent main = new Intent(Intent.ACTION_MAIN, null);
+        main.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
+        Collections.sort(installedAppList,
+                new ResolveInfo.DisplayNameComparator(pm));
+        Adapter adapter = new Adapter(this, installedAppList, pm);
+
+//
+
+        ArcSeekBar seekBar = findViewById(R.id.seekArc);
+        RecyclerView recyclerView = findViewById(R.id.recycalview);
+        recyclerView.setAdapter(adapter);
+        int itemCount = adapter.getItemCount();
+        CircleLayoutManager layoutManager = new CircleLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        seekBar.setMaxProgress(itemCount - 1);
+
+
+
+        seekBar.setOnProgressChangedListener(new ProgressListener() {
+            @Override
+            public void invoke(int i) {
+
+              layoutManager.scrollToPosition(i);
+
+            }
+        });
 
 
 
@@ -104,25 +136,31 @@ public class MainActivity extends AppCompatActivity {
                         result = true;
                     }
                 } else {
+                    View mBottomSheet = findViewById(R.id.bottomSheet);
+                    final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffY > 0) {
 //                            ExpandNotificationBar();
-                            try{
-                                @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
-                                Class<?> statusBarManager = Class.forName("android.app.StatusBarManager"); // Fix typo in class name
-                                Method expand = statusBarManager.getMethod("expandNotificationsPanel");
-                                expand.invoke(service);
-                            }
-                            catch (Exception e) {
-                                String errorMessage = "Notification panel swipe down error: " + e.getMessage();
-                                Log.e("StatusBar", errorMessage);
-                                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                            }
+                            if ((mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
+                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                            }else{
+//                            ExpandNotificationBar();
+                                try{
+                                    @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
+                                    Class<?> statusBarManager = Class.forName("android.app.StatusBarManager"); // Fix typo in class name
+                                    Method expand = statusBarManager.getMethod("expandNotificationsPanel");
+                                    expand.invoke(service);
+                                }
+                                catch (Exception e) {
+                                    String errorMessage = "Notification panel swipe down error: " + e.getMessage();
+                                    Log.e("StatusBar", errorMessage);
+                                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }}
 
                         } else {
-                            View mBottomSheet = findViewById(R.id.bottomSheet);
-                            final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         }
                         result = true;
                     }
@@ -158,29 +196,29 @@ public class MainActivity extends AppCompatActivity {
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(false);
      float x=  mBottomSheetBehavior.calculateSlideOffset();
-        mBottomSheetBehavior.setDraggable(true);
-        mBottomSheetBehavior.setPeekHeight(400);
-        mBottomSheet.setOnTouchListener(new View.OnTouchListener() {
-            private float startY;
+
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mBottomSheetBehavior.setPeekHeight(700);
+
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED)
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
 
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    startY = event.getY();
-                    return true;
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    float endY = event.getY();
-                    if (endY - startY > 0 && endY > mBottomSheet.getHeight() * 0.5f) {
-                        // Dismiss the bottom sheet only if the user swipes down on the bottom 20% of the sheet
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    }
-                    return true;
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
                 } else {
-                    return false;
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior.setDraggable(true);
                 }
-
             }
         });
+
 
 
 
