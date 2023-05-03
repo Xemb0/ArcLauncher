@@ -2,6 +2,7 @@ package com.launcher.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -19,9 +21,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.marcinmoskala.arcseekbar.ArcSeekBar;
+import com.marcinmoskala.arcseekbar.ProgressListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,13 +37,66 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeDrawer();
+
+        //seekbar
+
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        PackageManager pm = this.getPackageManager();
+        Intent main = new Intent(Intent.ACTION_MAIN, null);
+        main.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
+        Collections.sort(installedAppList,
+                new ResolveInfo.DisplayNameComparator(pm));
+        Adapter adapter = new Adapter(this, installedAppList, pm);
+
+//
+
+        ArcSeekBar seekBar = findViewById(R.id.seekArc);
+        RecyclerView recyclerView = findViewById(R.id.recycalview);
+        recyclerView.setAdapter(adapter);
+        int itemCount = adapter.getItemCount();
+        CircleLayoutManager layoutManager = new CircleLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        seekBar.setMaxProgress(itemCount - 1);
+
+
+
+        seekBar.setOnProgressChangedListener(new ProgressListener() {
+            @Override
+            public void invoke(int i) {
+
+              layoutManager.smoothScrollToPosition(null,null,i);
+
+            }
+        });
+
+
+
+
+        // Get the view that represents your launcher app
+
         gestureDetector = new GestureDetector(this, new GestureListener());
+        // Get the current wallpaper
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Drawable wallpaperDrawable = wallpaperManager.getDrawable();
+
+// Set the wallpaper as the background of your launcher app
+
 
     }
     @Override
@@ -68,32 +126,42 @@ public class MainActivity extends AppCompatActivity {
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
-                            Toast.makeText(getApplicationContext(), "Swipe Right", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Swipe Left", Toast.LENGTH_SHORT).show();
+                            // Open the dialer application
+                            Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
+                            startActivity(dialerIntent);
+                        } else {  Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+                            startActivity(intent);
+
                         }
                         result = true;
                     }
                 } else {
+                    View mBottomSheet = findViewById(R.id.bottomSheet);
+                    final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffY > 0) {
 //                            ExpandNotificationBar();
-                            try{
-                                @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
-                                Class<?> statusBarManager = Class.forName("android.app.StatusBarManager"); // Fix typo in class name
-                                Method expand = statusBarManager.getMethod("expandNotificationsPanel");
-                                expand.invoke(service);
-                            }
-                            catch (Exception e) {
-                                String errorMessage = "Notification panel swipe down error: " + e.getMessage();
-                                Log.e("StatusBar", errorMessage);
-                                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                            }
+                            if ((mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
+                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                            }else{
+//                            ExpandNotificationBar();
+                                try{
+                                    @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
+                                    Class<?> statusBarManager = Class.forName("android.app.StatusBarManager"); // Fix typo in class name
+                                    Method expand = statusBarManager.getMethod("expandNotificationsPanel");
+                                    expand.invoke(service);
+                                }
+                                catch (Exception e) {
+                                    String errorMessage = "Notification panel swipe down error: " + e.getMessage();
+                                    Log.e("StatusBar", errorMessage);
+                                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }}
 
                         } else {
-                            View mBottomSheet = findViewById(R.id.bottomSheet);
-                            final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         }
                         result = true;
                     }
@@ -137,8 +205,29 @@ public class MainActivity extends AppCompatActivity {
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(false);
      float x=  mBottomSheetBehavior.calculateSlideOffset();
-        mBottomSheetBehavior.setDraggable(true);
-        mBottomSheetBehavior.setPeekHeight(400);
+
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mBottomSheetBehavior.setPeekHeight(700);
+
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED)
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
+                } else {
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior.setDraggable(true);
+                }
+            }
+        });
+
 
 
 

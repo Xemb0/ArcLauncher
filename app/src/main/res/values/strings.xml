@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Arc launcher</string>
     <string name="swipe_gesture">Gesture</string>
     <string name="todo">todo</string>
 </resources>
