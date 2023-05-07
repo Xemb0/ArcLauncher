@@ -72,12 +72,13 @@ public class MainActivity extends AppCompatActivity {
 
         seekBar1.setMax(itemCount);
         TextView letterTextView = findViewById(R.id.firstletter); // assuming you have a TextView with this id in your layout
-
+        letterTextView.setVisibility(View.INVISIBLE);
         seekBar1.setMax(itemCount-1);
         seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
+                    letterTextView.setVisibility(View.VISIBLE);
                     seekArc.setProgress(progress);
                     layoutManager.scrollToPosition(progress);
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 PackageManager pm = getPackageManager();
+                letterTextView.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
@@ -141,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//
+
+
 
 
 
