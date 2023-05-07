@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CircleLayoutManager extends RecyclerView.LayoutManager{
 
-    private static int INTERVAL_ANGLE = 17;// The default interval angle between each items
-    private static float DISTANCE_RATIO = 15f; // Finger swipe distance divide item rotate angle
+    private static int INTERVAL_ANGLE = 20;// The default interval angle between each items
+    private static float DISTANCE_RATIO = 20f; // Finger swipe distance divide item rotate angle
 
     //Flags of scroll dirction
     private static int SCROLL_LEFT = 1;
@@ -41,7 +41,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     private int contentOffsetX = -1;
     private int contentOffsetY = -1;
 
-    private int firstChildRotate = -20;
+    private int firstChildRotate = 0;
 
     //Sparse array for recording the attachment and rotate angle of each items
     private SparseBooleanArray itemAttached = new SparseBooleanArray();

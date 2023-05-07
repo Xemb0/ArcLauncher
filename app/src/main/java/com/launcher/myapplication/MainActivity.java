@@ -16,12 +16,15 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -61,19 +64,84 @@ public class MainActivity extends AppCompatActivity {
         int itemCount = adapter.getItemCount();
         CircleLayoutManager layoutManager = new CircleLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        seekBar.setMaxProgress(itemCount - 1);
+        seekBar.setMaxProgress(itemCount-1);
 
 
+        SeekBar seekBar1 = findViewById(R.id.normalseekbar);
+        ArcSeekBar seekArc = findViewById(R.id.seekArc);
 
-        seekBar.setOnProgressChangedListener(new ProgressListener() {
+        seekBar1.setMax(itemCount);
+        TextView letterTextView = findViewById(R.id.firstletter); // assuming you have a TextView with this id in your layout
+
+        seekBar1.setMax(itemCount-1);
+        seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void invoke(int i) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    seekArc.setProgress(progress);
+                    layoutManager.scrollToPosition(progress);
 
-              layoutManager.smoothScrollToPosition(null,null,i);
+                    PackageManager pm = getPackageManager();
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
 
+                    Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+                    String packageName = apps.get(progress).activityInfo.packageName;
+                    String appName = null;
+                    try {
+                        appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    String alphabet = String.valueOf(appName.charAt(0));
+
+                    letterTextView.setText(alphabet);
+                }
+            }
+
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                int progress = seekBar.getProgress();
+                PackageManager pm = getPackageManager();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
+
+                // Sort the app list by app name
+                Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+
+                String packageName = apps.get(progress).activityInfo.packageName;
+
+                // Get the first letter of the package name
+                String appName = String.valueOf(packageName.charAt(0));
+                char appLetter = appName.charAt(0);
+                letterTextView.setText(String.valueOf(appLetter));
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                PackageManager pm = getPackageManager();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
+
+                // Sort the app list by app name
+                Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+
+                String packageName = apps.get(seekBar.getProgress()).activityInfo.packageName;
+
+                // Start the desired activity using an Intent with the package name of the app
+
+                Intent appIntent = pm.getLaunchIntentForPackage(packageName);
+                startActivity(appIntent);
             }
         });
 
+
+//
 
 
 

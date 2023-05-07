@@ -37,41 +37,66 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/parent_layout"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100sp"
-                android:orientation="horizontal"
+                android:layout_height="@dimen/_250sdp"
                 android:id="@+id/topDrawerLayout">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycalview"
+                    android:layout_height="@dimen/_150sdp"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="-119dp"
 
-            </LinearLayout>
+                    android:layout_alignParentBottom="true" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycalview"
-                android:layout_height="@dimen/_200sdp"
+                <TextView
+                    android:id="@+id/firstletter"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_250sdp"
+                    android:textSize="34sp"
+                    android:textColor="#FFFFFF"
+                    android:text="A"
+                    android:padding="@dimen/_5sdp"
+                    android:textAlignment="center"
+                    android:fontFamily="sans-serif"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/circular_backgraound"
+                    android:layout_above="@id/recycalview"
+                    />
 
+            </RelativeLayout>
 
+            <FrameLayout
                 android:layout_width="match_parent"
-               />
-
-
+                android:layout_height="@dimen/_150sdp">
 
                 <com.marcinmoskala.arcseekbar.ArcSeekBar
                     android:id="@+id/seekArc"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:progressBackgroundColor="@color/black"
-                    app:progressBackgroundWidth="10dp"
-                    app:progress="1"
+                    android:layout_height="@dimen/_130sdp"
+                    android:layout_gravity="top"
+                    android:padding="@dimen/_40sdp"
+          app:progressBackgroundColor="@color/colorPrimary"
+                    app:progressColor="#00000000"
+                    app:thumb="@drawable/thumb2" />
 
-                    android:layout_margin="20sp"
-                    android:paddingBottom="10sp"
-                    android:layout_marginBottom="300sp"
-                    app:progressWidth="60dp"
-                    app:roundEdges="true"
-                    android:nestedScrollingEnabled="true" />
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/normalseekbar"
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/_40sdp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:padding="@dimen/_80sdp"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:progressTint="@android:color/transparent"
+                    android:thumbTint="@android:color/transparent" />
+
+            </FrameLayout>
 
 
         </LinearLayout>
