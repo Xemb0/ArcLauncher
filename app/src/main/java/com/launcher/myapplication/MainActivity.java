@@ -20,9 +20,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeDrawer();
+
 
         //seekbar
 
@@ -183,9 +189,51 @@ public class MainActivity extends AppCompatActivity {
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
+        public void onLongPress(MotionEvent e) {
+
+
+            View view = findViewById(R.id.homescreen);
+
+            // This method is called when the user has touched the screen and not released their finger for an extended period of time.
+            // You can use this method to display a context menu or perform a more complex action.
+            // Get the x and y coordinates of the long press event
+            float x =e.getRawX();
+            float y = e.getRawY();
+
+
+            // Create a new popup window
+            PopupWindow popupWindow = new PopupWindow(MainActivity.this);
+
+            // Set the content view of the popup window
+            View popupView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_layout, null);
+            popupWindow.setContentView(popupView);
+
+            // Set the size of the popup window
+            popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            // Make the popup window dismiss when the user taps outside of it or presses the back button
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+
+            // Show the popup window at the location of the long press event
+            popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y);
+
+            // Set a click listener on the content view of the popup window to dismiss it when the user taps anywhere inside it
+            popupView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
+
+        }
+
+        @Override
         public boolean onDown(MotionEvent e) {
             return true;
         }
+
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -241,7 +289,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return result;
         }
+
     }
+
 
 
 
@@ -293,6 +343,40 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    private  void buttons(){
+        Button wallpaperButton = findViewById(R.id.Wallpaper);
+        Button arcSettingsButton = findViewById(R.id.ArcSettings);
+        Button widgetsButton = findViewById(R.id.Widgets);
+
+// Set onClickListener for wallpaper button to open default wallpaper app
+        wallpaperButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+                startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+            }
+        });
+
+// Set onClickListener for arc settings button to open a new activity
+        arcSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ArcSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+// Set onClickListener for widgets button to open default widget app
+        widgetsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
+                startActivity(Intent.createChooser(intent, "Select Widget"));
+            }
+        });
 
     }
 

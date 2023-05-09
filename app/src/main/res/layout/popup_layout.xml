@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_70sdp"
+    android:layout_height="@dimen/_120sdp"
+    android:id="@+id/popup_layout"
+    app:cardCornerRadius="22dp"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+<Button
+    android:layout_width="match_parent"
+    android:id="@+id/Wallpaper"
+    android:background="#E4E4E4"
+    android:text="Wallpaper"
+    android:layout_height="@dimen/_40sdp">
+
+</Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/ArcSettings"
+        android:text="Arc Settings"
+        android:background="#DADADA"
+        android:layout_height="@dimen/_40sdp"
+       android:layout_below="@+id/Wallpaper">
+
+
+    </Button>
+        <Button
+            android:layout_width="match_parent"
+            android:id="@+id/Widgets"
+            android:background="#CFCFCF"
+            android:text="Widgets"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@+id/ArcSettings">
+
+
+        </Button>
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
