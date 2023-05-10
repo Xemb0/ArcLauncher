@@ -38,16 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
     //for install and uninstall behaviour
-    private final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Send broadcast to notify adapter to refresh app list
-            Intent refreshIntent = new Intent();
-            refreshIntent.setAction(Intent.ACTION_PACKAGE_ADDED);
-            sendBroadcast(refreshIntent);
-        }
-    };
 
 
     ///refresh when unistall
@@ -62,6 +55,31 @@ public class MainActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new GestureListener());
 
 
+        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        PackageManager pm = this.getPackageManager();
+        Intent main = new Intent(Intent.ACTION_MAIN, null);
+        main.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> apps = pm.queryIntentActivities(main,0);
+        Collections.sort(apps,
+                new ResolveInfo.DisplayNameComparator(pm));
+        Adapter adapter = new Adapter(this, apps, pm);
+        recyclerDrawer.setAdapter(adapter);
+        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
+
+         final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                String packageName = intent.getData().getSchemeSpecificPart();
+                if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                    adapter.refreshAppList();
+                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+                    adapter.refreshAppList();
+                }
+            }
+        };
+
 
         /*                                                  install and uninstall behaviour                                               */
 
@@ -74,17 +92,11 @@ public class MainActivity extends AppCompatActivity {
 
 
  /*                          seekbar implimentation                         */
-        PackageManager pm = this.getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> apps = pm.queryIntentActivities(intent,0);
-        Collections.sort(apps,new ResolveInfo.DisplayNameComparator(pm));
-        Adapter adapter = new Adapter(this, apps, pm);
+
 
 
 
         ArcSeekBar seekArc = findViewById(R.id.seekArc);
-        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
         recyclerDrawer.setAdapter(adapter);
         int itemCount = adapter.getItemCount();
         CircleLayoutManager layoutManager = new CircleLayoutManager(this);
@@ -199,36 +211,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
-        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
-//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
-        PackageManager pm = this.getPackageManager();
-        Intent main = new Intent(Intent.ACTION_MAIN, null);
-        main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
-        Collections.sort(installedAppList,
-                new ResolveInfo.DisplayNameComparator(pm));
-        Adapter adapter = new Adapter(this, installedAppList, pm);
-        recyclerDrawer.setAdapter(adapter);
-
-        if (requestCode == adapter.UNINSTALL_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            adapter.refreshAppList();
-
-            recyclerDrawer.setAdapter(adapter);
-
-            CircleLayoutManager layoutManager = new CircleLayoutManager(this);
-            recyclerDrawer.setLayoutManager(layoutManager);
-
-            layoutManager.scrollToPosition(adapter.position);
-
-        }
-
-
-    }
 
 
 
@@ -445,23 +427,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //refresh when uninstall a aapp
 
-    private final ActivityResultLauncher<Intent> uninstallAppLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            PackageManager pm = this.getPackageManager();
-                            Intent main = new Intent(Intent.ACTION_MAIN, null);
-                            main.addCategory(Intent.CATEGORY_LAUNCHER);
-                            List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
-                            Collections.sort(installedAppList,
-                                    new ResolveInfo.DisplayNameComparator(pm));
-                            Adapter adapter = new Adapter(this, installedAppList, pm);
-                            // Refresh the app list when an app is uninstalled
-                            adapter.refreshAppList();
-                        }
-                    });
 
 
 

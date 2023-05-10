@@ -35,13 +35,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
      List<ResolveInfo> lapps;
      Context context;
     PackageManager pm;
-    private final BroadcastReceiver uninstallBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Refresh your app list here
-            refreshAppList();
-        }
-    };
+
     public Adapter(Context context, List<ResolveInfo> apps, PackageManager pn) {
         this.context = context;
         lapps=apps;
@@ -58,9 +52,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
     public void onBindViewHolder(@NonNull ViewHolder holder,  int position) {
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
-        intentFilter.addDataScheme("package");
-        context.registerReceiver(uninstallBroadcastReceiver, intentFilter);
 
         holder.itemlayout.setOnClickListener(view -> {
             ResolveInfo launchable = lapps.get(position);
@@ -140,7 +131,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         Uninstall.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
             intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
-            ((Activity)context).startActivityForResult(intent, UNINSTALL_REQUEST_CODE);
+            context.startActivity(intent);
+
             popupWindow.dismiss();
             position = lapps.indexOf(resolveInfo);
 
