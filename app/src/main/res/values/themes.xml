@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Home.Light" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
         <item name="android:colorPrimaryDark"  tools:targetApi="21">@android:color/transparent</item>
         <item name="android:windowShowWallpaper">true</item>

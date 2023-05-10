@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homescreen"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".MainActivity">
@@ -26,14 +27,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_250sdp"
+                android:layout_height="@dimen/_220sdp"
                 android:id="@+id/topDrawerLayout">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycalview"
-                    android:layout_height="@dimen/_150sdp"
+                    android:layout_height="@dimen/_140sdp"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="-119dp"
+                    android:layout_marginTop="-129dp"
 
                     android:layout_alignParentBottom="true" />
 
@@ -57,28 +58,22 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_150sdp">
+                android:layout_marginBottom="@dimen/_30sdp"
+                android:layout_height="@dimen/_100sdp">
 
                 <com.marcinmoskala.arcseekbar.ArcSeekBar
                     android:id="@+id/seekArc"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_130sdp"
-                    android:layout_gravity="top"
-                    android:padding="@dimen/_40sdp"
-          app:progressBackgroundColor="@color/colorPrimary"
+                    android:layout_height="match_parent"
+
+
+                    android:padding="@dimen/_20sdp"
+                    android:hapticFeedbackEnabled="true"
+                    app:progressBackgroundColor="@color/colorPrimary"
                     app:progressColor="#00000000"
                     app:thumb="@drawable/thumb2" />
 
-                <androidx.appcompat.widget.AppCompatSeekBar
-                    android:id="@+id/normalseekbar"
-                    android:layout_width="match_parent"
-                    android:layout_margin="@dimen/_40sdp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:padding="@dimen/_80sdp"
-                    android:progressBackgroundTint="@android:color/transparent"
-                    android:progressTint="@android:color/transparent"
-                    android:thumbTint="@android:color/transparent" />
+
 
             </FrameLayout>
 

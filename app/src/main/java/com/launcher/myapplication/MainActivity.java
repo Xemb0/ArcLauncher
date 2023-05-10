@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
+import com.marcinmoskala.arcseekbar.ProgressListener;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -60,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> apps = pm.queryIntentActivities(main,0);
+        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Collections.sort(apps,
                 new ResolveInfo.DisplayNameComparator(pm));
         Adapter adapter = new Adapter(this, apps, pm);
         recyclerDrawer.setAdapter(adapter);
         recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 
-         final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
+        final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -91,9 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
- /*                          seekbar implimentation                         */
-
-
+        /*                          seekbar implimentation                         */
 
 
         ArcSeekBar seekArc = findViewById(R.id.seekArc);
@@ -101,74 +100,71 @@ public class MainActivity extends AppCompatActivity {
         int itemCount = adapter.getItemCount();
         CircleLayoutManager layoutManager = new CircleLayoutManager(this);
         recyclerDrawer.setLayoutManager(layoutManager);
-        seekArc.setMaxProgress(itemCount-1);
+        seekArc.setMaxProgress(itemCount - 1);
 
 
-        SeekBar seekBar1 = findViewById(R.id.normalseekbar);
-
-
-        seekBar1.setMax(itemCount);
         TextView letterTextView = findViewById(R.id.firstletter);
-        letterTextView.setVisibility(View.INVISIBLE);
-        seekBar1.setMax(itemCount-1);
-        seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        letterTextView.setVisibility(View.VISIBLE);
+
+        seekArc.setOnProgressChangedListener(new ProgressListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    letterTextView.setVisibility(View.VISIBLE);
-                    seekArc.setProgress(progress);
-                    layoutManager.scrollToPosition(progress);
+            public void invoke(int progress) {
 
 
-                    String packageName = apps.get(progress).activityInfo.packageName;
-                    String appName;
-                    try {
-                        appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    String alphabet = String.valueOf(appName.charAt(0));
-
-                    letterTextView.setText(alphabet);
-                }
-            }
-
-
-
-            /*                       start tracking apps                  */
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                int progress = seekBar.getProgress();
-
-
+                layoutManager.scrollToPosition(progress);
+                letterTextView.setVisibility(View.VISIBLE);
 
 
                 String packageName = apps.get(progress).activityInfo.packageName;
+                String appName;
+                try {
+                    appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+                } catch (PackageManager.NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
 
-                // Get the first letter of the package name
-                String appName = String.valueOf(packageName.charAt(0));
-                char appLetter = appName.charAt(0);
-                letterTextView.setText(String.valueOf(appLetter));
+                String alphabet = String.valueOf(appName.charAt(0));
+
+                letterTextView.setText(alphabet);
+
+
             }
+
+
+
+        });
+
+        seekArc.setOnStartTrackingTouch(new ProgressListener() {
+            @Override
+            public void invoke(int progress) {
+
+
+
+
+
+            }
+        });
+
+
+        recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+
+                super.onScrollStateChanged(recyclerView, newState);
+                letterTextView.setVisibility(View.INVISIBLE);
+
+            }
+        });
+
+
+        /*                       start tracking apps                  */
+
+
+    }
 
 
 
 /*                       stop track to open apps              */
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                letterTextView.setVisibility(View.INVISIBLE);
-
-                String packageName = apps.get(seekBar.getProgress()).activityInfo.packageName;
-
-                // Start the desired activity using an Intent with the package name of the app
-
-                Intent appIntent = pm.getLaunchIntentForPackage(packageName);
-                startActivity(appIntent);
-            }
-        });
 
 
 
@@ -182,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    }
+
 //    ==========================================================================================================================
 
 
@@ -400,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheetBehavior.setHideable(false);
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        mBottomSheetBehavior.setPeekHeight(700);
+        mBottomSheetBehavior.setPeekHeight(800);
 
         mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
