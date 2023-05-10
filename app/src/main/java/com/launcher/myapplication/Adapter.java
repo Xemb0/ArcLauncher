@@ -57,6 +57,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 context.startActivity(i);
             }
         });
+        holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View view) {
+
+                return true;
+            }
+        });
     }
 
     @Override

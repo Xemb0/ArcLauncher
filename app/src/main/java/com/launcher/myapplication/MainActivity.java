@@ -208,6 +208,40 @@ public class MainActivity extends AppCompatActivity {
             View popupView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_layout, null);
             popupWindow.setContentView(popupView);
 
+            // Find the view inside the popup layout and set an onClickListener to it
+            Button popupButton = popupView.findViewById(R.id.Wallpaper);
+
+            Button arcSettingsButton = popupView.findViewById(R.id.ArcSettings);
+            Button widgetsButton = popupView.findViewById(R.id.Widgets);
+            popupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+                    startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+                    popupWindow.dismiss();
+
+                    // Do something when the popup button is clicked
+                }
+            });
+            // Set onClickListener for arc settings button to open a new activity
+            arcSettingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ArcSettingsActivity.class);
+                    startActivity(intent);
+                    popupWindow.dismiss();
+                }
+            });
+
+// Set onClickListener for widgets button to open default widget app
+            widgetsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
+                    startActivity(Intent.createChooser(intent, "Select Widget"));
+                    popupWindow.dismiss();
+                }
+            });
             // Set the size of the popup window
             popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
             popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -218,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
 
             // Show the popup window at the location of the long press event
             popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y);
+             Button Wallpaper = findViewById(R.id.Wallpaper);
+
 
             // Set a click listener on the content view of the popup window to dismiss it when the user taps anywhere inside it
             popupView.setOnClickListener(new View.OnClickListener() {
@@ -346,39 +382,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private  void buttons(){
-        Button wallpaperButton = findViewById(R.id.Wallpaper);
-        Button arcSettingsButton = findViewById(R.id.ArcSettings);
-        Button widgetsButton = findViewById(R.id.Widgets);
-
-// Set onClickListener for wallpaper button to open default wallpaper app
-        wallpaperButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
-                startActivity(Intent.createChooser(intent, "Select Wallpaper"));
-            }
-        });
-
-// Set onClickListener for arc settings button to open a new activity
-        arcSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ArcSettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-// Set onClickListener for widgets button to open default widget app
-        widgetsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
-                startActivity(Intent.createChooser(intent, "Select Widget"));
-            }
-        });
-
-    }
 
 
 }

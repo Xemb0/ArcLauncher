@@ -21,9 +21,15 @@
         android:theme="@style/Home.Light"
         tools:targetApi="31">
         <activity
+            android:name=".ArcSettingsActivity"
+            android:theme="@style/Home.Light"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:theme="@style/Home.Light"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
