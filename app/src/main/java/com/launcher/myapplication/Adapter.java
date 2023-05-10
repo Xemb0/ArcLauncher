@@ -2,9 +2,11 @@ package com.launcher.myapplication;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -33,9 +35,17 @@ import java.util.List;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
     public  final int UNINSTALL_REQUEST_CODE = 1;
+    public int position;
     static List<ResolveInfo> lapps;
     static Context context;
     PackageManager pm=null;
+    private BroadcastReceiver uninstallBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Refresh your app list here
+            refreshAppList();
+        }
+    };
     public Adapter(Context context, List<ResolveInfo> apps, PackageManager pn) {
         this.context = context;
         lapps=apps;
@@ -53,6 +63,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        context.registerReceiver(uninstallBroadcastReceiver, intentFilter);
+
         holder.itemlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +151,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 context.startActivity(intent);
                 popupWindow.dismiss();
 
+
                 // Do something when the popup button is clicked
             }
         });
@@ -145,6 +160,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
             intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
             ((Activity)context).startActivityForResult(intent, UNINSTALL_REQUEST_CODE);
             popupWindow.dismiss();
+            position = lapps.indexOf(resolveInfo);
+
         });
 
 // In the activity that contains the app list view, override onActivityResult():
