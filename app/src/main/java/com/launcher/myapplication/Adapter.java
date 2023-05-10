@@ -1,6 +1,5 @@
 package com.launcher.myapplication;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -23,23 +22,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.launcher.myapplication.R;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
     public  final int UNINSTALL_REQUEST_CODE = 1;
     public int position;
-    static List<ResolveInfo> lapps;
-    static Context context;
-    PackageManager pm=null;
-    private BroadcastReceiver uninstallBroadcastReceiver = new BroadcastReceiver() {
+     List<ResolveInfo> lapps;
+     Context context;
+    PackageManager pm;
+    private final BroadcastReceiver uninstallBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Refresh your app list here
@@ -56,40 +52,31 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder,  int position) {
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
         context.registerReceiver(uninstallBroadcastReceiver, intentFilter);
 
-        holder.itemlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ResolveInfo launchable = lapps.get(position);
-                ActivityInfo activity = launchable.activityInfo;
-                ComponentName name = new ComponentName(activity.applicationInfo.packageName,
-                        activity.name);
-                Intent i = new Intent(Intent.ACTION_MAIN);
-                i.addCategory(Intent.CATEGORY_LAUNCHER);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                i.setComponent(name);
-                context.startActivity(i);
-            }
+        holder.itemlayout.setOnClickListener(view -> {
+            ResolveInfo launchable = lapps.get(position);
+            ActivityInfo activity = launchable.activityInfo;
+            ComponentName name = new ComponentName(activity.applicationInfo.packageName,activity.name);
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            i.setComponent(name);
+            context.startActivity(i);
         });
         ResolveInfo resolveInfo = lapps.get(position);
-        holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                // Show the popup window for this app
-                showPopupWindowForApp(resolveInfo, view,pm);
-                return true;
-            }
+        holder.itemlayout.setOnLongClickListener(view -> {
+            // Show the popup window for this app
+            showPopupWindowForApp(resolveInfo, view,pm);
+            return true;
         });
     }
 
@@ -104,25 +91,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
 
         // Sort activities by label
-        Collections.sort(activities, new Comparator<ResolveInfo>() {
-            @Override
-            public int compare(ResolveInfo a, ResolveInfo b) {
-                return a.loadLabel(pm).toString().compareToIgnoreCase(b.loadLabel(pm).toString());
-            }
-        });
+        Collections.sort(activities, (a, b) -> a.loadLabel(pm).toString().compareToIgnoreCase(b.loadLabel(pm).toString()));
 
         lapps = activities;
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView images;
+
         TextView text;
         RelativeLayout itemlayout;
         public ViewHolder(View view) {
             super(view);
-            images = (ImageView) view.findViewById(R.id.image);
-            text = (TextView) view.findViewById(R.id.label);
+            images = view.findViewById(R.id.image);
+            text = view.findViewById(R.id.label);
             itemlayout=view.findViewById(R.id.item);
 
         }
@@ -138,23 +121,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         Button Appinfo = popupView.findViewById(R.id.button_app_info);
         Button Uninstall = popupView.findViewById(R.id.button_uninstall_app);
-        Appinfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {  String packageName = resolveInfo.activityInfo.packageName;
+        Appinfo.setOnClickListener(v -> {  String packageName = resolveInfo.activityInfo.packageName;
 
-                // Create an intent to show the app info screen
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + packageName));
+            // Create an intent to show the app info screen
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + packageName));
 
-                // Launch the app info screen
-                context.startActivity(intent);
-                popupWindow.dismiss();
+            // Launch the app info screen
+            context.startActivity(intent);
+            popupWindow.dismiss();
 
 
-                // Do something when the popup button is clicked
-            }
+
         });
+
+        //pop uninstall when the uninstall button is clicked
         Uninstall.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
             intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
@@ -164,7 +146,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         });
 
-// In the activity that contains the app list view, override onActivityResult():
+
 
 
         // Set the size of the popup window
@@ -178,7 +160,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         // Show the popup window at the location of the anchor view
         int[] location = new int[2];
         anchorView.getLocationOnScreen(location);
-        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1]);
+        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[1], location[1]);
     }
 
 }

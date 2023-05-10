@@ -160,6 +160,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+            /* instanace of viewholder  */
+
+
+
+
 
 
 
