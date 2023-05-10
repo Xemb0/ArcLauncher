@@ -1,6 +1,7 @@
 package com.launcher.myapplication;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,13 +26,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.launcher.myapplication.R;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
-
-    List<ResolveInfo> lapps;
-    Context context;
+    public  final int UNINSTALL_REQUEST_CODE = 1;
+    static List<ResolveInfo> lapps;
+    static Context context;
     PackageManager pm=null;
     public Adapter(Context context, List<ResolveInfo> apps, PackageManager pn) {
         this.context = context;
@@ -80,6 +83,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
     public int getItemCount() {
         return lapps.size();
     }
+    public void refreshAppList() {
+        PackageManager pm = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+
+        // Sort activities by label
+        Collections.sort(activities, new Comparator<ResolveInfo>() {
+            @Override
+            public int compare(ResolveInfo a, ResolveInfo b) {
+                return a.loadLabel(pm).toString().compareToIgnoreCase(b.loadLabel(pm).toString());
+            }
+        });
+
+        lapps = activities;
+        notifyDataSetChanged();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView images;
@@ -123,9 +143,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         Uninstall.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
             intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
-            context.startActivity(intent);
+            ((Activity)context).startActivityForResult(intent, UNINSTALL_REQUEST_CODE);
             popupWindow.dismiss();
         });
+
+// In the activity that contains the app list view, override onActivityResult():
+
+
         // Set the size of the popup window
         popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);

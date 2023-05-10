@@ -1,6 +1,7 @@
 package com.launcher.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -174,6 +175,26 @@ public class MainActivity extends AppCompatActivity {
 // Set the wallpaper as the background of your launcher app
 
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        RecyclerView mDrawerGridView = findViewById(R.id.recycalview);
+        mDrawerGridView.setLayoutManager(new CircleLayoutManager(this));
+//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        PackageManager pm = this.getPackageManager();
+        Intent main = new Intent(Intent.ACTION_MAIN, null);
+        main.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
+        Collections.sort(installedAppList,
+                new ResolveInfo.DisplayNameComparator(pm));
+        Adapter adapter = new Adapter(this, installedAppList, pm);
+        mDrawerGridView.setAdapter(adapter);
+
+        if (requestCode == adapter.UNINSTALL_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            adapter.refreshAppList();
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
