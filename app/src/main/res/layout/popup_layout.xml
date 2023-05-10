@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/_70sdp"
+    android:background="#00FFFFFF"
     android:layout_height="@dimen/_120sdp"
     android:id="@+id/popup_layout"
     app:cardCornerRadius="22dp"

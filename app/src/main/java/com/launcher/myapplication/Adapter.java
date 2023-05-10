@@ -7,21 +7,29 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.launcher.myapplication.R;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
+
+
     List<ResolveInfo> lapps;
     Context context;
     PackageManager pm=null;
@@ -57,11 +65,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 context.startActivity(i);
             }
         });
+        ResolveInfo resolveInfo = lapps.get(position);
         holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
-
             @Override
             public boolean onLongClick(View view) {
-
+                // Show the popup window for this app
+                showPopupWindowForApp(resolveInfo, view,pm);
                 return true;
             }
         });
@@ -84,4 +93,51 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         }
     }
+    private void showPopupWindowForApp(ResolveInfo resolveInfo, View anchorView,PackageManager pm) {
+        // Create a new popup window
+        PopupWindow popupWindow = new PopupWindow(context);
+
+        // Set the content view of the popup window
+        View popupView = LayoutInflater.from(context).inflate(R.layout.app_popup, null);
+        popupWindow.setContentView(popupView);
+
+
+        Button Appinfo = popupView.findViewById(R.id.button_app_info);
+        Button Uninstall = popupView.findViewById(R.id.button_uninstall_app);
+        Appinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {  String packageName = resolveInfo.activityInfo.packageName;
+
+                // Create an intent to show the app info screen
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + packageName));
+
+                // Launch the app info screen
+                context.startActivity(intent);
+                popupWindow.dismiss();
+
+                // Do something when the popup button is clicked
+            }
+        });
+        Uninstall.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
+            intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
+            context.startActivity(intent);
+            popupWindow.dismiss();
+        });
+        // Set the size of the popup window
+        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        // Make the popup window dismiss when the user taps outside of it or presses the back button
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+
+        // Show the popup window at the location of the anchor view
+        int[] location = new int[2];
+        anchorView.getLocationOnScreen(location);
+        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1]);
+    }
+
 }
