@@ -343,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
                                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                             }else{
+
 //                            ExpandNotificationBar();
                                 try{
                                     @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
@@ -357,7 +358,13 @@ public class MainActivity extends AppCompatActivity {
                                 }}
 
                         } else {
+                            if((mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)){
+                                Intent intent = new Intent(MainActivity.this, Drawer.class);
+                                startActivity(intent);
+                            }else {
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                            }
                         }
                         result = true;
                     }
