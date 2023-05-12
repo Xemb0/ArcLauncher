@@ -34,16 +34,27 @@
                     android:id="@+id/recycalview"
                     android:layout_height="@dimen/_140sdp"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="-129dp"
+                    android:layout_marginTop="-139dp"
+
+
+
+
+
+
+
+
+
+
 
                     android:layout_alignParentBottom="true" />
 
                 <TextView
                     android:id="@+id/firstletter"
                     android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_250sdp"
+                    android:layout_height="@dimen/_150sdp"
                     android:textSize="34sp"
                     android:textColor="#FFFFFF"
+                    android:translationY="-20dp"
                     android:text="A"
                     android:padding="@dimen/_5sdp"
                     android:textAlignment="center"
@@ -55,19 +66,28 @@
                     />
 
             </RelativeLayout>
-
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_marginBottom="@dimen/_30sdp"
-                android:layout_height="@dimen/_100sdp">
+                android:layout_height="wrap_content">
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+
+                android:id="@+id/group_divider"
+
+
+                android:layout_height="@dimen/_80sdp">
 
                 <com.marcinmoskala.arcseekbar.ArcSeekBar
                     android:id="@+id/seekArc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
-
-                    android:padding="@dimen/_20sdp"
+android:translationY="@dimen/_10sdp"
+                    android:padding="@dimen/_40sdp"
+                    android:layout_marginTop="-60dp"
                     android:hapticFeedbackEnabled="true"
                     app:progressBackgroundColor="@color/colorPrimary"
                     app:progressColor="#00000000"
@@ -75,7 +95,21 @@
 
 
 
-            </FrameLayout>
+
+
+            </RelativeLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/group_divider"
+
+                    android:background="@drawable/bg_bottomsheet"
+                    android:layout_height="@dimen/_50sdp">
+
+                </FrameLayout>
+            </RelativeLayout>
+
+
+
 
 
         </LinearLayout>

@@ -1,47 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/_70sdp"
-    android:background="#00FFFFFF"
-    android:layout_height="@dimen/_120sdp"
-    android:id="@+id/popup_layout"
-    app:cardCornerRadius="22dp"
-    android:orientation="vertical">
-    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/_60sdp"
+
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+
+        android:rotation="15"
+        android:src="@drawable/triangle"
+        app:flow_firstVerticalBias="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.037"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Uninstall_button"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:background="@drawable/circular_button"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-<Button
-    android:layout_width="match_parent"
-    android:id="@+id/Wallpaper"
-    android:background="#E4E4E4"
-    android:text="Wallpaper"
-    android:layout_height="@dimen/_40sdp">
+        <ImageButton
+            android:id="@+id/wallpaper"
 
-</Button>
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:background="@drawable/circular_button"
+            android:scaleType="fitCenter"
 
-    <Button
-        android:layout_width="match_parent"
-        android:id="@+id/ArcSettings"
-        android:text="Arc Settings"
-        android:background="#DADADA"
-        android:layout_height="@dimen/_40sdp"
-       android:layout_below="@+id/Wallpaper">
+            android:src="@drawable/wallpaper_icon"
+            android:padding="@dimen/_12sdp"
+            android:text="App info"
+            android:textSize="@dimen/_6sdp"
 
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/Widgets"
+            app:layout_constraintHorizontal_bias=".1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-    </Button>
-        <Button
-            android:layout_width="match_parent"
+        </ImageButton>
+
+        <ImageButton
             android:id="@+id/Widgets"
-            android:background="#CFCFCF"
-            android:text="Widgets"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_below="@+id/ArcSettings">
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_alignEnd="@id/app_info_button"
+            android:background="@drawable/circular_button"
+            android:hapticFeedbackEnabled="true"
+            android:padding="@dimen/_11sdp"
+            android:scaleType="fitCenter"
+
+            android:src="@drawable/widget_icon"
+
+            android:text="Uninstall"
+            android:textSize="@dimen/_6sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ArcSettings"
+            app:layout_constraintHorizontal_bias="0.187"
+            app:layout_constraintStart_toEndOf="@+id/wallpaper"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/ArcSettings"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_alignEnd="@id/app_info_button"
+            android:background="@drawable/circular_button"
+            android:hapticFeedbackEnabled="true"
+            android:padding="@dimen/_11sdp"
+            android:scaleType="fitCenter"
+
+            android:src="@drawable/settings_icon"
+
+            android:text="Uninstall"
+            android:textSize="@dimen/_6sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/Widgets"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+        </ImageButton>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </Button>
-    </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

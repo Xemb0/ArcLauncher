@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -109,9 +110,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         View popupView = LayoutInflater.from(context).inflate(R.layout.app_popup, null);
         popupWindow.setContentView(popupView);
 
-
-        Button Appinfo = popupView.findViewById(R.id.button_app_info);
-        Button Uninstall = popupView.findViewById(R.id.button_uninstall_app);
+        popupWindow.setBackgroundDrawable(null);
+        ImageButton Appinfo = popupView.findViewById(R.id.app_info_button);
+        ImageButton Uninstall = popupView.findViewById(R.id.Uninstall_button);
         Appinfo.setOnClickListener(v -> {  String packageName = resolveInfo.activityInfo.packageName;
 
             // Create an intent to show the app info screen
@@ -148,11 +149,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         // Make the popup window dismiss when the user taps outside of it or presses the back button
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
-
+        int verticalOffset = 100;
         // Show the popup window at the location of the anchor view
         int[] location = new int[2];
         anchorView.getLocationOnScreen(location);
-        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[1], location[1]);
+        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1]-verticalOffset);
     }
 
 }

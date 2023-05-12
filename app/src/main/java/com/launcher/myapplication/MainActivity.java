@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -249,16 +250,16 @@ public class MainActivity extends AppCompatActivity {
 
             // Create a new popup window
             PopupWindow popupWindow = new PopupWindow(MainActivity.this);
-
+            popupWindow.setBackgroundDrawable(null);
             // Set the content view of the popup window
             View popupView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_layout, null);
             popupWindow.setContentView(popupView);
 
             // Find the view inside the popup layout and set an onClickListener to it
-            Button wallpaper = popupView.findViewById(R.id.Wallpaper);
+            ImageButton wallpaper = popupView.findViewById(R.id.wallpaper);
 
-            Button arcSettingsButton = popupView.findViewById(R.id.ArcSettings);
-            Button widgetsButton = popupView.findViewById(R.id.Widgets);
+            ImageButton arcSettingsButton = popupView.findViewById(R.id.Widgets);
+            ImageButton widgetsButton = popupView.findViewById(R.id.ArcSettings);
             wallpaper.setOnClickListener(v -> {
 
                 //popup setwallpaper
@@ -296,9 +297,10 @@ public class MainActivity extends AppCompatActivity {
             // Make the popup window dismiss when the user taps outside of it or presses the back button
             popupWindow.setOutsideTouchable(true);
             popupWindow.setFocusable(true);
+          int verticalOffset = 200;
 
             // Show the popup window at the location of the long press event
-            popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y);
+            popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y-verticalOffset);
 
 
 
