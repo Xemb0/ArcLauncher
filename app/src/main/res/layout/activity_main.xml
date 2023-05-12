@@ -3,27 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homescreen"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/my_wallpaper"
-            android:scaleType="centerCrop"
-            android:id="@+id/homeScreenImage"
-            android:contentDescription="@string/todo" />
-        <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/viewPager">
-        </androidx.viewpager.widget.ViewPager>
-    </FrameLayout>
 
 
     <FrameLayout
@@ -37,71 +22,100 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/parent_layout"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100sp"
-                android:orientation="horizontal"
+                android:layout_height="@dimen/_220sdp"
                 android:id="@+id/topDrawerLayout">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycalview"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="-139dp"
 
-            </LinearLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycalview"
-<<<<<<< HEAD
-                android:layout_height="300sp"
+
+
+
+
+
+
+
+
+                    android:layout_alignParentBottom="true" />
+
+                <TextView
+                    android:id="@+id/firstletter"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_150sdp"
+                    android:textSize="34sp"
+                    android:textColor="#FFFFFF"
+                    android:translationY="-20dp"
+                    android:text="A"
+                    android:padding="@dimen/_5sdp"
+                    android:textAlignment="center"
+                    android:fontFamily="sans-serif"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/circular_backgraound"
+                    android:layout_above="@id/recycalview"
+                    />
+
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
-                    android:background="#37000000"
-               />
+                android:layout_height="wrap_content">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:background="#00000000"
-                android:id="@+id/recycalview2"
-                android:layout_height="300sp"
 
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycalview3"
-                android:layout_height="300sp"
 
-                android:layout_width="match_parent"
-                />
-=======
-                android:layout_height="@dimen/_200sdp"
+                android:id="@+id/group_divider"
 
 
-                android:layout_width="match_parent"
-               />
-
-
+                android:layout_height="@dimen/_80sdp">
 
                 <com.marcinmoskala.arcseekbar.ArcSeekBar
                     android:id="@+id/seekArc"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:progressBackgroundColor="@color/black"
-                    app:progressBackgroundWidth="10dp"
-                    app:progress="1"
+                    android:layout_height="match_parent"
 
-                    android:layout_margin="20sp"
-                    android:paddingBottom="10sp"
-                    android:layout_marginBottom="300sp"
-                    app:progressWidth="60dp"
-                    app:roundEdges="true"
-                    android:nestedScrollingEnabled="true" />
+android:translationY="@dimen/_10sdp"
+                    android:padding="@dimen/_40sdp"
+                    android:layout_marginTop="-60dp"
+                    android:hapticFeedbackEnabled="true"
+                    app:progressBackgroundColor="@color/colorPrimary"
+                    app:progressColor="#00000000"
+                    app:thumb="@drawable/thumb2" />
 
 
->>>>>>> seekscroll
+
+
+
+            </RelativeLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/group_divider"
+
+                    android:background="@drawable/bg_bottomsheet"
+                    android:layout_height="@dimen/_50sdp">
+
+                </FrameLayout>
+            </RelativeLayout>
+
+
+
+
+
         </LinearLayout>
 
     </FrameLayout>
 
-<<<<<<< HEAD
-=======
     <ImageView
         android:id="@+id/up_arrow"
         android:layout_width="wrap_content"
@@ -109,6 +123,5 @@
         android:src="@drawable/arrow"
         app:layout_anchor="@+id/bottomSheet"
         app:layout_anchorGravity="top|center" />
->>>>>>> seekscroll
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

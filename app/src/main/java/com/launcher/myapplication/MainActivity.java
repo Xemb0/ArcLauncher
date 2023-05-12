@@ -1,40 +1,52 @@
 package com.launcher.myapplication;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.res.ResourcesCompat;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.annotation.SuppressLint;
-import android.app.WallpaperManager;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.GridView;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import com.marcinmoskala.arcseekbar.ProgressListener;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+
+
+
+
+    //for install and uninstall behaviour
+
+
+    ///refresh when unistall
+
 
 
     @Override
@@ -42,63 +54,176 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeDrawer();
+        gestureDetector = new GestureDetector(this, new GestureListener());
 
-        //seekbar
 
+        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
-        Collections.sort(installedAppList,
+        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
+        Collections.sort(apps,
                 new ResolveInfo.DisplayNameComparator(pm));
-        Adapter adapter = new Adapter(this, installedAppList, pm);
+        Adapter adapter = new Adapter(this, apps, pm);
+        recyclerDrawer.setAdapter(adapter);
+        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 
-//
+        final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                String packageName = intent.getData().getSchemeSpecificPart();
+                if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                    adapter.refreshAppList();
+                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+                    adapter.refreshAppList();
+                }
+            }
+        };
 
-        ArcSeekBar seekBar = findViewById(R.id.seekArc);
-        RecyclerView recyclerView = findViewById(R.id.recycalview);
-        recyclerView.setAdapter(adapter);
+
+        /*                                                  install and uninstall behaviour                                               */
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        registerReceiver(installBroadcastReceiver, intentFilter);
+
+
+
+        /*                          seekbar implimentation                         */
+
+
+        ArcSeekBar seekArc = findViewById(R.id.seekArc);
+        recyclerDrawer.setAdapter(adapter);
         int itemCount = adapter.getItemCount();
         CircleLayoutManager layoutManager = new CircleLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        seekBar.setMaxProgress(itemCount - 1);
+        recyclerDrawer.setLayoutManager(layoutManager);
+        seekArc.setMaxProgress(itemCount - 1);
 
 
+        TextView letterTextView = findViewById(R.id.firstletter);
+        letterTextView.setVisibility(View.VISIBLE);
 
-        seekBar.setOnProgressChangedListener(new ProgressListener() {
+        seekArc.setOnProgressChangedListener(new ProgressListener() {
             @Override
-            public void invoke(int i) {
+            public void invoke(int progress) {
 
-              layoutManager.smoothScrollToPosition(null,null,i);
+
+                layoutManager.scrollToPosition(progress);
+                letterTextView.setVisibility(View.VISIBLE);
+
+
+                String packageName = apps.get(progress).activityInfo.packageName;
+                String appName;
+                try {
+                    appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+                } catch (PackageManager.NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String alphabet = String.valueOf(appName.charAt(0));
+
+                letterTextView.setText(alphabet);
+
+
+            }
+
+
+
+        });
+
+        seekArc.setOnStartTrackingTouch(new ProgressListener() {
+            @Override
+            public void invoke(int progress) {
+
+
+
+
 
             }
         });
 
 
+        recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+
+                super.onScrollStateChanged(recyclerView, newState);
+                letterTextView.setVisibility(View.INVISIBLE);
+
+            }
+        });
 
 
-        // Get the view that represents your launcher app
-
-        gestureDetector = new GestureDetector(this, new GestureListener());
-        // Get the current wallpaper
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Drawable wallpaperDrawable = wallpaperManager.getDrawable();
-
-// Set the wallpaper as the background of your launcher app
+        /*                       start tracking apps                  */
 
 
     }
+
+
+
+/*                       stop track to open apps              */
+
+
+
+            /* instanace of viewholder  */
+
+
+
+
+
+
+
+
+
+
+//    ==========================================================================================================================
+
+
+
+
+
+
+
+
+    /*                                           Above is Oncreate method                                                   */
+
+
+
+
+
+
+
+
+//    ============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*                                         GESTURE HANDLING                                            */
+
+
+
+
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
@@ -113,9 +238,82 @@ public class MainActivity extends AppCompatActivity {
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
+        public void onLongPress(MotionEvent e) {
+
+
+            View view = findViewById(R.id.homescreen);
+
+
+            float x =e.getRawX();
+            float y = e.getRawY();
+
+
+            // Create a new popup window
+            PopupWindow popupWindow = new PopupWindow(MainActivity.this);
+            popupWindow.setBackgroundDrawable(null);
+            // Set the content view of the popup window
+            View popupView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_layout, null);
+            popupWindow.setContentView(popupView);
+
+            // Find the view inside the popup layout and set an onClickListener to it
+            ImageButton wallpaper = popupView.findViewById(R.id.wallpaper);
+
+            ImageButton arcSettingsButton = popupView.findViewById(R.id.Widgets);
+            ImageButton widgetsButton = popupView.findViewById(R.id.ArcSettings);
+            wallpaper.setOnClickListener(v -> {
+
+                //popup setwallpaper
+
+                Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+                startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+                popupWindow.dismiss();
+
+
+            });
+
+            arcSettingsButton.setOnClickListener(v -> {
+
+                //popup ArcSettingsbutton
+
+                Intent intent = new Intent(MainActivity.this, ArcSettingsActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss();
+            });
+
+
+            widgetsButton.setOnClickListener(v -> {
+
+
+                //popup Widgets
+
+                Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
+                startActivity(Intent.createChooser(intent, "Select Widget"));
+                popupWindow.dismiss();
+            });
+            // Set the size of the popup window
+            popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            // Make the popup window dismiss when the user taps outside of it or presses the back button
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+          int verticalOffset = 200;
+
+            // Show the popup window at the location of the long press event
+            popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y-verticalOffset);
+
+
+
+            // Set a click listener on the content view of the popup window to dismiss it when the user taps anywhere inside it
+            popupView.setOnClickListener(v -> popupWindow.dismiss());
+
+        }
+
+        @Override
         public boolean onDown(MotionEvent e) {
             return true;
         }
+
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -147,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
                                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                             }else{
+
 //                            ExpandNotificationBar();
                                 try{
                                     @SuppressLint("WrongConstant") Object service = getSystemService("statusbar");
@@ -161,7 +360,13 @@ public class MainActivity extends AppCompatActivity {
                                 }}
 
                         } else {
+                            if((mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)){
+                                Intent intent = new Intent(MainActivity.this, Drawer.class);
+                                startActivity(intent);
+                            }else {
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                            }
                         }
                         result = true;
                     }
@@ -171,7 +376,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return result;
         }
+
     }
+
 
 
 
@@ -181,14 +388,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
-        RecyclerView mDrawerGridView = findViewById(R.id.recycalview);
-        RecyclerView mDrawerGridView2 = findViewById(R.id.recycalview2);
-        RecyclerView mDrawerGridView3 = findViewById(R.id.recycalview3);
-        mDrawerGridView.setLayoutManager(new CircleLayoutManager(this));
-        mDrawerGridView2.setLayoutManager(new CircleLayoutManager(this));
-        mDrawerGridView2.addItemDecoration(new ItemDecorator(-200));
-        mDrawerGridView3.setLayoutManager(new CircleLayoutManager(this));
-
+        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
+        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
@@ -197,17 +398,14 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(installedAppList,
                 new ResolveInfo.DisplayNameComparator(pm));
         Adapter adapter = new Adapter(this, installedAppList, pm);
-        mDrawerGridView.setAdapter(adapter);
-        mDrawerGridView2.setAdapter(adapter);
-        mDrawerGridView3.setAdapter(adapter);
+        recyclerDrawer.setAdapter(adapter);
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
 
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(false);
-     float x=  mBottomSheetBehavior.calculateSlideOffset();
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        mBottomSheetBehavior.setPeekHeight(700);
+        mBottomSheetBehavior.setPeekHeight(800);
 
         mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -233,6 +431,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
 
 }
