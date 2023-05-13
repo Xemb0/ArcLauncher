@@ -11,13 +11,19 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
+import android.graphics.Point;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -81,15 +87,25 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
             i.addCategory(Intent.CATEGORY_LAUNCHER);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             i.setComponent(name);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
-            int cx = holder.itemlayout.getWidth() / 2;
-            int cy = holder.itemlayout.getHeight() / 2;
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            int screenWidth = displayMetrics.widthPixels;
+            int screenHeight = displayMetrics.heightPixels;
 
+
+
+            View rootView = ((Activity) holder.itemlayout.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
+            int cx = rootView.getWidth() / 2;
+            int cy = rootView.getHeight() / 2;
             float finalRadius = (float) Math.hypot(cx, cy);
+            Animator anim = null;
+            anim = ViewAnimationUtils.createCircularReveal(rootView, cx, cy, 0, finalRadius);
 
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(holder.itemlayout, cx, cy, 0, finalRadius);
+            anim.setDuration(200);
             anim.start();
+
 
             // Start the app activity after the animation has finished
             anim.addListener(new Animator.AnimatorListener() {
@@ -100,6 +116,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     context.startActivity(i);
+
                 }
 
                 @Override
@@ -111,7 +128,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 }
             });
 
-            context.startActivity(i);
+
         });
 
     }
