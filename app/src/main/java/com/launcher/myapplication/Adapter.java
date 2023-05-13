@@ -1,5 +1,6 @@
 package com.launcher.myapplication;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -9,11 +10,13 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -23,11 +26,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import androidx.core.content.res.ResourcesCompat;
 import java.util.Collections;
 import java.util.List;
+import android.animation.Animator;
+import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import static java.lang.Math.hypot;
+import static java.lang.Math.max;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
@@ -53,7 +73,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
     public void onBindViewHolder(@NonNull ViewHolder holder,  int position) {
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
-
         holder.itemlayout.setOnClickListener(view -> {
             ResolveInfo launchable = lapps.get(position);
             ActivityInfo activity = launchable.activityInfo;
@@ -62,14 +81,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
             i.addCategory(Intent.CATEGORY_LAUNCHER);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             i.setComponent(name);
+
+            int cx = holder.itemlayout.getWidth() / 2;
+            int cy = holder.itemlayout.getHeight() / 2;
+
+            float finalRadius = (float) Math.hypot(cx, cy);
+
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(holder.itemlayout, cx, cy, 0, finalRadius);
+            anim.start();
+
+            // Start the app activity after the animation has finished
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    context.startActivity(i);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+                }
+            });
+
             context.startActivity(i);
         });
-        ResolveInfo resolveInfo = lapps.get(position);
-        holder.itemlayout.setOnLongClickListener(view -> {
-            // Show the popup window for this app
-            showPopupWindowForApp(resolveInfo, view,pm);
-            return true;
-        });
+
     }
 
     @Override
@@ -102,6 +146,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         }
     }
+
     private void showPopupWindowForApp(ResolveInfo resolveInfo, View anchorView,PackageManager pm) {
         // Create a new popup window
         PopupWindow popupWindow = new PopupWindow(context);
