@@ -1,10 +1,12 @@
 package com.launcher.myapplication;
 
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     ///refresh when unistall
 
-
+    private GestureDetector gestureDetector1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initializeDrawer();
         gestureDetector = new GestureDetector(this, new GestureListener());
+
+
+        gestureDetector1 = new GestureDetector(this, new MyGestureListener2());
+
 
 
         RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
@@ -106,12 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
         TextView letterTextView = findViewById(R.id.firstletter);
         letterTextView.setVisibility(View.VISIBLE);
+        View mBottomSheet2 = findViewById(R.id.bottomSheet2);
+        final BottomSheetBehavior<View> mBottomSheetBehavior2 = BottomSheetBehavior.from(mBottomSheet2);
 
         seekArc.setOnProgressChangedListener(new ProgressListener() {
             @Override
             public void invoke(int progress) {
 
-
+                mBottomSheetBehavior2.setDraggable(false);
                 layoutManager.scrollToPosition(progress);
                 letterTextView.setVisibility(View.VISIBLE);
 
@@ -133,18 +143,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         });
+       seekArc.setOnStopTrackingTouch(new ProgressListener() {
+           @Override
+           public void invoke(int i) {
+               mBottomSheetBehavior2.setDraggable(true);
+           }
+       });
 
-        seekArc.setOnStartTrackingTouch(new ProgressListener() {
-            @Override
-            public void invoke(int progress) {
 
 
 
 
 
-            }
-        });
+
+
 
 
         recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -156,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
         /*                       start tracking apps                  */
@@ -218,6 +233,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     /*                                         GESTURE HANDLING                                            */
+
+
+
+
+
+
+
+
+////////////////////////////////////////////
 
 
 
@@ -337,14 +361,12 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     View mBottomSheet = findViewById(R.id.bottomSheet);
                     final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+                    View mBottomSheet2 = findViewById(R.id.bottomSheet2);
+                    final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet2);
 
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffY > 0) {
 //                            ExpandNotificationBar();
-                            if ((mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
-                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                            }else{
 
 //                            ExpandNotificationBar();
                                 try{
@@ -357,12 +379,11 @@ public class MainActivity extends AppCompatActivity {
                                     String errorMessage = "Notification panel swipe down error: " + e.getMessage();
                                     Log.e("StatusBar", errorMessage);
                                     Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                }}
+                                }
 
                         } else {
                             if((mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)){
-                                Intent intent = new Intent(MainActivity.this, Drawer.class);
-                                startActivity(intent);
+                                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }else {
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -380,6 +401,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+        // Implement onFling for view2
+        private class MyGestureListener2 extends GestureDetector.SimpleOnGestureListener {
+            // Implement onFling for view2
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            private BottomSheetBehavior bottomSheetBehavior;
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight();
+                            } else {
+                                onSwipeLeft();
+                            }
+                            result = true;
+                        }
+                    } else {
+                        if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffY < 0) {
+                                View mBottomSheet2 = findViewById(R.id.bottomSheet2);
+                                final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet2);
+                            }
+                            result = true;
+                        }
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+
+            public void onSwipeRight() {
+                // do something when swiped right
+            }
+
+            public void onSwipeLeft() {
+                // do something when swiped left
+            }
+
+            public void onSwipeTop() {
+                // do something when swiped up
+            }
+
+            public void onSwipeBottom() {
+                // do something when swiped down
+            }
+        }
 
 
 // add this to your onCreate method
@@ -388,6 +461,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
+        View mBottomSheet1 = findViewById(R.id.bottomSheet2);
         RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
         recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
@@ -401,18 +475,63 @@ public class MainActivity extends AppCompatActivity {
         recyclerDrawer.setAdapter(adapter);
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
 
+
+
+        RecyclerView recyclerView = findViewById(R.id.recycalDrawer);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,6,RecyclerView.VERTICAL,false));
+        Adapter adapter1 = new Adapter(this,installedAppList,pm);
+        recyclerView.setAdapter(adapter1);
+
+
+        final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
+
        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
+
+        mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior1.setPeekHeight(550);
+
+        mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet1, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                }
+                else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet1, float slideOffset) {
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior1.setDraggable(true);
+                } else {
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior1.setDraggable(true);
+                }
+            }
+        });
+
+
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        mBottomSheetBehavior.setPeekHeight(800);
+        mBottomSheetBehavior.setPeekHeight(0);
 
         mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if(newState == BottomSheetBehavior.STATE_EXPANDED)
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
             }
+
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
@@ -421,11 +540,24 @@ public class MainActivity extends AppCompatActivity {
                     mBottomSheetBehavior.setDraggable(false);
                 } else {
                     // Enable dragging when the bottom sheet is less than 50% expanded
-                    mBottomSheetBehavior.setDraggable(true);
+                    mBottomSheetBehavior.setDraggable(false);
                 }
             }
         });
 
+
+
+
+
+
+
+
+        mBottomSheet1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector1.onTouchEvent(event);
+            }
+        });
 
 
 

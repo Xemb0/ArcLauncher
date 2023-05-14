@@ -1,127 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homescreen"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity">
 
 
-
-    <FrameLayout
+    <RelativeLayout
+        app:behavior_hideable="false"
+        android:layout_width="match_parent"
         android:id="@+id/bottomSheet"
+        android:outlineSpotShadowColor="@color/black"
+        style="@style/Widget.Design.BottomSheet.Modal"
+        android:background="@drawable/bg_bottomsheet"
+        android:orientation="vertical"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+
+        android:layout_height="400dp">
+        <TextView
+            android:id="@+id/firstletter"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_150sdp"
+            android:layout_above="@id/recycalview"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@drawable/circular_backgraound"
+            android:fontFamily="sans-serif"
+            android:padding="@dimen/_5sdp"
+            android:text="A"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="34sp"
+            android:translationY="-20dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycalview"
+            android:layout_width="match_parent"
+           android:translationY="-140dp"
+            android:layout_height="@dimen/_140sdp"
+
+            android:layout_alignParentBottom="true"
+
+
+            />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottomSheet2"
+        style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_bottomsheet"
-        style="@style/Widget.Design.BottomSheet.Modal"
+
+        android:background="@drawable/bg_bottomsheet2"
+        android:orientation="vertical"
+
         app:layout_behavior="@string/bottom_sheet_behavior">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/up_arrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow"
+        app:layout_anchor="@+id/bottomSheettop"
+            app:layout_anchorGravity="top|center" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/parent_layout"
+            android:layout_height="900dp"
+            android:id="@id/bottomSheettop"
             android:orientation="vertical">
 
-            <RelativeLayout
+
+            <com.marcinmoskala.arcseekbar.ArcSeekBar
+                android:id="@+id/seekArc"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_220sdp"
-                android:id="@+id/topDrawerLayout">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycalview"
-                    android:layout_height="@dimen/_140sdp"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="-139dp"
+                android:layout_height="@dimen/_120sdp"
+                android:hapticFeedbackEnabled="true"
 
 
-
-
-
-
-
-
-
-
-
-                    android:layout_alignParentBottom="true" />
-
-                <TextView
-                    android:id="@+id/firstletter"
-                    android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_150sdp"
-                    android:textSize="34sp"
-                    android:textColor="#FFFFFF"
-                    android:translationY="-20dp"
-                    android:text="A"
-                    android:padding="@dimen/_5sdp"
-                    android:textAlignment="center"
-                    android:fontFamily="sans-serif"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/circular_backgraound"
-                    android:layout_above="@id/recycalview"
-                    />
-
-            </RelativeLayout>
+                android:padding="@dimen/_30sdp"
+                android:transformPivotY="-40dp"
+                android:translationY="@dimen/_10sdp"
+                app:progressBackgroundColor="@color/colorPrimary"
+                app:progressColor="#00000000"
+                app:thumb="@drawable/thumb2" />
             <RelativeLayout
+                android:translationY="-10dp"
+                android:padding="@dimen/_5sdp"
+
+                android:id="@+id/search_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
 
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-
-                android:id="@+id/group_divider"
-
-
-                android:layout_height="@dimen/_80sdp">
-
-                <com.marcinmoskala.arcseekbar.ArcSeekBar
-                    android:id="@+id/seekArc"
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="Search on Google"
+                    app:searchIcon="@null" />
 
-android:translationY="@dimen/_10sdp"
-                    android:padding="@dimen/_40sdp"
-                    android:layout_marginTop="-60dp"
-                    android:hapticFeedbackEnabled="true"
-                    app:progressBackgroundColor="@color/colorPrimary"
-                    app:progressColor="#00000000"
-                    app:thumb="@drawable/thumb2" />
-
-
-
-
-
-            </RelativeLayout>
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_below="@+id/group_divider"
-
-                    android:background="@drawable/bg_bottomsheet"
-                    android:layout_height="@dimen/_50sdp">
-
-                </FrameLayout>
             </RelativeLayout>
 
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycalDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
+
+                />
 
 
         </LinearLayout>
+    </RelativeLayout>
 
-    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/up_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/arrow"
-        app:layout_anchor="@+id/bottomSheet"
-        app:layout_anchorGravity="top|center" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
