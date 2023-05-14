@@ -19,11 +19,11 @@
         android:orientation="vertical"
         app:layout_behavior="@string/bottom_sheet_behavior"
 
-        android:layout_height="400dp">
+        android:layout_height="450dp">
         <TextView
             android:id="@+id/firstletter"
             android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_150sdp"
+            android:layout_height="@dimen/_140sdp"
             android:layout_above="@id/recycalview"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_20sdp"
@@ -34,12 +34,12 @@
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="34sp"
-            android:translationY="-20dp" />
+            android:translationY="-35dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycalview"
             android:layout_width="match_parent"
-           android:translationY="-140dp"
+           android:translationY="-160dp"
             android:layout_height="@dimen/_140sdp"
 
             android:layout_alignParentBottom="true"
@@ -89,13 +89,13 @@
 
 
                 android:padding="@dimen/_30sdp"
-                android:transformPivotY="-40dp"
+                android:transformPivotY="-90dp"
                 android:translationY="@dimen/_10sdp"
                 app:progressBackgroundColor="@color/colorPrimary"
                 app:progressColor="#00000000"
                 app:thumb="@drawable/thumb2" />
             <RelativeLayout
-                android:translationY="-10dp"
+                android:translationY="-30dp"
                 android:padding="@dimen/_5sdp"
 
                 android:id="@+id/search_layout"
@@ -103,20 +103,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom">
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    app:iconifiedByDefault="false"
-                    app:queryHint="Search on Google"
-                    app:searchIcon="@null" />
+                <include layout="@layout/serachview"
+                    />
+
 
             </RelativeLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycalDrawer"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 

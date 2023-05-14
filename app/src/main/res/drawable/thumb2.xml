@@ -10,15 +10,15 @@
                 android:startColor="@color/colorAccent" />
 
             <size
-                android:height="30dp"
-                android:width="30dp" />
+                android:height="40dp"
+                android:width="40dp" />
 
         </shape>
     </item>
 
     <item
-        android:bottom="7dp"
-        android:left="7dp"
+        android:bottom="17dp"
+        android:left="17dp"
         android:right="17dp"
         android:top="17dp">
         <shape android:shape="oval">

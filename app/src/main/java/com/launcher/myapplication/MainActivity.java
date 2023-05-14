@@ -478,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         RecyclerView recyclerView = findViewById(R.id.recycalDrawer);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,6,RecyclerView.VERTICAL,false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.VERTICAL,false));
         Adapter adapter1 = new Adapter(this,installedAppList,pm);
         recyclerView.setAdapter(adapter1);
 
