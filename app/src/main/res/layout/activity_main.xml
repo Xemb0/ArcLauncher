@@ -11,7 +11,8 @@
     <RelativeLayout
 
         app:behavior_peekHeight="340dp"
-        android:background="@drawable/bg_bottomsheet"
+
+        android:background="@drawable/shadow_bottomsheet"
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
 
