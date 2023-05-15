@@ -460,7 +460,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initializeDrawer() {
-        View mBottomSheet = findViewById(R.id.bottomSheet);
         View mBottomSheet1 = findViewById(R.id.bottomSheet2);
         RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
         recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
@@ -485,11 +484,9 @@ public class MainActivity extends AppCompatActivity {
 
         final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
 
-       final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
 
         mBottomSheetBehavior1.setHideable(false);
-        mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
 
@@ -497,11 +494,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStateChanged(@NonNull View bottomSheet1, int newState) {
                 if(newState == BottomSheetBehavior.STATE_EXPANDED){
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
 
                 }
                 else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
                 }
 
 
@@ -520,30 +517,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        mBottomSheetBehavior.setPeekHeight(0);
-
-        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if(newState == BottomSheetBehavior.STATE_EXPANDED)
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-            }
-
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset > 0.5f) {
-                    // Disable dragging when the bottom sheet is more than 50% expanded
-                    mBottomSheetBehavior.setDraggable(false);
-                } else {
-                    // Enable dragging when the bottom sheet is less than 50% expanded
-                    mBottomSheetBehavior.setDraggable(false);
-                }
-            }
-        });
 
 
 

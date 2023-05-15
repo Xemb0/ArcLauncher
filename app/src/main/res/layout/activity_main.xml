@@ -10,21 +10,19 @@
 
     <RelativeLayout
 
-        style="@style/Animation.Design.BottomSheetDialog"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="380dp"
+        app:behavior_peekHeight="340dp"
         android:background="@drawable/bg_bottomsheet"
         android:id="@+id/bottomSheet"
-        app:behavior_hideable="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+        android:layout_height="@dimen/_250sdp"
         android:layout_gravity="bottom">
         <TextView
             android:id="@+id/firstletter"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_120sdp"
 
-            android:layout_centerHorizontal="true"
+        android:layout_centerHorizontal="true"
 
             android:background="@drawable/circular_backgraound"
             android:fontFamily="sans-serif"
@@ -35,6 +33,7 @@
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycalview"
+            android:translationY="-120dp"
             android:layout_width="match_parent"
             android:layout_below="@id/firstletter"
             android:layout_height="@dimen/_130sdp"
@@ -46,9 +45,11 @@
 
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
+       android:background="@drawable/bg_bottomsheet"
         android:layout_height="180dp">
 
         <ImageView
