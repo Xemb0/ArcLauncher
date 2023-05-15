@@ -5,7 +5,8 @@
     <gradient
         android:type="linear"
         android:angle="90"
-        android:startColor="#68050000"
+        android:startColor="#68F1F1F1"
+        android:centerColor="#68050000"
         android:endColor="#00FFFFFF" />
 
     <!-- Curved corners -->
@@ -14,6 +15,7 @@
     <!-- Set the size -->
     <size android:width="8dp" android:height="42dp" />
 
+    <!-- Add transparent padding at the top -->
 
 
 </shape>

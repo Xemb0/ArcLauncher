@@ -113,9 +113,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         TextView letterTextView = findViewById(R.id.firstletter);
-        letterTextView.setVisibility(View.VISIBLE);
+        View IconShadow = findViewById(R.id.Icon_shadow);
+        letterTextView.setVisibility(View.INVISIBLE);
         View mBottomSheet2 = findViewById(R.id.bottomSheet2);
         final BottomSheetBehavior<View> mBottomSheetBehavior2 = BottomSheetBehavior.from(mBottomSheet2);
+                IconShadow.setVisibility(View.INVISIBLE);
 
         seekArc.setOnProgressChangedListener(new ProgressListener() {
             @Override
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 mBottomSheetBehavior2.setDraggable(false);
                 layoutManager.scrollToPosition(progress);
                 letterTextView.setVisibility(View.VISIBLE);
+                IconShadow.setVisibility(View.VISIBLE);
 
 
                 String packageName = apps.get(progress).activityInfo.packageName;
@@ -148,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
        seekArc.setOnStopTrackingTouch(new ProgressListener() {
            @Override
            public void invoke(int i) {
+               letterTextView.setVisibility(View.INVISIBLE);
+               IconShadow.setVisibility(View.INVISIBLE);
                mBottomSheetBehavior2.setDraggable(true);
            }
        });
@@ -166,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
 
                 super.onScrollStateChanged(recyclerView, newState);
-                letterTextView.setVisibility(View.INVISIBLE);
 
             }
         });
