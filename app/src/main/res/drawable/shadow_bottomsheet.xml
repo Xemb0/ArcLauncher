@@ -21,8 +21,8 @@
         android:top="8dp">
         <shape android:shape="oval">
             <gradient
-                android:startColor="#00D8D8D8"
-                android:endColor="#171B1B1B"
+                android:startColor="#32707070"
+                android:endColor="#231B1B1B"
                 android:type="radial"
                 android:gradientRadius="9980dp"
                 android:angle="95" />
