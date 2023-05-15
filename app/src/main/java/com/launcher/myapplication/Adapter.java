@@ -131,6 +131,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         });
 
+        holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Handle the long click event here
+
+                ResolveInfo launchable = lapps.get(position);
+                showPopupWindowForApp(launchable,holder.itemlayout,pm);
+                return true;
+            }
+        });
     }
 
     @Override
