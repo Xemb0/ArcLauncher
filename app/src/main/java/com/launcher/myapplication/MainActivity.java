@@ -491,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mBottomSheetBehavior1.setPeekHeight(550);
+
 
         mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
