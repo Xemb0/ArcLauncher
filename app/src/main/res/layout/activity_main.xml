@@ -73,12 +73,13 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/bottomSheet2"
+        android:background="@drawable/bottom_sheet_transition"
         style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_peekHeight="@dimen/_50sdp"
 
-       android:background="@drawable/onesideround"
+
         android:orientation="vertical"
 
         app:layout_behavior="@string/bottom_sheet_behavior">

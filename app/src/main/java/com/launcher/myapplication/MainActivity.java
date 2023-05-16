@@ -6,7 +6,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
@@ -17,7 +20,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -26,14 +32,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import com.marcinmoskala.arcseekbar.ProgressListener;
 
@@ -59,7 +68,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+
+
+
+        // Retrieve the root view of your activity
+        View rootView = getWindow().getDecorView();
+
+        int backgroundColor = 0; // Default color
+
+        Drawable background = rootView.getBackground();
+        if (background instanceof ColorDrawable) {
+            backgroundColor = ((ColorDrawable) background).getColor();
+        }
+// Add an OnApplyWindowInsetsListener to the root view
+        int finalBackgroundColor = backgroundColor;
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            // Get the system window insets
+            Insets systemWindowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Apply the insets as padding to the root view
+            v.setPadding(
+                    systemWindowInsets.left,
+                    systemWindowInsets.top,
+                    systemWindowInsets.right,
+                    systemWindowInsets.bottom
+            );
+            v.setBackgroundColor(finalBackgroundColor);
+            // Return the consumed WindowInsets to prevent further dispatch
+            return WindowInsetsCompat.CONSUMED;
+        });
         setContentView(R.layout.activity_main);
+
         initializeDrawer();
         gestureDetector = new GestureDetector(this, new GestureListener());
 
@@ -168,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -177,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
 
@@ -463,10 +503,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 // add this to your onCreate method
+private TransitionDrawable transitionDrawable;
+    private RelativeLayout bottomSheetLayout;
 
-
-
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void initializeDrawer() {
+        View mBottomSheet = findViewById(R.id.bottomSheet);
         View mBottomSheet1 = findViewById(R.id.bottomSheet2);
         RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
         recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
@@ -492,19 +534,29 @@ public class MainActivity extends AppCompatActivity {
         final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
 
 
+       final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
 
         mBottomSheetBehavior1.setHideable(false);
+        mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-
+        RelativeLayout bottomSheet2 = findViewById(R.id.bottomSheet2);
+        transitionDrawable = (TransitionDrawable) getResources().getDrawable(R.drawable.bottom_sheet_transition);
+        transitionDrawable.setAlpha(0);
+        bottomSheet2.setBackground(transitionDrawable);
         mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet1, int newState) {
                 if(newState == BottomSheetBehavior.STATE_EXPANDED){
 
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 }
                 else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 }
 
@@ -513,6 +565,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSlide(@NonNull View bottomSheet1, float slideOffset) {
+                int transitionAlpha = (int) (slideOffset * 255);
+                transitionDrawable.setAlpha(transitionAlpha);
                 if (slideOffset > 0.5f) {
                     // Disable dragging when the bottom sheet is more than 50% expanded
                     mBottomSheetBehavior1.setDraggable(true);
@@ -524,6 +578,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mBottomSheetBehavior.setPeekHeight(0);
+
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED)
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+            }
+
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
+                } else {
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
+                }
+            }
+        });
 
 
 
