@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -33,16 +35,17 @@
 
         tools:targetApi="31">
         <activity
-            android:launchMode="singleTask"
-            android:clearTaskOnLaunch="true"
-            android:stateNotNeeded="true"
-            android:resumeWhilePausing="true"
-            android:taskAffinity=""
             android:name=".ArcSettingsActivity"
             android:theme="@style/Home.Light"
             android:exported="true">
         </activity>
         <activity
+
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+            android:resumeWhilePausing="true"
+            android:taskAffinity=""
             android:name=".MainActivity"
             android:theme="@style/Home.Light"
             android:exported="true">

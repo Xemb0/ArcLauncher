@@ -1,6 +1,7 @@
 package com.launcher.myapplication;
 
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,7 +25,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -52,20 +56,25 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-
-
+    private int previousProgress = -1;
+    VibrationEffect vibrationEffect;
     //for install and uninstall behaviour
 
 
     ///refresh when unistall
 
     private GestureDetector gestureDetector1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // This callback will only be called when MyFragment is at least Started.
+
+
+
+        // The callback can be enabled or disabled here or in handleOnBackPressed()
+
+
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
@@ -165,6 +174,23 @@ public class MainActivity extends AppCompatActivity {
         seekArc.setOnProgressChangedListener(new ProgressListener() {
             @Override
             public void invoke(int progress) {
+                if (progress != previousProgress) { // check if progress has changed
+                    final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    final VibrationEffect vibrationEffect1;
+
+                    // this is the only type of the vibration which requires system version Oreo (API 26)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                        // this effect creates the vibration of default amplitude for 1000ms(1 sec)
+                        vibrationEffect1 = VibrationEffect.createOneShot(1, VibrationEffect.DEFAULT_AMPLITUDE);
+
+                        // it is safe to cancel other vibrations currently taking place
+                        vibrator.cancel();
+                        vibrator.vibrate(vibrationEffect1);
+                    }
+
+                    previousProgress = progress; // update previous progress value
+                }
 
                 mBottomSheetBehavior2.setDraggable(false);
                 layoutManager.scrollToPosition(progress);
@@ -183,29 +209,17 @@ public class MainActivity extends AppCompatActivity {
                 String alphabet = String.valueOf(appName.charAt(0));
 
                 letterTextView.setText(alphabet);
-
-
             }
-
-
-
-
         });
-       seekArc.setOnStopTrackingTouch(new ProgressListener() {
-           @Override
-           public void invoke(int i) {
-               letterTextView.setVisibility(View.INVISIBLE);
-               IconShadow.setVisibility(View.INVISIBLE);
-               mBottomSheetBehavior2.setDraggable(true);
-           }
-       });
 
-
-
-
-
-
-
+        seekArc.setOnStopTrackingTouch(new ProgressListener() {
+            @Override
+            public void invoke(int i) {
+                letterTextView.setVisibility(View.INVISIBLE);
+                IconShadow.setVisibility(View.INVISIBLE);
+                mBottomSheetBehavior2.setDraggable(true);
+            }
+        });
 
 
         recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -618,12 +632,44 @@ private TransitionDrawable transitionDrawable;
         });
 
 
+// Get a reference to your bottom sheet view
+        View bottomSheetView = findViewById(R.id.homescreen);
+
+// Set an OnClickListener on the bottom sheet view
+
+        bottomSheetView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                final VibrationEffect vibrationEffect1;
+
+                // this is the only type of the vibration which requires system version Oreo (API 26)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                    // this effect creates the vibration of default amplitude for 1000ms(1 sec)
+                    vibrationEffect1 = VibrationEffect.createOneShot(1, VibrationEffect.DEFAULT_AMPLITUDE);
+
+                    // it is safe to cancel other vibrations currently taking place
+                    vibrator.cancel();
+                    vibrator.vibrate(vibrationEffect1);
+                }
+            }
+        });
+
 
 
     }
 
 
 
+
+
+
+
+    @Override
+    public void onBackPressed() {
+
+    }
 
 
 }
