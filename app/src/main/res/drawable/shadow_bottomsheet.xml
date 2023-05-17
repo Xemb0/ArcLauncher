@@ -1,30 +1,28 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Background -->
     <item
-        android:bottom="-300dp"
-        android:left="-150dp"
-        android:right="-150dp"
-        android:top="10dp">
+        android:bottom="@dimen/_minus60sdp"
+        android:left="@dimen/_minus60sdp"
+        android:right="@dimen/_minus60sdp"
+        android:top="@dimen/_8sdp">
         <shape android:shape="oval">
             <solid android:color="#00000000" /> <!-- Transparent background -->
-            <stroke
-                android:color="#25292929"
-                android:width="1dp" /> <!-- Outer stroke -->
+          <!-- Outer stroke -->
         </shape>
     </item>
 
     <!-- Gradient -->
     <item
-        android:bottom="-298dp"
-        android:left="-148dp"
-        android:right="-148dp"
-        android:top="8dp">
+        android:bottom="@dimen/_minus60sdp"
+        android:left="@dimen/_minus60sdp"
+        android:right="@dimen/_minus60sdp"
+        android:top="@dimen/_8sdp">
         <shape android:shape="oval">
             <gradient
-                android:startColor="#32707070"
-                android:endColor="#231B1B1B"
+                android:startColor="#08000000"
+                android:endColor="#07101010"
                 android:type="radial"
-                android:gradientRadius="9980dp"
+                android:gradientRadius="@dimen/_600sdp"
                 android:angle="95" />
         </shape>
     </item>

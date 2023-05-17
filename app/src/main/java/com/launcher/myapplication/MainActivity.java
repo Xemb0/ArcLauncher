@@ -56,8 +56,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private Vibrator vibrator;
+    private VibrationEffect vibrationEffect;
+
+
+
     private int previousProgress = -1;
-    VibrationEffect vibrationEffect;
     //for install and uninstall behaviour
 
 
@@ -68,12 +73,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // This callback will only be called when MyFragment is at least Started.
-
-
-
-        // The callback can be enabled or disabled here or in handleOnBackPressed()
-
+        // This callback will only be called when MyFragment is at least S
 
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -175,20 +175,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void invoke(int progress) {
                 if (progress != previousProgress) { // check if progress has changed
-                    final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    final VibrationEffect vibrationEffect1;
-
-                    // this is the only type of the vibration which requires system version Oreo (API 26)
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
-                        // this effect creates the vibration of default amplitude for 1000ms(1 sec)
-                        vibrationEffect1 = VibrationEffect.createOneShot(1, VibrationEffect.DEFAULT_AMPLITUDE);
-
-                        // it is safe to cancel other vibrations currently taking place
-                        vibrator.cancel();
-                        vibrator.vibrate(vibrationEffect1);
-                    }
-
+               vibrate();
                     previousProgress = progress; // update previous progress value
                 }
 
@@ -327,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             View view = findViewById(R.id.homescreen);
+            vibrate();
 
 
             float x =e.getRawX();
@@ -411,9 +399,11 @@ public class MainActivity extends AppCompatActivity {
                         if (diffX > 0) {
                             // Open the dialer application
                             Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
+                            vibrate();
                             startActivity(dialerIntent);
                         } else {  Intent intent = new Intent(Intent.ACTION_MAIN);
                             intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+                            vibrate();
                             startActivity(intent);
 
                         }
@@ -446,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
                             if((mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)){
                                 mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }else {
+                                vibrate();
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                             }
@@ -568,8 +559,10 @@ private TransitionDrawable transitionDrawable;
 
                 }
                 else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    vibrate();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
+                    vibrate();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 }
@@ -637,24 +630,6 @@ private TransitionDrawable transitionDrawable;
 
 // Set an OnClickListener on the bottom sheet view
 
-        bottomSheetView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                final VibrationEffect vibrationEffect1;
-
-                // this is the only type of the vibration which requires system version Oreo (API 26)
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
-                    // this effect creates the vibration of default amplitude for 1000ms(1 sec)
-                    vibrationEffect1 = VibrationEffect.createOneShot(1, VibrationEffect.DEFAULT_AMPLITUDE);
-
-                    // it is safe to cancel other vibrations currently taking place
-                    vibrator.cancel();
-                    vibrator.vibrate(vibrationEffect1);
-                }
-            }
-        });
 
 
 
@@ -669,6 +644,25 @@ private TransitionDrawable transitionDrawable;
     @Override
     public void onBackPressed() {
 
+    }
+
+    private void vibrate() {
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            VibrationEffect vibrationEffect = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // For devices with API level Q and above
+                vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK);
+            } else {
+                // For devices with API level Oreo (API 26) to Pie (API 28)
+                vibrationEffect = VibrationEffect.createOneShot(1, VibrationEffect.DEFAULT_AMPLITUDE);
+            }
+            vibrator.vibrate(vibrationEffect);
+        } else {
+            // For devices with API level 21 to 25
+            vibrator.vibrate(50);
+        }
     }
 
 

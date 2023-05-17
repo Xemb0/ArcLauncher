@@ -8,8 +8,8 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="35dp"
+        android:layout_width="@dimen/_48sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
 
@@ -18,9 +18,9 @@
         app:flow_firstVerticalBias="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.037"
+        app:layout_constraintHorizontal_bias="0.0907"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Uninstall_button"
+        app:layout_constraintTop_toBottomOf="@+id/homescreen_popup"
         app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +30,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0"
+        android:id="@+id/homescreen_popup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -60,7 +61,6 @@
             android:id="@+id/Widgets"
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            android:layout_alignEnd="@id/app_info_button"
             android:background="@drawable/circular_button"
             android:hapticFeedbackEnabled="true"
             android:padding="@dimen/_11sdp"
@@ -83,7 +83,6 @@
             android:id="@+id/ArcSettings"
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            android:layout_alignEnd="@id/app_info_button"
             android:background="@drawable/circular_button"
             android:hapticFeedbackEnabled="true"
             android:padding="@dimen/_11sdp"

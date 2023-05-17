@@ -10,10 +10,10 @@
         android:endColor="#00FFFFFF" />
 
     <!-- Curved corners -->
-    <corners android:radius="56dp" />
+    <corners android:radius="@dimen/_56sdp" />
 
     <!-- Set the size -->
-    <size android:width="8dp" android:height="42dp" />
+    <size android:width="@dimen/_8sdp" android:height="@dimen/_42sdp" />
 
     <!-- Add transparent padding at the top -->
 

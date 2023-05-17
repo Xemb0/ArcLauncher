@@ -8,7 +8,7 @@
     </item>
 
     <!-- Inner circle -->
-    <item android:top="300dp" android:left="300dp" android:right="300dp" android:bottom="300dp"> <!-- Add padding to position the inner circle -->
+    <item android:top="@dimen/_300sdp" android:left="@dimen/_300sdp" android:right="@dimen/_300sdp" android:bottom="@dimen/_300sdp"> <!-- Add padding to position the inner circle -->
         <shape android:shape="oval">
             <solid android:color="#FF6B4F"/> <!-- The color of the inner circle -->
         </shape>
