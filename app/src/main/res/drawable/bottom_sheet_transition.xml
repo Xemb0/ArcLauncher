@@ -1,3 +1,3 @@
 <transition xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/colorBottomSheetCollapsed" />
+    <item android:drawable="@drawable/rounded_shape" />
 </transition>

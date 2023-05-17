@@ -127,13 +127,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        app:layout_anchor="@id/bottomSheet"
+        app:layout_anchor="@id/bottomSheet2"
         app:layout_anchorGravity="top"
         android:orientation="vertical"
-        android:translationY="@dimen/_minus60sdp"
 
 
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/_450sdp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_gravity="center"
