@@ -24,10 +24,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycalview"
             android:layout_width="match_parent"
-           android:translationY="-130dp"
+           android:translationY="@dimen/_5sdp"
             android:layout_height="@dimen/_140sdp"
 
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
 
 
             />
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_20sdp"
             android:layout_below="@id/seekArc"
-            android:translationY="-74dp"
+            android:translationY="@dimen/_minus50sdp"
             android:src="@drawable/arrow"
             app:layout_anchor="@+id/bottomSheettop2"
             app:layout_anchorGravity="top|center" />
@@ -127,10 +127,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        app:layout_anchor="@id/bottomSheet2"
+        app:layout_anchor="@id/bottomSheet"
         app:layout_anchorGravity="top"
         android:orientation="vertical"
-        android:translationY="-210dp"
+        android:translationY="@dimen/_minus60sdp"
 
 
         android:layout_height="wrap_content">
