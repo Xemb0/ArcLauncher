@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -164,7 +165,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         ImageView images;
 
         TextView text;
-        RelativeLayout itemlayout;
+        ConstraintLayout itemlayout;
         public ViewHolder(View view) {
             super(view);
             images = view.findViewById(R.id.image);
