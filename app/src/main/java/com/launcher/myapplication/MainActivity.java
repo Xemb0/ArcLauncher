@@ -117,109 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
-//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
-        PackageManager pm = this.getPackageManager();
-        Intent main = new Intent(Intent.ACTION_MAIN, null);
-        main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
-        Collections.sort(apps,
-                new ResolveInfo.DisplayNameComparator(pm));
-        Adapter adapter = new Adapter(this, apps, pm);
-        recyclerDrawer.setAdapter(adapter);
-        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
-
-        final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                String packageName = intent.getData().getSchemeSpecificPart();
-                if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
-                    adapter.refreshAppList();
-                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
-                    adapter.refreshAppList();
-                }
-            }
-        };
-
-
-        /*                                                  install and uninstall behaviour                                               */
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        intentFilter.addDataScheme("package");
-        registerReceiver(installBroadcastReceiver, intentFilter);
-
-
-
-        /*                          seekbar implimentation                         */
-
-
-        ArcSeekBar seekArc = findViewById(R.id.seekArc);
-        recyclerDrawer.setAdapter(adapter);
-        int itemCount = adapter.getItemCount();
-        CircleLayoutManager layoutManager = new CircleLayoutManager(this);
-        recyclerDrawer.setLayoutManager(layoutManager);
-        seekArc.setMaxProgress(itemCount - 1);
-
-
-        TextView letterTextView = findViewById(R.id.firstletter);
-        View IconShadow = findViewById(R.id.Icon_shadow);
-        letterTextView.setVisibility(View.INVISIBLE);
-        View mBottomSheet2 = findViewById(R.id.bottomSheet2);
-        final BottomSheetBehavior<View> mBottomSheetBehavior2 = BottomSheetBehavior.from(mBottomSheet2);
-                IconShadow.setVisibility(View.INVISIBLE);
-
-        seekArc.setOnProgressChangedListener(new ProgressListener() {
-            @Override
-            public void invoke(int progress) {
-                if (progress != previousProgress) { // check if progress has changed
-               vibrate();
-                    previousProgress = progress; // update previous progress value
-                }
-
-                mBottomSheetBehavior2.setDraggable(false);
-                layoutManager.scrollToPosition(progress);
-                letterTextView.setVisibility(View.VISIBLE);
-                IconShadow.setVisibility(View.VISIBLE);
-
-
-                String packageName = apps.get(progress).activityInfo.packageName;
-                String appName;
-                try {
-                    appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
-                } catch (PackageManager.NameNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-
-                String alphabet = String.valueOf(appName.charAt(0));
-
-                letterTextView.setText(alphabet);
-            }
-        });
-
-        seekArc.setOnStopTrackingTouch(new ProgressListener() {
-            @Override
-            public void invoke(int i) {
-                letterTextView.setVisibility(View.INVISIBLE);
-                IconShadow.setVisibility(View.INVISIBLE);
-                mBottomSheetBehavior2.setDraggable(true);
-            }
-        });
-
-
-        recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-
-                super.onScrollStateChanged(recyclerView, newState);
-
-            }
-        });
-
-
-
 
         /*                       start tracking apps                  */
 
@@ -515,25 +412,119 @@ private TransitionDrawable transitionDrawable;
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
         View mBottomSheet1 = findViewById(R.id.bottomSheet2);
+
+
+
         RecyclerView recyclerDrawer = findViewById(R.id.recycalview);
-        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
         PackageManager pm = this.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
-        Collections.sort(installedAppList,
+        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
+        Collections.sort(apps,
                 new ResolveInfo.DisplayNameComparator(pm));
-        Adapter adapter = new Adapter(this, installedAppList, pm);
+        Adapter adapter = new Adapter(this, apps, pm);
         recyclerDrawer.setAdapter(adapter);
-//        mDrawerGridView.setLayoutManager(mGridLayoutManager);
+        recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
+
+        final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                String packageName = intent.getData().getSchemeSpecificPart();
+                if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                    adapter.refreshAppList();
+
+                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+                    adapter.refreshAppList();
+                }
+            }
+        };
+
+
+        /*                                                  install and uninstall behaviour                                               */
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        registerReceiver(installBroadcastReceiver, intentFilter);
+
+
+
+        /*                          seekbar implimentation                         */
+
+
+        ArcSeekBar seekArc = findViewById(R.id.seekArc);
+        recyclerDrawer.setAdapter(adapter);
+        int itemCount = adapter.getItemCount();
+        CircleLayoutManager layoutManager = new CircleLayoutManager(this);
+        recyclerDrawer.setLayoutManager(layoutManager);
+        seekArc.setMaxProgress(itemCount - 1);
+
+
+        TextView letterTextView = findViewById(R.id.firstletter);
+        View IconShadow = findViewById(R.id.Icon_shadow);
+        letterTextView.setVisibility(View.INVISIBLE);
+        View mBottomSheet2 = findViewById(R.id.bottomSheet2);
+        final BottomSheetBehavior<View> mBottomSheetBehavior2 = BottomSheetBehavior.from(mBottomSheet2);
+        IconShadow.setVisibility(View.INVISIBLE);
+
+        seekArc.setOnProgressChangedListener(new ProgressListener() {
+            @Override
+            public void invoke(int progress) {
+                if (progress != previousProgress) { // check if progress has changed
+                    vibrate();
+                    previousProgress = progress; // update previous progress value
+                }
+
+                mBottomSheetBehavior2.setDraggable(false);
+                layoutManager.scrollToPosition(progress);
+                letterTextView.setVisibility(View.VISIBLE);
+                IconShadow.setVisibility(View.VISIBLE);
+
+
+                String packageName = apps.get(progress).activityInfo.packageName;
+                String appName;
+                try {
+                    appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+                } catch (PackageManager.NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String alphabet = String.valueOf(appName.charAt(0));
+
+                letterTextView.setText(alphabet);
+            }
+        });
+
+        seekArc.setOnStopTrackingTouch(new ProgressListener() {
+            @Override
+            public void invoke(int i) {
+                letterTextView.setVisibility(View.INVISIBLE);
+                IconShadow.setVisibility(View.INVISIBLE);
+                mBottomSheetBehavior2.setDraggable(true);
+            }
+        });
+
+
+        recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+        });
+
+
+
 
 
 
         RecyclerView recyclerView = findViewById(R.id.recycalDrawer);
         recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.VERTICAL,false));
-        Adapter adapter1 = new Adapter(this,installedAppList,pm);
-        recyclerView.setAdapter(adapter1);
+        recyclerView.setAdapter(adapter);
 
 
         final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
