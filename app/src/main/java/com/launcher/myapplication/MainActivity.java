@@ -1,11 +1,6 @@
 package com.launcher.myapplication;
 
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,14 +9,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -36,17 +29,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import com.marcinmoskala.arcseekbar.ProgressListener;
 
@@ -365,9 +353,7 @@ public class MainActivity extends AppCompatActivity {
                     if (Math.abs(diffX) > Math.abs(diffY)) {
                         if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                             if (diffX > 0) {
-                                onSwipeRight();
                             } else {
-                                onSwipeLeft();
                             }
                             result = true;
                         }
@@ -386,21 +372,6 @@ public class MainActivity extends AppCompatActivity {
                 return result;
             }
 
-            public void onSwipeRight() {
-                // do something when swiped right
-            }
-
-            public void onSwipeLeft() {
-                // do something when swiped left
-            }
-
-            public void onSwipeTop() {
-                // do something when swiped up
-            }
-
-            public void onSwipeBottom() {
-                // do something when swiped down
-            }
         }
 
 
@@ -521,9 +492,8 @@ private TransitionDrawable transitionDrawable;
 
 
 
-
         RecyclerView recyclerView = findViewById(R.id.recycalDrawer);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.VERTICAL,false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.HORIZONTAL,false));
         recyclerView.setAdapter(adapter);
 
 

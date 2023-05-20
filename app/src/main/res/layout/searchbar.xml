@@ -5,20 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:layout_height="@dimen/_30sdp"
+    android:layout_marginHorizontal="@dimen/_20sdp"
 
-    android:layout_height="@dimen/_40sdp"
-    android:layout_marginHorizontal="@dimen/_10sdp"
-
-    android:background="@drawable/outersearchbar">
+    android:background="@drawable/bg_round_corners">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
-        android:layout_width="@dimen/_140sdp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_80sdp"
 
-        android:layout_height="@dimen/_27sdp"
+        android:layout_height="match_parent"
 
         android:layout_gravity="center"
-        android:background="@drawable/searchbar"
         android:iconifiedByDefault="false"
 
         android:scaleType="fitCenter"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.533"
         app:queryHint="Search on Google"
-        app:searchIcon="@drawable/google_icon" />
+        app:searchIcon="@drawable/icon_google" />
 
     <ImageButton
         android:id="@+id/lence_icon"
@@ -38,7 +38,7 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/_9sdp"
 
-        android:background="@drawable/lence_icon"
+        android:background="@drawable/icon_google_lense"
         android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,17 +47,18 @@
         android:contentDescription="TODO" />
     <ImageButton
         android:id="@+id/Assistance_button"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_width="@dimen/_17sdp"
+        android:layout_height="@dimen/_17sdp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_9sdp"
 
-        android:background="@drawable/assiance_icon"
+        android:background="@drawable/icon_google_assistance"
         android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lence_icon"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="TODO" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

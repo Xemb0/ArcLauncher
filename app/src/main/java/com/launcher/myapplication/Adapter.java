@@ -58,7 +58,6 @@ import static java.lang.Math.max;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
-    public  final int UNINSTALL_REQUEST_CODE = 1;
     public int position;
      List<ResolveInfo> lapps;
      Context context;

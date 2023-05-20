@@ -77,7 +77,7 @@
         style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_peekHeight="@dimen/_50sdp"
+        app:behavior_peekHeight="@dimen/_40sdp"
 
 
         android:orientation="vertical"
@@ -104,14 +104,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom">
 
-                <include layout="@layout/serachview"
+                <include layout="@layout/searchbar"
                     />
 
 
             </RelativeLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.launcher.myapplication.CustomRecyclerView
                 android:id="@+id/recycalDrawer"
 
                 android:layout_width="match_parent"

@@ -3,7 +3,7 @@
     <color name="colorPrimary">#5c6bc0</color>
     <color name="colorPrimaryDark">#4254b3</color>
     <color name="colorAccent">#5c6bc0</color>
-    <color name="colorBottomSheetExpanded">#E9FFFFFF</color>
+    <color name="colorBottomSheetExpanded">#E2575757</color>
 
 
     <color name="Light.Background">#f9f9f9</color>
@@ -28,7 +28,8 @@
     <color name="introText">#ff444444</color>
     <color name="introButton">#7d000000</color>
 
-    <color name="darkmode_gray">#E0E6F1</color>
-    <color name="bg">#FFFFFF</color>
-    <color name="icon_name">#000000</color>
+    <color name="bg">#333333</color>
+    <color name="darkmode_gray">#2e2f31</color>
+
+    <color name="icon_name">#FFFFFF</color>
 </resources>
