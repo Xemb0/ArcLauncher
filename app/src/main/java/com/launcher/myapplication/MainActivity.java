@@ -44,7 +44,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private BottomSheetBehavior<View> mBottomSheetBehavior1;
     private Vibrator vibrator;
     private VibrationEffect vibrationEffect;
 
@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     ///refresh when unistall
 
     private GestureDetector gestureDetector1;
+
+    public MainActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +106,131 @@ public class MainActivity extends AppCompatActivity {
 
 
         gestureDetector1 = new GestureDetector(this, new MyGestureListener2());
+
+
+
+
+
+
+
+
+
+
+
+        View mBottomSheet = findViewById(R.id.bottomSheet);
+        View mBottomSheet1 = findViewById(R.id.bottomSheet2);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
+
+
+        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
+
+        mBottomSheetBehavior1.setHideable(false);
+        mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        RelativeLayout bottomSheet2 = findViewById(R.id.bottomSheet2);
+        transitionDrawable = (TransitionDrawable) getResources().getDrawable(R.drawable.bottom_sheet_transition);
+        transitionDrawable.setAlpha(0);
+        bottomSheet2.setBackground(transitionDrawable);
+        mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet1, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                }
+                else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    vibrate();
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
+                    vibrate();
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                }
+
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet1, float slideOffset) {
+                int transitionAlpha = (int) (slideOffset * 255);
+                transitionDrawable.setAlpha(transitionAlpha);
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior1.setDraggable(true);
+                } else {
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior1.setDraggable(true);
+                }
+            }
+        });
+
+
+
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mBottomSheetBehavior.setPeekHeight(0);
+
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED)
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+            }
+
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset > 0.5f) {
+                    // Disable dragging when the bottom sheet is more than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
+                } else {
+                    // Enable dragging when the bottom sheet is less than 50% expanded
+                    mBottomSheetBehavior.setDraggable(false);
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+        mBottomSheet1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector1.onTouchEvent(event);
+            }
+        });
+
+
+
+
+
+
+
+        HomeWatcher mHomeWatcher = new HomeWatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+
+                Toast.makeText(MainActivity.this, "homepress", Toast.LENGTH_SHORT).show();
+                // do something here...
+            }
+            @Override
+            public void onHomeLongPressed() {
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                Toast.makeText(MainActivity.this, "homepresslong", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mHomeWatcher.startWatch();
+
+
 
 
 
@@ -381,8 +510,6 @@ private TransitionDrawable transitionDrawable;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void initializeDrawer() {
-        View mBottomSheet = findViewById(R.id.bottomSheet);
-        View mBottomSheet1 = findViewById(R.id.bottomSheet2);
 
 
 
@@ -496,96 +623,6 @@ private TransitionDrawable transitionDrawable;
         recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.HORIZONTAL,false));
         recyclerView.setAdapter(adapter);
 
-
-        final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet1);
-
-
-       final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-
-        mBottomSheetBehavior1.setHideable(false);
-        mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        RelativeLayout bottomSheet2 = findViewById(R.id.bottomSheet2);
-        transitionDrawable = (TransitionDrawable) getResources().getDrawable(R.drawable.bottom_sheet_transition);
-        transitionDrawable.setAlpha(0);
-        bottomSheet2.setBackground(transitionDrawable);
-        mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet1, int newState) {
-                if(newState == BottomSheetBehavior.STATE_EXPANDED){
-
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                }
-                else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
-                    vibrate();
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
-                    vibrate();
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                }
-
-
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet1, float slideOffset) {
-                int transitionAlpha = (int) (slideOffset * 255);
-                transitionDrawable.setAlpha(transitionAlpha);
-                if (slideOffset > 0.5f) {
-                    // Disable dragging when the bottom sheet is more than 50% expanded
-                    mBottomSheetBehavior1.setDraggable(true);
-                } else {
-                    // Enable dragging when the bottom sheet is less than 50% expanded
-                    mBottomSheetBehavior1.setDraggable(true);
-                }
-            }
-        });
-
-
-
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        mBottomSheetBehavior.setPeekHeight(0);
-
-        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if(newState == BottomSheetBehavior.STATE_EXPANDED)
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-            }
-
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset > 0.5f) {
-                    // Disable dragging when the bottom sheet is more than 50% expanded
-                    mBottomSheetBehavior.setDraggable(false);
-                } else {
-                    // Enable dragging when the bottom sheet is less than 50% expanded
-                    mBottomSheetBehavior.setDraggable(false);
-                }
-            }
-        });
-
-
-
-
-
-
-
-
-        mBottomSheet1.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector1.onTouchEvent(event);
-            }
-        });
-
-
 // Get a reference to your bottom sheet view
         View bottomSheetView = findViewById(R.id.homescreen);
 
@@ -602,10 +639,18 @@ private TransitionDrawable transitionDrawable;
 
 
 
+
+
+
+
+
     @Override
     public void onBackPressed() {
 
+
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
+
 
     private void vibrate() {
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

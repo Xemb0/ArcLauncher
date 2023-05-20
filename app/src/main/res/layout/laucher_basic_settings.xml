@@ -92,7 +92,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/Arc_clock"
+                    android:id="@+id/Arc_clock_switch"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="match_parent"
                     android:paddingHorizontal="@dimen/_5sdp"
