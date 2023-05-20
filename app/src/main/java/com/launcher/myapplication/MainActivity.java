@@ -2,6 +2,7 @@ package com.launcher.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -9,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -30,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -217,23 +221,103 @@ public class MainActivity extends AppCompatActivity {
         mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
             @Override
             public void onHomePressed() {
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                Toast.makeText(MainActivity.this, "homepress", Toast.LENGTH_SHORT).show();
-                // do something here...
             }
             @Override
             public void onHomeLongPressed() {
                 mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                Toast.makeText(MainActivity.this, "homepresslong", Toast.LENGTH_SHORT).show();
             }
         });
         mHomeWatcher.startWatch();
 
 
 
+        ImageButton lenceIcon = findViewById(R.id.lence_icon);
+        lenceIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open Google Lens application
+                PackageManager packageManager = getPackageManager();
+                Intent lensIntent = packageManager.getLaunchIntentForPackage("com.google.ar.lens");
+
+                if (lensIntent != null) {
+                    // Google Lens is installed, open the application
+                    startActivity(lensIntent);
+                } else {
+                    // Google Lens is not installed
+                    Toast.makeText(getApplicationContext(), "Google Lens is not installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ImageButton assistanceButton = findViewById(R.id.google_assistance);
+        assistanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open Google Assistant listener
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VOICE_COMMAND);
+                intent.setPackage("com.google.android.googlequicksearchbox");
+
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+
+                if (activities.size() > 0) {
+                    // Google Assistant is available, open the Assistant listener
+                    startActivity(intent);
+                } else {
+                    // Google Assistant is not available, prompt the user to install it
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.googlequicksearchbox")));
+                    } catch (ActivityNotFoundException e) {
+                        // Google Play Store app is not available on the device, open the Google Play Store website
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.googlequicksearchbox")));
+                    }
+                }
+            }
+        });
+
+        SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Reset the search view
+                searchView.setQuery("", false);
+                searchView.clearFocus();
+
+                // Close the search view
+                searchView.setIconified(true);
+
+                // Perform search using the query
+                String url = "https://www.google.com/search?q=" + query;
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                intent.setPackage("com.android.chrome"); // Specify Chrome package name
+
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+
+                if (activities.size() > 0) {
+                    // Chrome is installed, open the URL in Chrome
+                    startActivity(intent);
+                } else {
+                    // Chrome is not installed, handle the error or open in a different browser
+                    Toast.makeText(getApplicationContext(), "Chrome is not installed", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
 
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Handle text change in the search view if needed
+                return false;
+            }
+        });
 
         /*                       start tracking apps                  */
 
@@ -345,8 +429,8 @@ public class MainActivity extends AppCompatActivity {
             // Find the view inside the popup layout and set an onClickListener to it
             ImageButton wallpaper = popupView.findViewById(R.id.wallpaper);
 
-            ImageButton arcSettingsButton = popupView.findViewById(R.id.Widgets);
-            ImageButton widgetsButton = popupView.findViewById(R.id.ArcSettings);
+            ImageButton arcSettingsButton = popupView.findViewById(R.id.ArcSettings);
+            ImageButton widgetsButton = popupView.findViewById(R.id.Widgets);
             wallpaper.setOnClickListener(v -> {
 
                 //popup setwallpaper

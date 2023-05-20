@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.googlequicksearchbox.permission.ACCESS_ASSISTANT" />
+
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         android:minSdkVersion="30"
@@ -49,6 +51,7 @@
             android:name=".MainActivity"
             android:clearTaskOnLaunch="true"
             android:exported="true"
+            android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask"
             android:resumeWhilePausing="true"
             android:stateNotNeeded="true"

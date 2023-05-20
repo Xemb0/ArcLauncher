@@ -13,7 +13,6 @@
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/_20sdp"
         android:layout_marginRight="@dimen/_80sdp"
 
         android:layout_height="match_parent"
@@ -33,32 +32,34 @@
 
     <ImageButton
         android:id="@+id/lence_icon"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_width="33dp"
+        android:layout_height="34dp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_9sdp"
 
         android:background="@drawable/icon_google_lense"
+        android:contentDescription="TODO"
         android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.164"
         app:layout_constraintStart_toEndOf="@+id/search_view"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
-        android:id="@+id/Assistance_button"
-        android:layout_width="@dimen/_17sdp"
-        android:layout_height="@dimen/_17sdp"
+        android:id="@+id/google_assistance"
+        android:layout_width="29dp"
+        android:layout_height="29dp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_9sdp"
 
         android:background="@drawable/icon_google_assistance"
+        android:contentDescription="TODO"
         android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lence_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
