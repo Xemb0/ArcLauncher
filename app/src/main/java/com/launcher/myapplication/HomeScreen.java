@@ -46,7 +46,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeScreen extends AppCompatActivity {
 
     private BottomSheetBehavior<View> mBottomSheetBehavior1;
     private Vibrator vibrator;
@@ -62,12 +62,16 @@ public class MainActivity extends AppCompatActivity {
 
     private GestureDetector gestureDetector1;
 
-    public MainActivity() {
+
+    public HomeScreen() {
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LinearLayout clockView= findViewById(R.id.clock_date);
+
+
 
         // This callback will only be called when MyFragment is at least S
 
@@ -420,10 +424,10 @@ public class MainActivity extends AppCompatActivity {
 
 
             // Create a new popup window
-            PopupWindow popupWindow = new PopupWindow(MainActivity.this);
+            PopupWindow popupWindow = new PopupWindow(HomeScreen.this);
             popupWindow.setBackgroundDrawable(null);
             // Set the content view of the popup window
-            View popupView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_layout, null);
+            View popupView = LayoutInflater.from(HomeScreen.this).inflate(R.layout.popup_layout, null);
             popupWindow.setContentView(popupView);
 
             // Find the view inside the popup layout and set an onClickListener to it
@@ -446,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //popup ArcSettingsbutton
 
-                Intent intent = new Intent(MainActivity.this, ArcSettingsActivity.class);
+                Intent intent = new Intent(HomeScreen.this, ArcSettingsActivity.class);
                 startActivity(intent);
                 popupWindow.dismiss();
             });

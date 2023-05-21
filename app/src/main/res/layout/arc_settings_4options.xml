@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/option_parent_settings"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -18,10 +19,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/_40sdp"
+            android:id="@+id/home_setting_option"
             android:src="@drawable/home"
             android:contentDescription="TODO" />
         <TextView
@@ -52,10 +54,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/_20sdp"
+            android:id="@+id/gesture_setting_option"
             android:src="@drawable/gesture_icon"
             android:contentDescription="TODO" />
         <TextView
@@ -84,10 +87,11 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView3"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/_40sdp"
+            android:id="@+id/update_and_info_setting_option"
             android:src="@drawable/update_and_info"
             android:contentDescription="TODO" />
         <TextView
@@ -116,10 +120,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView"
         app:layout_constraintVertical_bias="0.0">
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/_30sdp"
+            android:id="@+id/drawer_icon_setting_option"
             android:src="@drawable/drawer_icon"
             android:contentDescription="TODO" />
         <TextView

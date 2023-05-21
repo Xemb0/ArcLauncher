@@ -1,15 +1,11 @@
 package com.launcher.myapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-    public class Gesture extends GestureDetector.SimpleOnGestureListener {
+public class Gesture extends GestureDetector.SimpleOnGestureListener {
 
         private Context context;
 
@@ -26,12 +22,12 @@ import androidx.appcompat.app.AppCompatActivity;
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             if (event1.getY() < event2.getY()) {
-                Intent intent = new Intent(context, MainActivity.class);
+                Intent intent = new Intent(context, HomeScreen.class);
                 context.startActivity(intent);
             }
             else if (event1.getY() > event2.getY()) {
                 // User swiped up
-                Intent intent = new Intent(context, MainActivity.class);
+                Intent intent = new Intent(context, HomeScreen.class);
                 context.startActivity(intent);
             }
             return true;

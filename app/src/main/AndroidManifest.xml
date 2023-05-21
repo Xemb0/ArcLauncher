@@ -48,7 +48,12 @@
             android:exported="true"
             android:theme="@style/Home.Light"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".GestureSettingsActivity"
+            android:exported="true"
+            android:theme="@style/Home.Light"></activity>
+
+        <activity
+            android:name=".HomeScreen"
             android:clearTaskOnLaunch="true"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"

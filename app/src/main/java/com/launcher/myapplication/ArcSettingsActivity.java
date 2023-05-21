@@ -1,19 +1,21 @@
 package com.launcher.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextClock;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
 public class ArcSettingsActivity extends AppCompatActivity {
 
     SwitchMaterial DarkmodeSwitch;
@@ -22,15 +24,25 @@ public class ArcSettingsActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sEditor;
 
+    LinearLayout clockView;
+
+    private LayoutInflater inflater;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.arc_settings);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+
+        inflater = LayoutInflater.from(this);
+
+
+        // Call onOptionSelected with the initial selected option
+        onOptionSelected(findViewById(R.id.option_parent_settings));
+
+
+
+
+
 
         DarkmodeSwitch = findViewById(R.id.darkmode);
         Switch_Clock = findViewById(R.id.Arc_clock_switch);
@@ -58,35 +70,47 @@ public class ArcSettingsActivity extends AppCompatActivity {
             }
         });
 
-        Switch_Clock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    showClock();
-                } else {
-                    hideClock();
-                }
-            }
-        });
+
+
+
+
+
+
+
+
     }
+    public void onOptionSelected(View view) {
+        final int homeOptionId = R.id.home_setting_option;
+        final int gestureOptionId = R.id.gesture_setting_option;
+        final int drawerOptionId = R.id.drawer_icon_setting_option;
+        final int updatesOptionId = R.id.update_and_info_setting_option;
 
-    // ... your existing code ...
+        int optionId = view.getId();
+        int layoutId;
 
-
-
-    private void hideClock() {
-        // Hide the clock view
-        LinearLayout clockView = findViewById(R.id.clock_date);
-        if (clockView != null) {
-            clockView.setVisibility(View.GONE);
+        switch (optionId) {
+            case homeOptionId:
+                layoutId = R.layout.setting_home;
+                break;
+            case gestureOptionId:
+                layoutId = R.layout.gestures_setting;
+                break;
+            case drawerOptionId:
+                layoutId = R.layout.setting_drawer;
+                break;
+            case updatesOptionId:
+                layoutId = R.layout.setting_updat_info;
+                break;
+            default:
+                return;
         }
+
+        // Inflate the selected option layout
+        View optionLayout = inflater.inflate(layoutId, null);
+        setContentView(optionLayout);
     }
 
-    private void showClock() {
-        // Show the clock view
-        LinearLayout clockView = findViewById(R.id.clock_date);
-        if (clockView != null) {
-            clockView.setVisibility(View.VISIBLE);
-        }
-    }
+
+
+
 }

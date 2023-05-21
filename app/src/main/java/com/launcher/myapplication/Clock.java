@@ -3,13 +3,17 @@ package com.launcher.myapplication;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class Clock extends AppWidgetProvider {
+
+
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Get the current date and day
@@ -20,9 +24,13 @@ public class Clock extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.clock);
         views.setTextViewText(R.id.dateTextView, date);
+// To make a view visible
+        views.setViewVisibility(R.id.dateTextView, View.INVISIBLE);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
+
     }
 
     @Override
@@ -31,6 +39,7 @@ public class Clock extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+
     }
 
     @Override
@@ -42,4 +51,8 @@ public class Clock extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+
+
+
 }

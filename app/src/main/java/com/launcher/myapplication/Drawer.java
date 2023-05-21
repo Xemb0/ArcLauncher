@@ -84,14 +84,14 @@ public class Drawer extends AppCompatActivity {
                     // Bottom sheet is fully expanded and user started to swipe down
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     overridePendingTransition(0, R.anim.slide_down);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
                     startActivity(intent);
 
                 } else if (slideOffset == 1) {
                     // Bottom sheet is fully collapsed and user started to swipe up
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     overridePendingTransition(R.anim.slide_up, 0);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
                     startActivity(intent);
 
                 }

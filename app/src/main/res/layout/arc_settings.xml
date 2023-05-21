@@ -19,7 +19,7 @@
             android:background="#FFFFFF"
             android:orientation="vertical">
 
-            <include layout="@layout/setting_buttons" />
+            <include layout="@layout/arc_settings_4options" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
