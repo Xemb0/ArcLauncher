@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.tabs.TabLayout;
@@ -58,27 +60,28 @@ private boolean arcSetting;
         tabLayout.setupWithViewPager(viewPager);
 
         // Set the titles for the tabs (options)
-        tabLayout.getTabAt(0).setText("Option 1");
-        tabLayout.getTabAt(1).setText("Option 2");
-        tabLayout.getTabAt(2).setText("Option 3");
-        tabLayout.getTabAt(3).setText("Option 4");
+        tabLayout.getTabAt(0).setText("HOME 1").setIcon(R.drawable.home_icon_settings);
+        tabLayout.getTabAt(1).setText("DRAWER 2").setIcon(R.drawable.drawer_icon);
+        tabLayout.getTabAt(2).setText("GESTURES 3").setIcon(R.drawable.gesture_icon);
+        tabLayout.getTabAt(3).setText("UPDATES & INFO 4").setIcon(R.drawable.update_and_info);
 
-         class MyPagerAdapter extends FragmentPagerAdapter {
+
+         class MyPagerAdapter extends FragmentStateAdapter {
             private List<Fragment> fragments;
 
-            public MyPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
-                super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            public MyPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, List<Fragment> fragments) {
+                super(fragmentManager, lifecycle);
                 this.fragments = fragments;
             }
 
             @NonNull
             @Override
-            public Fragment getItem(int position) {
+            public Fragment createFragment(int position) {
                 return fragments.get(position);
             }
 
             @Override
-            public int getCount() {
+            public int getItemCount() {
                 return fragments.size();
             }
         }
