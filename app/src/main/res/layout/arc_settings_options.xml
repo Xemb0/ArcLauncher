@@ -45,45 +45,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginVertical="@dimen/_2sdp"
-            android:background="@color/colorAccent"
-            android:orientation="vertical">
 
-
-            <TextView
-
-
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/_35sdp"
-
-                android:gravity="center"
-                android:text="Arc Clock"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_20ssp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/Arc_clock_switch"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/Arc_clock_switch"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/_5sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </com.google.android.material.switchmaterial.SwitchMaterial>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

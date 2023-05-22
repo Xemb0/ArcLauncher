@@ -25,4 +25,14 @@
     <string name="title_activity_settings_fragment_home">SettingsFragmentHome</string>
     <string name="title_activity_settings_fragment_drawer">SettingsFragmentDrawer</string>
     <string name="title_activity_setttings_fragment_updat_info">SetttingsFragmentUpdatInfo</string>
+    <string name="Arc_Clock">Arc Clock</string>
+    <string name="Date_off">Date is Disabled</string>
+    <string name="Date_on">Date is Enabled</string>
+    <string name="Date">Date</string>
+    <string name="Date_And_Time">Date And Time</string>
+    <string name="AutoUpdate">Turn On Auto Update</string>
+    <string name="AutoUpdates">Auto Update</string>
+    <string name="CurruntVersion">Version</string>
+    <string name="ArcUpdate">Arc Update</string>
+    <string name="Drawer">Drawer</string>
 </resources>

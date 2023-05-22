@@ -51,7 +51,7 @@ private boolean arcSetting;
         fragments.add(new SettingsFragmentHome.SettingsFragment());
         fragments.add(new SettingsFragmentDrawer.SettingsFragment());
         fragments.add(new SettingsFragmentGesture.SettingsFragment());
-        fragments.add(new SetttingsFragmentUpdatInfo.SettingsFragment());
+        fragments.add(new SetttingsFragmentUpdatInfo.MyPreferenceFragment());
 
         MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
@@ -60,10 +60,10 @@ private boolean arcSetting;
         tabLayout.setupWithViewPager(viewPager);
 
         // Set the titles for the tabs (options)
-        tabLayout.getTabAt(0).setText("HOME 1").setIcon(R.drawable.home_icon_settings);
-        tabLayout.getTabAt(1).setText("DRAWER 2").setIcon(R.drawable.drawer_icon);
-        tabLayout.getTabAt(2).setText("GESTURES 3").setIcon(R.drawable.gesture_icon);
-        tabLayout.getTabAt(3).setText("UPDATES & INFO 4").setIcon(R.drawable.update_and_info);
+        tabLayout.getTabAt(0).setText("HOME").setIcon(R.drawable.home_icon_settings);
+        tabLayout.getTabAt(1).setText("DRAWER").setIcon(R.drawable.drawer_icon);
+        tabLayout.getTabAt(2).setText("GESTURES").setIcon(R.drawable.gesture_icon);
+        tabLayout.getTabAt(3).setText("UPDATES & INFO").setIcon(R.drawable.update_and_info);
 
 
          class MyPagerAdapter extends FragmentStateAdapter {
