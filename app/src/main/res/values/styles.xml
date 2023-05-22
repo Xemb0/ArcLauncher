@@ -5,6 +5,7 @@
         <item name="android:background">?android:attr/colorBackground</item>
     </style>
 
+
     <style name="Widget.MyApplication.AppWidget.InnerView" parent="android:Widget">
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>

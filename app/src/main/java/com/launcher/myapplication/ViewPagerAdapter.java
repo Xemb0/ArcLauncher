@@ -1,5 +1,4 @@
-package com.launcher.nova;
-
+package com.launcher.myapplication;
 
 import android.content.Context;
 

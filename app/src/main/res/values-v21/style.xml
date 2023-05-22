@@ -6,4 +6,8 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+<style name="PreferenceScreenStyle" parent="PreferenceThemeOverlay">
+<item name="android:background">@drawable/prefrence_bg</item>
+</style>
 </resources>

@@ -3,23 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/rootlayout"
+    android:background="@color/Transparent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:orientation="vertical"
-       android:layout_height="@dimen/_200sdp">
-
-   </LinearLayout>
-
-
-
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_weight="2"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_centerVertical="true">
+
+            <include layout="@layout/settings_drawer_icons" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+
+    <LinearLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:background="@color/bg"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <com.marcinmoskala.arcseekbar.ArcSeekBar
             android:id="@+id/seekArc"
@@ -35,15 +49,16 @@
             app:progressColor="#00000000"
             app:thumb="@drawable/thumb2" />
 
-    </RelativeLayout>
-    <RelativeLayout
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         android:background="@color/darkmode_gray"
-        android:layout_weight="1">
+        android:layout_weight="8">
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

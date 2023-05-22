@@ -1,6 +1,8 @@
 package com.launcher.myapplication;
 
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
@@ -11,6 +13,8 @@ public class SettingsFragmentHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
+
+
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()

@@ -13,4 +13,8 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:clipToOutline">true</item>
     </style>
+
+<style name="PreferenceScreenStyle" parent="PreferenceThemeOverlay">
+<item name="android:background">@drawable/prefrence_bg</item>
+</style>
 </resources>
