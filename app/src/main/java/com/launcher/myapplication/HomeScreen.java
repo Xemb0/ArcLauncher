@@ -9,6 +9,11 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
+
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -32,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -51,6 +58,8 @@ public class HomeScreen extends AppCompatActivity {
     private BottomSheetBehavior<View> mBottomSheetBehavior1;
     private Vibrator vibrator;
     private VibrationEffect vibrationEffect;
+    private RelativeLayout bottomSheet2;
+
 
 
 
@@ -81,33 +90,19 @@ public class HomeScreen extends AppCompatActivity {
 
 
 
-        // Retrieve the root view of your activity
-        View rootView = getWindow().getDecorView();
-
-        int backgroundColor = 0; // Default color
-
-        Drawable background = rootView.getBackground();
-        if (background instanceof ColorDrawable) {
-            backgroundColor = ((ColorDrawable) background).getColor();
-        }
-// Add an OnApplyWindowInsetsListener to the root view
-        int finalBackgroundColor = backgroundColor;
-        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
-            // Get the system window insets
-            Insets systemWindowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-
-            // Apply the insets as padding to the root view
-            v.setPadding(
-                    systemWindowInsets.left,
-                    systemWindowInsets.top,
-                    systemWindowInsets.right,
-                    systemWindowInsets.bottom
-            );
-            v.setBackgroundColor(finalBackgroundColor);
-            // Return the consumed WindowInsets to prevent further dispatch
-            return WindowInsetsCompat.CONSUMED;
-        });
         setContentView(R.layout.activity_main);
+
+        View listView = findViewById(android.R.id.content);
+
+        final int bottomPadding = listView.getPaddingBottom();
+        listView.setOnApplyWindowInsetsListener((v, insets) -> {
+            v.setPadding(
+                    v.getPaddingLeft(),
+                    v.getPaddingTop(),
+                    v.getPaddingRight(),
+                    bottomPadding + insets.getSystemWindowInsetBottom());
+            return insets.consumeSystemWindowInsets();
+        });
 
         initializeDrawer();
         gestureDetector = new GestureDetector(this, new GestureListener());
@@ -137,29 +132,45 @@ public class HomeScreen extends AppCompatActivity {
         mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        RelativeLayout bottomSheet2 = findViewById(R.id.bottomSheet2);
+        bottomSheet2 = findViewById(R.id.bottomSheet2);
         transitionDrawable = (TransitionDrawable) getResources().getDrawable(R.drawable.bottom_sheet_transition);
         transitionDrawable.setAlpha(0);
         bottomSheet2.setBackground(transitionDrawable);
         mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet1, int newState) {
-                if(newState == BottomSheetBehavior.STATE_EXPANDED){
-
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                }
-                else if (newState == BottomSheetBehavior.STATE_COLLAPSED){
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     vibrate();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
+                } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+
                     vibrate();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
                 }
-
-
             }
+
+            private void animatePadding(final View view, final int left, final int top, final int right, final int bottom) {
+                ValueAnimator animator = ValueAnimator.ofInt(view.getPaddingLeft(), left);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int animatedValue = (int) animation.getAnimatedValue();
+                        view.setPadding(animatedValue, top, right, bottom);
+                    }
+                });
+                Transition transition = new ChangeBounds();
+
+                transition.setDuration(300); // Set the desired duration
+                TransitionManager.beginDelayedTransition(bottomSheet2, transition);
+                animator.start();
+            }
+
+
+
+
+
 
             @Override
             public void onSlide(@NonNull View bottomSheet1, float slideOffset) {
@@ -168,9 +179,11 @@ public class HomeScreen extends AppCompatActivity {
                 if (slideOffset > 0.5f) {
                     // Disable dragging when the bottom sheet is more than 50% expanded
                     mBottomSheetBehavior1.setDraggable(true);
+                    animatePadding(bottomSheet2, 0, 70, 0, 0);
                 } else {
                     // Enable dragging when the bottom sheet is less than 50% expanded
                     mBottomSheetBehavior1.setDraggable(true);
+                    animatePadding(bottomSheet2, 0, 0, 0, 0);
                 }
             }
         });

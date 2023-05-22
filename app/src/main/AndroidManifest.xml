@@ -11,9 +11,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.googlequicksearchbox.permission.ACCESS_ASSISTANT" />
-
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         android:minSdkVersion="30"
@@ -31,6 +29,23 @@
         android:supportsRtl="true"
         android:theme="@style/Home.Light"
         tools:targetApi="31">
+        <activity
+            android:name=".SetttingsFragmentUpdatInfo"
+            android:exported="false"
+            android:label="@string/title_activity_setttings_fragment_updat_info" />
+        <activity
+            android:name=".SettingsFragmentDrawer"
+            android:exported="false"
+            android:label="@string/title_activity_settings_fragment_drawer" />
+        <activity
+            android:name=".SettingsFragmentHome"
+            android:exported="false"
+            android:label="@string/title_activity_settings_fragment_home" />
+        <activity
+            android:name=".SettingsFragmentGesture"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+
         <receiver
             android:name=".Clock"
             android:exported="false">
@@ -46,22 +61,21 @@
         <activity
             android:name=".ArcSettingsActivity"
             android:exported="true"
-            android:theme="@style/Home.Light"></activity>
+            android:theme="@style/Home.Light" />
         <activity
             android:name=".GestureSettingsActivity"
             android:exported="true"
-            android:theme="@style/Home.Light"></activity>
-
+            android:theme="@style/Home.Light" />
         <activity
             android:name=".HomeScreen"
             android:clearTaskOnLaunch="true"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask"
             android:resumeWhilePausing="true"
             android:stateNotNeeded="true"
             android:taskAffinity=""
-            android:theme="@style/Home.Light">
+            android:theme="@style/Home.Light"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -2,75 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-
+    android:layout_height="@dimen/_200sdp">
 
     <Button
-        android:layout_width="match_parent"
-        android:text="Double Tap"
         android:id="@+id/double_tap_option"
-        android:textAlignment="textStart"
-        android:layout_height="@dimen/_70sdp">
-
-    </Button>
-    </LinearLayout>
-    <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-
+        android:background="@color/Transparent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Double Tap"
+        android:textAlignment="textStart" />
 
     <Button
-        android:layout_width="match_parent"
-        android:text="Swipe Down"
         android:id="@+id/swipe_down_option"
-
-        android:textAlignment="textStart"
-        android:layout_height="@dimen/_70sdp">
-
-    </Button>
-    </LinearLayout>
-    <LinearLayout
+        android:background="@color/Transparent"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Swipe Down"
+        android:textAlignment="textStart" />
 
     <Button
-        android:layout_width="match_parent"
-        android:text="Swipe Up From Screen"
-
         android:id="@+id/swipe_up_screen_option"
-        android:textAlignment="textStart"
-        android:layout_height="@dimen/_70sdp">
-
-    </Button>
-    </LinearLayout>
-    <LinearLayout
+        android:background="@color/Transparent"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Swipe Up From Screen"
+        android:textAlignment="textStart" />
 
     <Button
-        android:layout_width="match_parent"
-        android:text="Touch And Hold"
         android:id="@+id/longpress"
-        android:textAlignment="textStart"
-        android:layout_height="@dimen/_70sdp">
-
-    </Button>
-
-    </LinearLayout>
-
+        android:background="@color/Transparent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Touch And Hold"
+        android:textAlignment="textStart" />
 
 </LinearLayout>

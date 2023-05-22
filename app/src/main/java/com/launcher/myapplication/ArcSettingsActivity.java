@@ -1,20 +1,26 @@
 package com.launcher.myapplication;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArcSettingsActivity extends AppCompatActivity {
 
@@ -25,24 +31,57 @@ public class ArcSettingsActivity extends AppCompatActivity {
     SharedPreferences.Editor sEditor;
 
     LinearLayout clockView;
-
+private boolean arcSetting;
     private LayoutInflater inflater;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.arc_settings);
 
 
-        inflater = LayoutInflater.from(this);
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
 
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new SettingsFragmentHome.SettingsFragment());
+        fragments.add(new SettingsFragmentDrawer.SettingsFragment());
+        fragments.add(new SettingsFragmentGesture.SettingsFragment());
+        fragments.add(new SetttingsFragmentUpdatInfo.SettingsFragment());
 
-        // Call onOptionSelected with the initial selected option
-        onOptionSelected(findViewById(R.id.option_parent_settings));
+        MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(pagerAdapter);
 
+        // Attach the ViewPager to the TabLayout
+        tabLayout.setupWithViewPager(viewPager);
 
+        // Set the titles for the tabs (options)
+        tabLayout.getTabAt(0).setText("Option 1");
+        tabLayout.getTabAt(1).setText("Option 2");
+        tabLayout.getTabAt(2).setText("Option 3");
+        tabLayout.getTabAt(3).setText("Option 4");
 
+         class MyPagerAdapter extends FragmentPagerAdapter {
+            private List<Fragment> fragments;
 
+            public MyPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+                super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+                this.fragments = fragments;
+            }
 
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return fragments.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return fragments.size();
+            }
+        }
 
         DarkmodeSwitch = findViewById(R.id.darkmode);
         Switch_Clock = findViewById(R.id.Arc_clock_switch);
@@ -71,46 +110,7 @@ public class ArcSettingsActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
-
     }
-    public void onOptionSelected(View view) {
-        final int homeOptionId = R.id.home_setting_option;
-        final int gestureOptionId = R.id.gesture_setting_option;
-        final int drawerOptionId = R.id.drawer_icon_setting_option;
-        final int updatesOptionId = R.id.update_and_info_setting_option;
-
-        int optionId = view.getId();
-        int layoutId;
-
-        switch (optionId) {
-            case homeOptionId:
-                layoutId = R.layout.setting_home;
-                break;
-            case gestureOptionId:
-                layoutId = R.layout.gestures_setting;
-                break;
-            case drawerOptionId:
-                layoutId = R.layout.setting_drawer;
-                break;
-            case updatesOptionId:
-                layoutId = R.layout.setting_updat_info;
-                break;
-            default:
-                return;
-        }
-
-        // Inflate the selected option layout
-        View optionLayout = inflater.inflate(layoutId, null);
-        setContentView(optionLayout);
-    }
-
-
 
 
 }

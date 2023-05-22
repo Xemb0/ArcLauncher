@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Gesture Options">
+
+        <Preference
+            android:key="double_tap"
+            android:title="Double Tap"
+            android:summary="Perform an action with double tap gesture"
+            android:icon="@drawable/ic_double_tap" />
+
+        <Preference
+            android:key="right_swipe"
+            android:title="Right Swipe"
+            android:summary="Perform an action with right swipe gesture"
+            android:icon="@drawable/ic_swipe_right" />
+
+        <Preference
+            android:key="left_swipe"
+            android:title="Left Swipe"
+            android:summary="Perform an action with left swipe gesture"
+            android:icon="@drawable/ic_swipe_left" />
+
+        <Preference
+            android:key="swipe_down"
+            android:title="Swipe Down"
+            android:summary="Perform an action with swipe down gesture"
+            android:icon="@drawable/ic_swipe_down" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
