@@ -40,6 +40,7 @@
         <activity
             android:name=".SettingsFragmentHome"
             android:exported="false"
+            android:theme="@style/SettingsActivity"
             android:label="@string/title_activity_settings_fragment_home" />
         <activity
             android:name=".SettingsFragmentGesture"
@@ -61,7 +62,8 @@
         <activity
             android:name=".ArcSettingsActivity"
             android:exported="true"
-            android:theme="@style/Home.Light" />
+
+            android:theme="@style/SettingsActivity"/>
         <activity
             android:name=".GestureSettingsActivity"
             android:exported="true"

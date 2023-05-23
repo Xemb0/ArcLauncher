@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="SettingsActivity" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:colorPrimaryDark">@color/Dark.Background</item>
+        <item name="colorPrimary">@color/materialRed</item>
+        <item name="android:statusBarColor">@color/darkmode_gray</item>
+
+        <item name="colorPrimaryDark">@color/materialRed</item>
+        <item name="colorAccent">@color/materialRed</item>
+        <!--treanparent wallpaer-->
+        <item name="android:windowShowWallpaper">true</item>
+
+        <item name="android:windowBackground">#00F9F9F9</item>
+
+        <item name="android:navigationBarColor">@color/materialRed</item>
+        <item name="android:textColorPrimary">@color/Light.TextColor</item>
+        <item name="android:textColor">@color/Light.TextColor</item>
+        <item name="android:textColorSecondary">@color/Light.TextColorSecondary</item>
+    </style>
+
     <style name="Home.Light" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:colorPrimaryDark">@android:color/transparent</item>
+        <!--treanparent wallpaer-->
         <item name="android:windowShowWallpaper">true</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+<!--treanparent wallpaer-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:textColorPrimary">@color/Light.TextColor</item>
         <item name="android:textColor">@color/Light.TextColor</item>
@@ -79,6 +99,7 @@
         <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
         <item name="appWidgetPadding">16dp</item>
     </style>
+
 
 
 </resources>
