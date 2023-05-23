@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@color/Primary_background"
+    android:background="@drawable/round_bottom"
     android:layout_height="wrap_content">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-
+            android:layout_marginHorizontal="@dimen/_5sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginVertical="@dimen/_2sdp"
-           android:background="@drawable/rounded_shape"
+           android:background="@drawable/round_shape_revers_color"
             android:orientation="vertical">
 
 
@@ -25,8 +25,8 @@
 
                 android:gravity="center"
                 android:text="Dark Mode"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_20ssp"
+                android:textColor="@color/materialRed"
+                android:textSize="@dimen/_15ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.787"
                 app:layout_constraintStart_toEndOf="@+id/darkmode"
@@ -53,7 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginVertical="@dimen/_2sdp"
-            android:background="@drawable/rounded_shape"
+            android:background="@drawable/round_shape_revers_color"
+            android:layout_marginHorizontal="@dimen/_5sdp"
             android:orientation="vertical">
 
 
@@ -65,8 +66,8 @@
                 android:layout_height="match_parent"
 
                 android:text="Blur Background"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_20ssp"
+                android:textColor="@color/materialRed"
+                android:textSize="@dimen/_15ssp"
                 android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

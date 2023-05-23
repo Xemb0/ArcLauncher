@@ -3,7 +3,7 @@
     <color name="colorPrimary">#1a237e</color>
     <color name="colorPrimaryDark">#0d47a1</color>
     <color name="colorAccent">#6570EA</color>
-    <color name="colorBottomSheetExpanded">#E6000000</color>
+    <color name="colorBottomSheetExpanded">#F2212121</color>
 
     <color name="Light.Background">#f9f9f9</color>
     <color name="Transparent">#00000000</color>
@@ -30,9 +30,12 @@
     <color name="darkmode_gray">#F2434343</color>
 
     <color name="Primary_background">#EE333333</color>
+
+    <color name="Settings_Actionbar">#F0D1D1D1</color>
+    <color name="Settings_tabs">#F0393939</color>
     <color name="textColor">#ED000000</color>
     <color name="bg">#FFFFFF</color>
-    <color name="icon_name">#000000</color>
+    <color name="icon_name">#FFFFFF</color>
     <color name="light_blue_50">#FFE1F5FE</color>
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>

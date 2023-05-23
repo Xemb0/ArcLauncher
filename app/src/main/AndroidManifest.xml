@@ -32,19 +32,22 @@
         <activity
             android:name=".SetttingsFragmentUpdatInfo"
             android:exported="false"
+            android:theme="@style/ViewPagers"
             android:label="@string/title_activity_setttings_fragment_updat_info" />
         <activity
             android:name=".SettingsFragmentDrawer"
             android:exported="false"
+
             android:label="@string/title_activity_settings_fragment_drawer" />
         <activity
             android:name=".SettingsFragmentHome"
             android:exported="false"
-            android:theme="@style/SettingsActivity"
+            android:theme="@style/ViewPagers"
             android:label="@string/title_activity_settings_fragment_home" />
         <activity
             android:name=".SettingsFragmentGesture"
             android:exported="false"
+            android:theme="@style/ViewPagers"
             android:label="@string/title_activity_settings" />
 
         <receiver

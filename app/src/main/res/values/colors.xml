@@ -30,6 +30,9 @@
 
     <color name="darkmode_gray">#E0E6F1</color>
     <color name="Primary_background">#E2E0E6F1</color>
+    <color name="Settings_Actionbar">#F0424242</color>
+    <color name="Settings_tabs">#F0C3C3C3</color>
+
 
     <color name="textColor">#ED000000</color>
     <color name="bg">#FFFFFF</color>
