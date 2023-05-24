@@ -16,12 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import com.marcinmoskala.arcseekbar.ProgressListener;
 
+import java.util.Objects;
 
 
 public class SettingsFragmentDrawer extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,46 +52,61 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
 
 
     }
-
     public static class SettingsFragment extends Fragment {
-
+        private int iconSize;
+        private int seekBarProgress;
+        private SharedPreferences sharedPreferences;
+        private SharedPreferences.Editor editor;
 
         @Override
-
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.settings_drawer, container, false);
 
             ArcSeekBar seekBar = rootView.findViewById(R.id.IconseekArc);
             LinearLayout rootViewLayout = rootView.findViewById(R.id.rootlayout);
-            seekBar.setMaxProgress(100);
-
-
-
-
-
             ImageView icon1 = rootView.findViewById(R.id.icon1);
             ImageView icon2 = rootView.findViewById(R.id.icon2);
             ImageView icon3 = rootView.findViewById(R.id.icon3);
             ImageView icon4 = rootView.findViewById(R.id.icon4);
+
+            sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            editor = sharedPreferences.edit();
+
+            iconSize = sharedPreferences.getInt("iconSize", 0);
+            seekBarProgress = sharedPreferences.getInt("seekBarProgress", 10);
+
+            if (iconSize != 0) {
+                ViewGroup.LayoutParams layoutParams = icon1.getLayoutParams();
+                layoutParams.width = iconSize;
+                layoutParams.height = iconSize;
+                icon1.setLayoutParams(layoutParams);
+                icon2.setLayoutParams(layoutParams);
+                icon3.setLayoutParams(layoutParams);
+                icon4.setLayoutParams(layoutParams);
+            }
+
+            seekBar.setProgress(seekBarProgress);
+            seekBar.setMaxProgress(100);
+
             seekBar.setOnProgressChangedListener(new ProgressListener() {
                 @Override
                 public void invoke(int i) {
-
                     // Update the size of the icon
                     ViewGroup.LayoutParams layoutParams = icon1.getLayoutParams();
-                    layoutParams.width = i+110;
-                    layoutParams.height = i+110;
-
+                    layoutParams.width = i + 110;
+                    layoutParams.height = i + 110;
                     icon1.setLayoutParams(layoutParams);
                     icon2.setLayoutParams(layoutParams);
                     icon3.setLayoutParams(layoutParams);
                     icon4.setLayoutParams(layoutParams);
+
+                    editor.putInt("iconSize", i + 110);
+                    editor.putInt("seekBarProgress", i);
+                    editor.apply();
                 }
             });
 
-
             seekBar.setOnTouchListener(new View.OnTouchListener() {
-
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     int action = motionEvent.getAction();
@@ -106,11 +124,9 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
 
             return rootView;
         }
-
-        private void Onbackpress(){
-
-        }
     }
-
-
 }
+
+
+
+

@@ -33,7 +33,7 @@ public class ArcSettingsActivity extends AppCompatActivity {
     SharedPreferences.Editor sEditor;
 
     LinearLayout clockView;
-private boolean arcSetting;
+    private boolean arcSetting;
     private LayoutInflater inflater;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -42,7 +42,6 @@ private boolean arcSetting;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.arc_settings);
-
 
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
@@ -53,8 +52,10 @@ private boolean arcSetting;
         fragments.add(new SettingsFragmentGesture.SettingsFragment());
         fragments.add(new SetttingsFragmentUpdatInfo.MyPreferenceFragment());
 
-        MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+
+        com.launcher.myapplication.MyPagerAdapter pagerAdapter = new com.launcher.myapplication.MyPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
+
 
         // Attach the ViewPager to the TabLayout
         tabLayout.setupWithViewPager(viewPager);
@@ -65,55 +66,45 @@ private boolean arcSetting;
         tabLayout.getTabAt(2).setText("GESTURES").setIcon(R.drawable.gesture_icon);
         tabLayout.getTabAt(3).setText("UPDATES & INFO").setIcon(R.drawable.update_and_info);
 
-
-         class MyPagerAdapter extends FragmentStateAdapter {
-            private List<Fragment> fragments;
-
-            public MyPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, List<Fragment> fragments) {
-                super(fragmentManager, lifecycle);
-                this.fragments = fragments;
-            }
-
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                return fragments.get(position);
-            }
-
-            @Override
-            public int getItemCount() {
-                return fragments.size();
-            }
-        }
-
         DarkmodeSwitch = findViewById(R.id.darkmode);
         Switch_Clock = findViewById(R.id.Arc_clock_switch);
 
         sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
         darkMode = sharedPreferences.getBoolean("dark", true);
 
-        if (darkMode) {
-            DarkmodeSwitch.setChecked(true);
-        }
 
         DarkmodeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    sEditor = sharedPreferences.edit();
-                    sEditor.putBoolean("dark", true);
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    sEditor = sharedPreferences.edit();
-                    sEditor.putBoolean("dark", false);
                 }
+                sEditor = sharedPreferences.edit();
+                sEditor.putBoolean("dark", b);
                 sEditor.apply(); // Apply the changes to SharedPreferences
             }
         });
-
-
     }
 
+    private static class MyPagerAdapter extends FragmentStateAdapter {
+        private List<Fragment> fragments;
 
+        public MyPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, List<Fragment> fragments) {
+            super(fragmentManager, lifecycle);
+            this.fragments = fragments;
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
+        }
+    }
 }
