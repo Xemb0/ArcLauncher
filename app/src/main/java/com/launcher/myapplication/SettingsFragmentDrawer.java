@@ -1,11 +1,15 @@
 package com.launcher.myapplication;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
+import com.marcinmoskala.arcseekbar.ProgressListener;
+
+
 
 public class SettingsFragmentDrawer extends AppCompatActivity {
 
@@ -30,17 +37,58 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
+        SharedPreferences sharedPreferences;
+        SharedPreferences.Editor sEditor;
+        Boolean size;
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+
+
+
+
     }
 
     public static class SettingsFragment extends Fragment {
+
+
         @Override
+
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.settings_drawer, container, false);
 
-            ArcSeekBar seekBar = rootView.findViewById(R.id.seekArc);
+            ArcSeekBar seekBar = rootView.findViewById(R.id.IconseekArc);
             LinearLayout rootViewLayout = rootView.findViewById(R.id.rootlayout);
+            seekBar.setMaxProgress(100);
+
+
+
+
+
+            ImageView icon1 = rootView.findViewById(R.id.icon1);
+            ImageView icon2 = rootView.findViewById(R.id.icon2);
+            ImageView icon3 = rootView.findViewById(R.id.icon3);
+            ImageView icon4 = rootView.findViewById(R.id.icon4);
+            seekBar.setOnProgressChangedListener(new ProgressListener() {
+                @Override
+                public void invoke(int i) {
+
+                    // Update the size of the icon
+                    ViewGroup.LayoutParams layoutParams = icon1.getLayoutParams();
+                    layoutParams.width = i+110;
+                    layoutParams.height = i+110;
+
+                    icon1.setLayoutParams(layoutParams);
+                    icon2.setLayoutParams(layoutParams);
+                    icon3.setLayoutParams(layoutParams);
+                    icon4.setLayoutParams(layoutParams);
+                }
+            });
+
 
             seekBar.setOnTouchListener(new View.OnTouchListener() {
+
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     int action = motionEvent.getAction();
@@ -57,6 +105,10 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
             });
 
             return rootView;
+        }
+
+        private void Onbackpress(){
+
         }
     }
 
