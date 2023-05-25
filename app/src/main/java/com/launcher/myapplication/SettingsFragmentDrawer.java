@@ -71,8 +71,17 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         private SharedPreferences sharedPreferences;
         private SharedPreferences.Editor editor;
 
+
+        private int numCol;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+
+
+            sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            editor = sharedPreferences.edit();
+
             View rootView = inflater.inflate(R.layout.settings_drawer, container, false);
 
             Button drawerPopup = rootView.findViewById(R.id.drawer_layout);
@@ -103,7 +112,11 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
                 updateGridView(gridView, numPickerVertical.getValue(), numPickerHorizontal.getValue());
             });
 
+
+
             doneButton.setOnClickListener(v -> {
+                editor.putInt("iconSpan", numPickerHorizontal.getValue());
+                editor.apply();
                 popupWindow.dismiss();
             });
 
@@ -131,9 +144,6 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
             ImageView icon2 = rootView.findViewById(R.id.icon2);
             ImageView icon3 = rootView.findViewById(R.id.icon3);
             ImageView icon4 = rootView.findViewById(R.id.icon4);
-
-            sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-            editor = sharedPreferences.edit();
 
             iconSize = sharedPreferences.getInt("iconSize", 0);
             seekBarProgress = sharedPreferences.getInt("seekBarProgress", 10);

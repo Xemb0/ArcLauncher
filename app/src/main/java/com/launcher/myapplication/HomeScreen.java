@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.ColorDrawable;
@@ -55,6 +56,7 @@ import java.util.List;
 
 public class HomeScreen extends AppCompatActivity {
 
+    private static final int DEFAULT_ICON_SPAN = 5;
     private BottomSheetBehavior<View> mBottomSheetBehavior1;
     private Vibrator vibrator;
     private VibrationEffect vibrationEffect;
@@ -108,7 +110,6 @@ public class HomeScreen extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new GestureListener());
 
 
-        gestureDetector1 = new GestureDetector(this, new MyGestureListener2());
 
 
 
@@ -221,12 +222,7 @@ public class HomeScreen extends AppCompatActivity {
 
 
 
-        mBottomSheet1.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector1.onTouchEvent(event);
-            }
-        });
+
 
 
 
@@ -503,6 +499,12 @@ public class HomeScreen extends AppCompatActivity {
         }
 
 
+        View mBottomSheet = findViewById(R.id.bottomSheet);
+        final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        View mBottomSheet2 = findViewById(R.id.bottomSheet2);
+        final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet2);
+
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             boolean result = false;
@@ -525,10 +527,6 @@ public class HomeScreen extends AppCompatActivity {
                         result = true;
                     }
                 } else {
-                    View mBottomSheet = findViewById(R.id.bottomSheet);
-                    final BottomSheetBehavior<View> mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-                    View mBottomSheet2 = findViewById(R.id.bottomSheet2);
-                    final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet2);
 
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffY > 0) {
@@ -566,43 +564,6 @@ public class HomeScreen extends AppCompatActivity {
         }
 
     }
-
-
-        // Implement onFling for view2
-        private class MyGestureListener2 extends GestureDetector.SimpleOnGestureListener {
-            // Implement onFling for view2
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-            private BottomSheetBehavior bottomSheetBehavior;
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
-                try {
-                    float diffY = e2.getY() - e1.getY();
-                    float diffX = e2.getX() - e1.getX();
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-                            } else {
-                            }
-                            result = true;
-                        }
-                    } else {
-                        if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffY < 0) {
-                                View mBottomSheet2 = findViewById(R.id.bottomSheet2);
-                                final BottomSheetBehavior<View> mBottomSheetBehavior1 = BottomSheetBehavior.from(mBottomSheet2);
-                            }
-                            result = true;
-                        }
-                    }
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                return result;
-            }
-
-        }
 
 
 // add this to your onCreate method
@@ -708,22 +669,22 @@ private TransitionDrawable transitionDrawable;
         });
 
 
-        recyclerDrawer.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-
-                super.onScrollStateChanged(recyclerView, newState);
-
-            }
-        });
 
 
 
 
 
+
+
+
+
+
+        int iconSpan = getIconSizeFromSharedPreferences();
         RecyclerView recyclerView = findViewById(R.id.recycalDrawer);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,5,RecyclerView.HORIZONTAL,false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,iconSpan,RecyclerView.HORIZONTAL,false));
         recyclerView.setAdapter(adapter);
+
+
 
 // Get a reference to your bottom sheet view
         View bottomSheetView = findViewById(R.id.homescreen);
@@ -739,6 +700,10 @@ private TransitionDrawable transitionDrawable;
 
 
 
+    private int getIconSizeFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("iconSpan", DEFAULT_ICON_SPAN);
+    }
 
 
 
