@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -68,6 +73,24 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.settings_drawer, container, false);
+
+            Button drawerPopup = rootView.findViewById(R.id.drawer_layout);
+            View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_drawer_layout, null);
+
+            PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            drawerPopup.setOnClickListener(v -> {
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+            });
+
+// Set a click listener on the content view of the popup window to dismiss it when tapped anywhere inside
+            popupView.setOnClickListener(v -> {
+                popupWindow.dismiss();
+            });
+
+
+
 
 
 
