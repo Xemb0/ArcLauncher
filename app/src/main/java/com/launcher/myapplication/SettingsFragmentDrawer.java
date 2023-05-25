@@ -14,9 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -29,6 +29,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import com.marcinmoskala.arcseekbar.ProgressListener;
+import com.shawnlin.numberpicker.NumberPicker;
 
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +76,7 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.settings_drawer, container, false);
 
             Button drawerPopup = rootView.findViewById(R.id.drawer_layout);
+
             View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_drawer_layout, null);
 
             PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -84,10 +86,36 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
                 popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
             });
 
+
+            NumberPicker numPickerVertical = popupView.findViewById(R.id.numpickvertical);
+            NumberPicker numPickerHorizontal = popupView.findViewById(R.id.numpickhorizotal);
+            Button doneButton = popupView.findViewById(R.id.drawer_popup_done);
+
+            GridView gridView = popupView.findViewById(R.id.drawerGrid_layout);
+            gridView.setNumColumns(numPickerHorizontal.getValue());
+
+            numPickerVertical.setOnValueChangedListener((picker, oldVal, newVal) -> {
+                updateGridView(gridView, numPickerVertical.getValue(), numPickerHorizontal.getValue());
+            });
+
+            numPickerHorizontal.setOnValueChangedListener((picker, oldVal, newVal) -> {
+                gridView.setNumColumns(numPickerHorizontal.getValue());
+                updateGridView(gridView, numPickerVertical.getValue(), numPickerHorizontal.getValue());
+            });
+
+            doneButton.setOnClickListener(v -> {
+                popupWindow.dismiss();
+            });
+
+            // Set initial grid size
+            updateGridView(gridView, numPickerVertical.getValue(), numPickerHorizontal.getValue());
+
 // Set a click listener on the content view of the popup window to dismiss it when tapped anywhere inside
             popupView.setOnClickListener(v -> {
                 popupWindow.dismiss();
             });
+
+
 
 
 
@@ -163,6 +191,12 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+    }
+
+    private static void updateGridView(GridView gridView, int verticalValue, int horizontalValue) {
+        int itemCount = verticalValue * horizontalValue;
+        AdapterDrawerPopupLayout adapter = new AdapterDrawerPopupLayout(gridView.getContext(), itemCount);
+        gridView.setAdapter(adapter);
     }
 }
 

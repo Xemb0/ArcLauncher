@@ -15,18 +15,28 @@
 
 
     <LinearLayout
-        android:layout_width="@dimen/_200sdp"
+        android:layout_width="@dimen/_250sdp"
         android:id="@+id/drawer_grid_container"
         android:layout_height="@dimen/_200sdp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <GridView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/drawerGrid_layout"
-            android:columnWidth="100dp"
-            android:numColumns="auto_fit"
-            android:padding="@dimen/_5sdp"
-            android:stretchMode="spacingWidthUniform" />
+
+            <GridView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/drawerGrid_layout"
+                android:columnWidth="@dimen/_50sdp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/_10sdp"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:stretchMode="spacingWidthUniform" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -42,11 +52,15 @@
 
 
         <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/numpickvertical"
             android:layout_width="@dimen/_53sdp"
             android:layout_height="@dimen/_100sdp"
             android:layout_alignParentEnd="true"
+            app:np_wrapSelectorWheel="false"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/drawer_grid_container"
+            app:np_dividerColor="@color/materialRed"
+            app:np_min="2"
             app:np_max="7" />
 
     </LinearLayout>
@@ -61,8 +75,12 @@
 
     <com.shawnlin.numberpicker.NumberPicker
         android:layout_width="@dimen/_100sdp"
+        app:np_dividerColor="@color/materialRed"
         android:layout_height="@dimen/_53sdp"
-        app:np_max="7"
+        app:np_max="6"
+        app:np_min="2"
+        app:np_wrapSelectorWheel="false"
+        android:id="@+id/numpickhorizotal"
         app:np_orientation="horizontal" />
 </LinearLayout>
         <Button
@@ -71,6 +89,7 @@
             android:layout_margin="@dimen/_2sdp"
             android:background="@color/Transparent"
             android:textColor="@color/materialRed"
+            android:id="@+id/drawer_popup_done"
 
             android:layout_below="@+id/numPickerVertical"
             android:layout_toEndOf="@+id/numPickerHorizontal"
