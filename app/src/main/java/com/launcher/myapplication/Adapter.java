@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -62,6 +63,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
      List<ResolveInfo> lapps;
      Context context;
     PackageManager pm;
+    private static final int DEFAULT_ICON_SIZE = 110; // Replace 110 with your desired default size in pixels
+
 
     public Adapter(Context context, List<ResolveInfo> apps, PackageManager pn) {
         this.context = context;
@@ -75,10 +78,42 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
         return new ViewHolder(view);
     }
+
+
+    private int getIconSizeFromSharedPreferences() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("iconSize", DEFAULT_ICON_SIZE);
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder,  int position) {
+
+
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
+
+
+
+
+        int iconSize = getIconSizeFromSharedPreferences();
+
+        // Update the size of the ImageView
+            ViewGroup.LayoutParams imageLayoutParams = holder.images.getLayoutParams();
+            imageLayoutParams.width = iconSize;
+            imageLayoutParams.height = iconSize;
+            holder.images.setLayoutParams(imageLayoutParams);
+
+
+            // Update the height of the TextView
+            ViewGroup.LayoutParams textLayoutParams = holder.text.getLayoutParams();
+            textLayoutParams.height = iconSize / 3; // Adjust the height of the label based on the icon size
+            holder.text.setLayoutParams(textLayoutParams);
+
+
+            // Rest of your code...
+
+
         holder.itemlayout.setOnClickListener(view -> {
             ResolveInfo launchable = lapps.get(position);
             ActivityInfo activity = launchable.activityInfo;
@@ -173,6 +208,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         }
     }
+    public void setIconSize(int iconSize) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("iconSize", iconSize);
+        editor.apply();
+        notifyDataSetChanged();
+    }
+
 
     private void showPopupWindowForApp(ResolveInfo resolveInfo, View anchorView,PackageManager pm) {
         // Create a new popup window
@@ -227,5 +270,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         anchorView.getLocationOnScreen(location);
         popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1]-verticalOffset);
     }
+
+
 
 }

@@ -624,6 +624,7 @@ private TransitionDrawable transitionDrawable;
                 new ResolveInfo.DisplayNameComparator(pm));
         Adapter adapter = new Adapter(this, apps, pm);
         recyclerDrawer.setAdapter(adapter);
+        adapter.refreshAppList();
         recyclerDrawer.setLayoutManager(new CircleLayoutManager(this));
 
         final BroadcastReceiver installBroadcastReceiver = new BroadcastReceiver() {

@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation 'androidx.core:core:1.7.0'
-
+    implementation 'io.github.ShawnLin013:number-picker:2.4.13'
 
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
