@@ -68,11 +68,7 @@
 
             android:theme="@style/SettingsActivity"/>
         <activity
-            android:name=".GestureSettingsActivity"
-            android:exported="true"
-            android:theme="@style/Home.Light" />
-        <activity
-            android:name=".HomeScreen"
+            android:name=".ActivityHome"
             android:clearTaskOnLaunch="true"
             android:exported="true"
             android:launchMode="singleTask"
@@ -90,7 +86,6 @@
                 <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
-        <activity android:name=".Drawer" />
     </application>
 
 </manifest>

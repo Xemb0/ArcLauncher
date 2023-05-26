@@ -24,7 +24,7 @@
     <RelativeLayout
         app:behavior_hideable="false"
         android:layout_width="match_parent"
-        android:id="@+id/bottomSheet"
+        android:id="@+id/CircularSheet"
 
         style="@style/Widget.Design.BottomSheet.Modal"
         android:background="@drawable/shadow_bottomsheet"
@@ -52,7 +52,7 @@
 
         style="@style/Widget.Design.BottomSheet.Modal"
 
-        app:layout_anchor="@id/bottomSheet2"
+        app:layout_anchor="@id/DrawerSheet"
         app:layout_anchorGravity="top"
 
 
@@ -84,7 +84,7 @@
             app:layout_anchorGravity="top|center" />
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/bottomSheet2"
+        android:id="@+id/DrawerSheet"
         android:background="@drawable/bottom_sheet_transition"
         style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
@@ -138,7 +138,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        app:layout_anchor="@id/bottomSheet2"
+        app:layout_anchor="@id/DrawerSheet"
         app:layout_anchorGravity="top"
         android:orientation="vertical"
 
