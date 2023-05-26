@@ -89,9 +89,76 @@ public class ActivityHome extends AppCompatActivity {
 
 
         @Override
-        public void onLongPress(MotionEvent motionEvent) {
+        public void onLongPress(MotionEvent e) {
+
+
+            View view = findViewById(R.id.homescreen);
             vibrate();
-            HomescreenPopup(motionEvent);
+
+
+            float x =e.getRawX();
+            float y = e.getRawY();
+
+
+            // Create a new popup window
+            PopupWindow popupWindow = new PopupWindow(ActivityHome.this);
+            popupWindow.setBackgroundDrawable(null);
+            // Set the content view of the popup window
+            View popupView = LayoutInflater.from(ActivityHome.this).inflate(R.layout.popup_layout, null);
+            popupWindow.setContentView(popupView);
+
+            // Find the view inside the popup layout and set an onClickListener to it
+            ImageButton wallpaper = popupView.findViewById(R.id.wallpaper);
+
+            ImageButton arcSettingsButton = popupView.findViewById(R.id.ArcSettings);
+            ImageButton widgetsButton = popupView.findViewById(R.id.Widgets);
+            wallpaper.setOnClickListener(v -> {
+
+                //popup setwallpaper
+
+                Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+                startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+                popupWindow.dismiss();
+
+
+            });
+
+            arcSettingsButton.setOnClickListener(v -> {
+
+                //popup ArcSettingsbutton
+
+                Intent intent = new Intent(ActivityHome.this, ArcSettingsActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss();
+            });
+
+
+            widgetsButton.setOnClickListener(v -> {
+
+
+                //popup Widgets
+
+                Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
+                startActivity(Intent.createChooser(intent, "Select Widget"));
+                popupWindow.dismiss();
+            });
+            // Set the size of the popup window
+            popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            // Make the popup window dismiss when the user taps outside of it or presses the back button
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            int verticalOffset = 200;
+
+            // Show the popup window at the location of the long press event
+            popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) x, (int) y-verticalOffset);
+
+
+
+            // Set a click listener on the content view of the popup window to dismiss it when the user taps anywhere inside it
+            popupView.setOnClickListener(v -> popupWindow.dismiss());
+
         }
 
         @Override
@@ -178,9 +245,9 @@ public class ActivityHome extends AppCompatActivity {
             float x = e.getRawX();
             float y = e.getRawY();
 
-            PopupWindow popupWindow = new PopupWindow(getApplicationContext());
+            PopupWindow popupWindow = new PopupWindow(ActivityHome.this);
             popupWindow.setBackgroundDrawable(null);
-            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) ActivityHome.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View popupView = inflater.inflate(R.layout.popup_layout, (ViewGroup) homescreen);
             popupWindow.setContentView(popupView);
 
@@ -195,7 +262,7 @@ public class ActivityHome extends AppCompatActivity {
             });
 
             arcSettingsButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), ArcSettingsActivity.class);
+                Intent intent = new Intent(ActivityHome.this, ArcSettingsActivity.class);
                 startActivity(intent);
                 popupWindow.dismiss();
             });
