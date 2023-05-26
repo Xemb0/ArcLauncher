@@ -48,6 +48,8 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.settings, new SettingsFragment())
                     .commit();
+
+
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -65,6 +67,8 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
 
 
     }
+
+
     public static class SettingsFragment extends Fragment {
         private int iconSize;
         private int seekBarProgress;
@@ -130,6 +134,23 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
 
 
 
+            HomeWatcher mHomeWatcher = new HomeWatcher(requireContext());
+            mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+                @Override
+                public void onHomePressed() {
+                    Intent intent = new Intent(requireContext(), ActivityHome.class);
+                    startActivity(intent);
+
+                }
+                @Override
+                public void onHomeLongPressed() {
+                    Intent intent = new Intent(requireContext(), ActivityHome.class);
+                    startActivity(intent);
+
+                    // Finish the current activity
+
+                }
+            });
 
 
 
@@ -199,6 +220,7 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onBackPressed() {
     }

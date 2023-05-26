@@ -44,8 +44,10 @@ import java.util.List;
 public class ActivityHome extends AppCompatActivity {
 
     GestureDetector gestureDetector;
+    Adapter appAdapter;
     private TransitionDrawable transitionDrawable;
     BottomSheetBehavior<View> mDrawerSheetBehaviour;
+
 
 
     @Override
@@ -257,7 +259,7 @@ public class ActivityHome extends AppCompatActivity {
         main.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
-        Adapter appAdapter = new Adapter(this, apps, pm);
+        appAdapter = new Adapter(this, apps, pm);
         CircularDrawer.setAdapter(appAdapter);
         CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this);
         CircularDrawer.setLayoutManager(circleLayoutManager);
@@ -448,5 +450,10 @@ public class ActivityHome extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+    @Override
+    protected void onResume() {
+        appAdapter.refreshAppList();
+        super.onResume();
     }
 }
