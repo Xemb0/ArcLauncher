@@ -86,6 +86,7 @@
     <RelativeLayout
         android:id="@+id/DrawerSheet"
         style="@style/Widget.Design.BottomSheet.Modal"
+        android:background="@drawable/bottom_sheet_transition"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_peekHeight="@dimen/_40sdp"
@@ -121,7 +122,7 @@
             </RelativeLayout>
 
 
-            <com.launcher.myapplication.CustomRecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycalDrawer"
 
                 android:layout_width="match_parent"

@@ -45,6 +45,7 @@ public class ActivityHome extends AppCompatActivity {
 
     GestureDetector gestureDetector;
     private TransitionDrawable transitionDrawable;
+    BottomSheetBehavior<View> mDrawerSheetBehaviour;
 
 
     @Override
@@ -240,50 +241,6 @@ public class ActivityHome extends AppCompatActivity {
             }
         }
 
-        private void HomescreenPopup(MotionEvent e) {
-            View homescreen = findViewById(R.id.homescreen);
-            float x = e.getRawX();
-            float y = e.getRawY();
-
-            PopupWindow popupWindow = new PopupWindow(ActivityHome.this);
-            popupWindow.setBackgroundDrawable(null);
-            LayoutInflater inflater = (LayoutInflater) ActivityHome.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.popup_layout, (ViewGroup) homescreen);
-            popupWindow.setContentView(popupView);
-
-            ImageButton wallpaper = popupView.findViewById(R.id.wallpaper);
-            ImageButton arcSettingsButton = popupView.findViewById(R.id.ArcSettings);
-            ImageButton widgetsButton = popupView.findViewById(R.id.Widgets);
-
-            wallpaper.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
-                startActivity(Intent.createChooser(intent, "Select Wallpaper"));
-                popupWindow.dismiss();
-            });
-
-            arcSettingsButton.setOnClickListener(v -> {
-                Intent intent = new Intent(ActivityHome.this, ArcSettingsActivity.class);
-                startActivity(intent);
-                popupWindow.dismiss();
-            });
-
-            widgetsButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
-                startActivity(Intent.createChooser(intent, "Select Widget"));
-                popupWindow.dismiss();
-            });
-
-            popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            popupWindow.setOutsideTouchable(true);
-            popupWindow.setFocusable(true);
-            int verticalOffset = 200;
-
-            popupWindow.showAtLocation(homescreen, Gravity.NO_GRAVITY, (int) x, (int) y - verticalOffset);
-
-            popupView.setOnClickListener(v -> popupWindow.dismiss());
-        }
     }
 
 
@@ -337,6 +294,7 @@ public class ActivityHome extends AppCompatActivity {
 
         seekArc.setOnProgressChangedListener(progress -> {
             if (progress != previousProgress) {
+                vibrate();
                 previousProgress = progress;
             }
             circleLayoutManager.scrollToPosition(progress);
@@ -361,8 +319,10 @@ public class ActivityHome extends AppCompatActivity {
 
         int iconSpan = getIconSizeFromSharedPreferences();
         RecyclerView recyclerDrawer = findViewById(R.id.recycalDrawer);
-        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
+        recyclerDrawer.setLayoutManager(new PreCachingGridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
         recyclerDrawer.setAdapter(appAdapter);
+        recyclerDrawer.setHasFixedSize(true);
+        recyclerDrawer.setItemViewCacheSize(100);
 
     }
 
@@ -413,7 +373,7 @@ public class ActivityHome extends AppCompatActivity {
 
 
         View mDrawerSheet = findViewById(R.id.DrawerSheet);
-        final BottomSheetBehavior<View> mDrawerSheetBehaviour = BottomSheetBehavior.from(mDrawerSheet);
+        mDrawerSheetBehaviour = BottomSheetBehavior.from(mDrawerSheet);
         mDrawerSheetBehaviour.setDraggable(true);
         mDrawerSheetBehaviour.setHideable(false);
         mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -430,11 +390,13 @@ public class ActivityHome extends AppCompatActivity {
 
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    vibrate();
                     mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     // Reset the padding to its original value
@@ -471,7 +433,20 @@ public class ActivityHome extends AppCompatActivity {
                 }
             }
         });
-
-
+        HomeWatcher mHomeWatcher = new HomeWatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+            @Override
+            public void onHomeLongPressed() {
+                mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+    }
+    @Override
+    public void onBackPressed() {
+        mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 }

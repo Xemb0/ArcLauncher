@@ -24,6 +24,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -40,6 +41,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.core.content.res.ResourcesCompat;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
+
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -109,6 +112,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
             ViewGroup.LayoutParams textLayoutParams = holder.text.getLayoutParams();
             textLayoutParams.height = iconSize / 3; // Adjust the height of the label based on the icon size
             holder.text.setLayoutParams(textLayoutParams);
+            setAnimation(holder.itemlayout,position);
 
 
             // Rest of your code...
@@ -178,6 +182,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         });
     }
 
+
+    private void setAnimation(View apps,int position){
+        Animation slideIn = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+    }
     @Override
     public int getItemCount() {
         return lapps.size();
@@ -199,7 +207,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         ImageView images;
 
         TextView text;
-        ConstraintLayout itemlayout;
+        RelativeLayout itemlayout;
         public ViewHolder(View view) {
             super(view);
             images = view.findViewById(R.id.image);
