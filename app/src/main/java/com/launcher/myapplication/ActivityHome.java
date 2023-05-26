@@ -324,7 +324,7 @@ public class ActivityHome extends AppCompatActivity {
 
         int iconSpan = getIconSpanFromSharedPreferences();
         recyclerDrawer = findViewById(R.id.recycalDrawer);
-        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.HORIZONTAL, false));
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
         recyclerDrawer.setAdapter(appAdapter);
         recyclerDrawer.setItemViewCacheSize(100);
 
@@ -336,7 +336,7 @@ public class ActivityHome extends AppCompatActivity {
 
     private int getIconSpanFromSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("iconVertical", DEFAULT_ICON_SPAN);
+        return sharedPreferences.getInt("iconHorizontal", DEFAULT_ICON_SPAN);
     }
 
 
@@ -461,7 +461,8 @@ public class ActivityHome extends AppCompatActivity {
     protected void onResume() {
         appAdapter.refreshAppList();
         int iconSpan = getIconSpanFromSharedPreferences();
-        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.HORIZONTAL, false));
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
+        recyclerDrawer.setNestedScrollingEnabled(false);
 
         super.onResume();
     }

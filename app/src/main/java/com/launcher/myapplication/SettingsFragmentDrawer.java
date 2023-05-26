@@ -76,7 +76,7 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         private SharedPreferences.Editor editor;
 
         private int DEFAULT_VERTICAL_SPAN=5;
-        private int DEFAULT_HORIZONTAL_SPAN=6;
+        private int DEFAULT_HORIZONTAL_SPAN=5;
 
 
         private int numCol;
@@ -192,7 +192,7 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
             }
 
             seekBar.setProgress(seekBarProgress);
-            seekBar.setMaxProgress(100);
+            seekBar.setMaxProgress(60);
 
             seekBar.setOnProgressChangedListener(new ProgressListener() {
                 @Override
