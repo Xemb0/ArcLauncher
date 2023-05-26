@@ -1,5 +1,6 @@
 package com.launcher.myapplication;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,9 +41,10 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public class ActivityHome extends AppCompatActivity  {
+public class ActivityHome extends AppCompatActivity {
 
     GestureDetector gestureDetector;
+    private TransitionDrawable transitionDrawable;
 
 
     @Override
@@ -62,8 +66,8 @@ public class ActivityHome extends AppCompatActivity  {
                     bottomPadding + insets.getSystemWindowInsetBottom());
             return insets.consumeSystemWindowInsets();
         });
-         gestureDetector = new GestureDetector(this, new GestureListener());
-    AppDrawer();
+        gestureDetector = new GestureDetector(this, new GestureListener());
+        AppDrawer();
         BottomSheet();
 
     }
@@ -216,21 +220,19 @@ public class ActivityHome extends AppCompatActivity  {
     }
 
 
-
-
     private static final int DEFAULT_ICON_SPAN = 5;
 
     private int previousProgress = -1;
 
-    void AppDrawer(){
+    void AppDrawer() {
 
         RecyclerView CircularDrawer = findViewById(R.id.recycalview);
         PackageManager pm = this.getPackageManager();
 
         Intent main = new Intent(Intent.ACTION_MAIN);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> apps = pm.queryIntentActivities(main,0);
-        Collections.sort(apps,new ResolveInfo.DisplayNameComparator(pm));
+        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
+        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
         Adapter appAdapter = new Adapter(this, apps, pm);
         CircularDrawer.setAdapter(appAdapter);
         CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this);
@@ -240,9 +242,9 @@ public class ActivityHome extends AppCompatActivity  {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                if(Intent.ACTION_PACKAGE_ADDED.equals(action)){
+                if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
                     appAdapter.refreshAppList();
-                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)){
+                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
                     appAdapter.refreshAppList();
 
                 }
@@ -254,11 +256,11 @@ public class ActivityHome extends AppCompatActivity  {
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
-        registerReceiver(installUninstallBrodcastReciver,intentFilter);
+        registerReceiver(installUninstallBrodcastReciver, intentFilter);
 
         ArcSeekBar seekArc = findViewById(R.id.seekArc);
         int AppCount = appAdapter.getItemCount();
-        seekArc.setMaxProgress(AppCount-1);
+        seekArc.setMaxProgress(AppCount - 1);
 
         TextView fisrtletter = findViewById(R.id.firstletter);
         View focusAppBackground = findViewById(R.id.Icon_shadow);
@@ -267,7 +269,7 @@ public class ActivityHome extends AppCompatActivity  {
 
 
         seekArc.setOnProgressChangedListener(progress -> {
-            if(progress!=previousProgress){
+            if (progress != previousProgress) {
                 previousProgress = progress;
             }
             circleLayoutManager.scrollToPosition(progress);
@@ -277,7 +279,7 @@ public class ActivityHome extends AppCompatActivity  {
             String packageName = apps.get(progress).activityInfo.packageName;
             String appName;
             try {
-                appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName,PackageManager.GET_META_DATA)).toString();
+                appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
 
             } catch (PackageManager.NameNotFoundException e) {
                 throw new RuntimeException(e);
@@ -292,10 +294,11 @@ public class ActivityHome extends AppCompatActivity  {
 
         int iconSpan = getIconSizeFromSharedPreferences();
         RecyclerView recyclerDrawer = findViewById(R.id.recycalDrawer);
-        recyclerDrawer.setLayoutManager(new GridLayoutManager(this,iconSpan,RecyclerView.VERTICAL,false));
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
         recyclerDrawer.setAdapter(appAdapter);
 
     }
+
     private int getIconSizeFromSharedPreferences() {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         return sharedPreferences.getInt("iconSpan", DEFAULT_ICON_SPAN);
@@ -321,13 +324,13 @@ public class ActivityHome extends AppCompatActivity  {
         }
     }
 
-    private void BottomSheet(){
+    private void BottomSheet() {
 
-    View mCircularSheet = findViewById(R.id.CircularSheet);
-    final BottomSheetBehavior<View> mCircularSheetBehaviour = BottomSheetBehavior.from(mCircularSheet);
-    mCircularSheetBehaviour.setPeekHeight(0);
-    mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
-    mCircularSheetBehaviour.setDraggable(false);
+        View mCircularSheet = findViewById(R.id.CircularSheet);
+        final BottomSheetBehavior<View> mCircularSheetBehaviour = BottomSheetBehavior.from(mCircularSheet);
+        mCircularSheetBehaviour.setPeekHeight(0);
+        mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mCircularSheetBehaviour.setDraggable(false);
 
         mCircularSheetBehaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -342,40 +345,66 @@ public class ActivityHome extends AppCompatActivity  {
         });
 
 
+        View mDrawerSheet = findViewById(R.id.DrawerSheet);
+        final BottomSheetBehavior<View> mDrawerSheetBehaviour = BottomSheetBehavior.from(mDrawerSheet);
+        mDrawerSheetBehaviour.setDraggable(true);
+        mDrawerSheetBehaviour.setHideable(false);
+        mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        transitionDrawable = (TransitionDrawable) getResources().getDrawable(R.drawable.bottom_sheet_transition);
+        transitionDrawable.setAlpha(0);
+        mDrawerSheet.setBackground(transitionDrawable);
 
+// Define the desired padding increase and the maximum padding value
+        int desiredPaddingIncrease = 100; // Adjust this value as needed
+        int maxPaddingTop = 200; // Adjust this value as needed
 
+        mDrawerSheetBehaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            private int originalPaddingTop = mDrawerSheet.getPaddingTop();
 
-    View mDrawerSheet = findViewById(R.id.DrawerSheet);
-    final BottomSheetBehavior<View> mDrawerSheetBehaviour = BottomSheetBehavior.from(mDrawerSheet);
-    mDrawerSheetBehaviour.setDraggable(true);
-    mDrawerSheetBehaviour.setHideable(false);
-    mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-    mDrawerSheetBehaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            if(newState==BottomSheetBehavior.STATE_EXPANDED){
-                mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            } else if (newState==BottomSheetBehavior.STATE_COLLAPSED) {
-                mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
-            } else if (newState== BottomSheetBehavior.STATE_DRAGGING) {
-                mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    mCircularSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    // Reset the padding to its original value
+                    bottomSheet.setPadding(
+                            bottomSheet.getPaddingLeft(),
+                            originalPaddingTop,
+                            bottomSheet.getPaddingRight(),
+                            bottomSheet.getPaddingBottom()
+                    );
+                }
             }
 
-        }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                int transitionAlpha = (int) (slideOffset * 255);
+                transitionDrawable.setAlpha(transitionAlpha);
 
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Calculate the new padding based on the slide offset
+                int newPadding = (int) (slideOffset * desiredPaddingIncrease);
+                newPadding = Math.min(newPadding, maxPaddingTop - originalPaddingTop); // Limit the new padding
 
-        }
-    });
+                // Set the new padding for top, left, right, and bottom
+                bottomSheet.setPadding(
+                        bottomSheet.getPaddingLeft(),
+                        originalPaddingTop + newPadding,
+                        bottomSheet.getPaddingRight(),
+                        bottomSheet.getPaddingBottom()
+                );
+
+                if (slideOffset > 0.4f) {
+                    // Do something when slide offset is greater than 0.4f
+                } else {
+                    // Do something else when slide offset is less than or equal to 0.4f
+                }
+            }
+        });
+
+
     }
-
-
-
-
-
-
-
-
 }

@@ -85,7 +85,6 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/DrawerSheet"
-        android:background="@drawable/bottom_sheet_transition"
         style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
