@@ -75,8 +75,12 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
         private SharedPreferences sharedPreferences;
         private SharedPreferences.Editor editor;
 
+        private int DEFAULT_VERTICAL_SPAN=5;
+        private int DEFAULT_HORIZONTAL_SPAN=6;
+
 
         private int numCol;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -100,11 +104,17 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
             });
 
 
+
             NumberPicker numPickerVertical = popupView.findViewById(R.id.numpickvertical);
             NumberPicker numPickerHorizontal = popupView.findViewById(R.id.numpickhorizotal);
             Button doneButton = popupView.findViewById(R.id.drawer_popup_done);
 
+
             GridView gridView = popupView.findViewById(R.id.drawerGrid_layout);
+            int prevNumPickerVerticalValue = sharedPreferences.getInt("iconVertical", DEFAULT_VERTICAL_SPAN);
+            int prevNumPickerHorizontalValue = sharedPreferences.getInt("iconHorizontal", DEFAULT_HORIZONTAL_SPAN);
+            numPickerVertical.setValue(prevNumPickerVerticalValue);
+            numPickerHorizontal.setValue(prevNumPickerHorizontalValue);
             gridView.setNumColumns(numPickerHorizontal.getValue());
 
             numPickerVertical.setOnValueChangedListener((picker, oldVal, newVal) -> {
@@ -119,7 +129,8 @@ public class SettingsFragmentDrawer extends AppCompatActivity {
 
 
             doneButton.setOnClickListener(v -> {
-                editor.putInt("iconSpan", numPickerHorizontal.getValue());
+                editor.putInt("iconHorizontal", numPickerHorizontal.getValue());
+                editor.putInt("iconVertical", numPickerVertical.getValue());
                 editor.apply();
                 popupWindow.dismiss();
             });

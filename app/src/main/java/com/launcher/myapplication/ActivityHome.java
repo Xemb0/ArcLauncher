@@ -48,6 +48,11 @@ public class ActivityHome extends AppCompatActivity {
     private TransitionDrawable transitionDrawable;
     BottomSheetBehavior<View> mDrawerSheetBehaviour;
 
+    public  int DEFAULT_ICON_SPAN = 5;
+
+    private int previousProgress = -1;
+    RecyclerView recyclerDrawer;
+
 
 
     @Override
@@ -246,9 +251,6 @@ public class ActivityHome extends AppCompatActivity {
     }
 
 
-    private static final int DEFAULT_ICON_SPAN = 5;
-
-    private int previousProgress = -1;
 
     void AppDrawer() {
 
@@ -319,18 +321,22 @@ public class ActivityHome extends AppCompatActivity {
             focusAppBackground.setVisibility(View.INVISIBLE);
         });
 
-        int iconSpan = getIconSizeFromSharedPreferences();
-        RecyclerView recyclerDrawer = findViewById(R.id.recycalDrawer);
-        recyclerDrawer.setLayoutManager(new PreCachingGridLayoutManager(this, iconSpan, RecyclerView.VERTICAL, false));
+
+        int iconSpan = getIconSpanFromSharedPreferences();
+        recyclerDrawer = findViewById(R.id.recycalDrawer);
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.HORIZONTAL, false));
         recyclerDrawer.setAdapter(appAdapter);
-        recyclerDrawer.setHasFixedSize(true);
         recyclerDrawer.setItemViewCacheSize(100);
+
 
     }
 
-    private int getIconSizeFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("iconSpan", DEFAULT_ICON_SPAN);
+
+
+
+    private int getIconSpanFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("iconVertical", DEFAULT_ICON_SPAN);
     }
 
 
@@ -454,6 +460,12 @@ public class ActivityHome extends AppCompatActivity {
     @Override
     protected void onResume() {
         appAdapter.refreshAppList();
+        int iconSpan = getIconSpanFromSharedPreferences();
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, iconSpan, RecyclerView.HORIZONTAL, false));
+
         super.onResume();
     }
+
+
+
 }
