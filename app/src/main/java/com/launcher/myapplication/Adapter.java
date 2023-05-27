@@ -137,35 +137,28 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
             View rootView = ((Activity) holder.itemlayout.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
 
-            int cx = holder.images.getWidth() / 2;
-            int cy = holder.images.getHeight() / 2;
+// Set initial scale
+            holder.images.setScaleX(.5f);
+            holder.images.setScaleY(.5f);
 
-            float finalRadius = (float) Math.hypot(cx, cy);
+// Set pivot point
+            holder.images.setPivotX(holder.images.getWidth() / 2f);
+            holder.images.setPivotY(holder.images.getHeight() / 2f);
 
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(holder.images, cx, cy, 0, finalRadius);
-anim.setDuration(100);
-            anim.start();
+// Create and start the animation
+            holder.images.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Start the activity after the animation has finished
+                            context.startActivity(i);
+                        }
+                    })
+                    .start();
 
-            // Start the app activity after the animation has finished
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    context.startActivity(i);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-            });
         });
 
 
