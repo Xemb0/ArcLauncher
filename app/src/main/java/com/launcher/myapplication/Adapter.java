@@ -181,7 +181,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 holder.images.animate()
                         .scaleX(1f)
                         .scaleY(1f)
-                        .setDuration(80)
+                        .setDuration(150)
                         .start();
 
 
