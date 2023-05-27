@@ -169,6 +169,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 // Handle the long click event here
 
                 ResolveInfo launchable = lapps.get(position);
+                // Set initial scale
+                holder.images.setScaleX(0.5f);
+                holder.images.setScaleY(0.5f);
+
+// Set pivot point
+                holder.images.setPivotX(holder.images.getWidth() / 2f);
+                holder.images.setPivotY(holder.images.getHeight() / 2f);
+
+// Create and start the animation
+                holder.images.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(80)
+                        .start();
+
+
                 showPopupWindowForApp(launchable,holder.itemlayout,pm);
                 return true;
             }
