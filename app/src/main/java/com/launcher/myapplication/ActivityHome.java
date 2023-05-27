@@ -1,6 +1,5 @@
 package com.launcher.myapplication;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,7 +28,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -222,6 +220,10 @@ public class ActivityHome extends AppCompatActivity {
 
         @Override
         public boolean onDoubleTap(MotionEvent event) {
+
+            Intent Viewpager = new Intent(ActivityHome.this, ActivityPager.class);
+            startActivity(Viewpager);
+
             return true;
         }
 

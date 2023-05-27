@@ -1,29 +1,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Background -->
-    <item
-        android:bottom="@dimen/_minus60sdp"
+    <item android:bottom="@dimen/_minus60sdp"
         android:left="@dimen/_minus60sdp"
         android:right="@dimen/_minus60sdp"
         android:top="@dimen/_8sdp">
         <shape android:shape="oval">
             <solid android:color="#00000000" /> <!-- Transparent background -->
-          <!-- Outer stroke -->
-        </shape>
-    </item>
-
-    <!-- Gradient -->
-    <item
-        android:bottom="@dimen/_minus60sdp"
-        android:left="@dimen/_minus60sdp"
-        android:right="@dimen/_minus60sdp"
-        android:top="@dimen/_8sdp">
-        <shape android:shape="oval">
-            <gradient
-                android:startColor="#00000000"
-                android:endColor="#25000000"
-                android:type="radial"
-                android:gradientRadius="@dimen/_600sdp"
-                android:angle="95" />
+            <stroke
+                android:color="#25000000"
+                android:width="4dp" /> <!-- Stroke with desired color and width -->
         </shape>
     </item>
 </layer-list>
