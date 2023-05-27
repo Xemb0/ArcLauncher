@@ -136,15 +136,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
 
             View rootView = ((Activity) holder.itemlayout.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-            int cx = rootView.getWidth() / 2;
-            int cy = rootView.getHeight() / 2;
+
+            int cx = holder.images.getWidth() / 2;
+            int cy = holder.images.getHeight() / 2;
+
             float finalRadius = (float) Math.hypot(cx, cy);
-            Animator anim = null;
-            anim = ViewAnimationUtils.createCircularReveal(rootView, cx, cy, 0, finalRadius);
 
-            anim.setDuration(200);
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(holder.images, cx, cy, 0, finalRadius);
+anim.setDuration(100);
             anim.start();
-
 
             // Start the app activity after the animation has finished
             anim.addListener(new Animator.AnimatorListener() {
@@ -155,7 +156,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     context.startActivity(i);
-
                 }
 
                 @Override
@@ -166,9 +166,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 public void onAnimationRepeat(Animator animator) {
                 }
             });
-
-
         });
+
+
 
         holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

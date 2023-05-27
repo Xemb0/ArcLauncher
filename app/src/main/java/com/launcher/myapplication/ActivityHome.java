@@ -457,6 +457,7 @@ public class ActivityHome extends AppCompatActivity {
     public void onBackPressed() {
         mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
+
     @Override
     protected void onResume() {
         appAdapter.refreshAppList();
