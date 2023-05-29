@@ -8,17 +8,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
@@ -26,7 +20,8 @@ import com.marcinmoskala.arcseekbar.ArcSeekBar;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeScreenFragment extends Fragment {
+public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
+    private Context context;
     private static final int DEFAULT_ICON_SPAN = 5;
 
     private int previousProgress = -1;
@@ -35,31 +30,25 @@ public class HomeScreenFragment extends Fragment {
     ArcSeekBar seekArc;
     Vibrator vibrator;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.circular_drawer, container, false);
-        initializeViews(view);
+    public VerticalView1ViewHolder(@NonNull View itemView, Context context) {
+        super(itemView);
+        this.context = context;
 
+        // Initialize the views and variables for Vertical View 2
+        recyclerView = itemView.findViewById(R.id.CircularDrawerPager);
+        seekArc = itemView.findViewById(R.id.seekArcPager);
         initializeAppDrawer();
-        return view;
     }
 
-    private void initializeViews(View view) {
-        // Find and initialize other views as required
-        recyclerView = view.findViewById(R.id.CircularDrawerPager);
-
-        seekArc =   view.findViewById(R.id.seekArcPager);
-    }
 
     private void initializeAppDrawer() {
-        PackageManager pm = requireActivity().getPackageManager();
+        PackageManager pm = context.getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
-        appAdapter = new Adapter(requireContext(), apps, pm);
-        CircleLayoutManager circleLayoutManager = new CircleLayoutManager(requireContext());
+        appAdapter = new Adapter(context, apps, pm);
+        CircleLayoutManager circleLayoutManager = new CircleLayoutManager(context);
         recyclerView.setLayoutManager(circleLayoutManager);
         recyclerView.setAdapter(appAdapter);
         recyclerView.setItemViewCacheSize(100);
@@ -69,7 +58,7 @@ public class HomeScreenFragment extends Fragment {
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
-        requireActivity().registerReceiver(installUninstallBroadcastReceiver, intentFilter);
+        context.registerReceiver(installUninstallBroadcastReceiver, intentFilter);
 
         int AppCount = appAdapter.getItemCount();
         seekArc.setMaxProgress(AppCount - 1);
@@ -96,22 +85,15 @@ public class HomeScreenFragment extends Fragment {
         }
     };
 
-    private int getIconSpanFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("iconHorizontal", DEFAULT_ICON_SPAN);
-    }
+
 
     // Other methods and implementations
 
-    @Override
-    public void onDestroy() {
-        requireActivity().unregisterReceiver(installUninstallBroadcastReceiver);
-        super.onDestroy();
-    }
+
 
     void vibrate() {
 
-        vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             VibrationEffect vibrationEffect;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -127,4 +109,6 @@ public class HomeScreenFragment extends Fragment {
             vibrator.vibrate(50);
         }
     }
+
+    // Rest of the class implementation...
 }
