@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
+public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
     private Context context;
     private static final int DEFAULT_ICON_SPAN = 5;
 
@@ -41,6 +41,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
     RecyclerView recyclerView;
     ArcSeekBar seekArc;
     Vibrator vibrator;
+    GestureDetector gestureDetector;
 
     public VerticalView1ViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
@@ -50,6 +51,14 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         recyclerView = itemView.findViewById(R.id.CircularDrawerPager);
         seekArc = itemView.findViewById(R.id.seekArcPager);
         initializeAppDrawer();
+
+
+         gestureDetector = new GestureDetector(context, new GestureListener());
+
+        itemView.setOnTouchListener((view, event) -> {
+            gestureDetector.onTouchEvent(event);
+            return false;
+        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             seekArc.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -106,6 +115,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+
     private BroadcastReceiver installUninstallBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -141,11 +151,11 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-
-
-
-
-
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        gestureDetector.onTouchEvent(motionEvent);
+        return super.itemView.onTouchEvent(motionEvent);
+    }
 
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -157,7 +167,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         public void onLongPress(MotionEvent e) {
 
 
-            View view = findViewById(R.id.homescreen);
+            View view = itemView.getRootView();
             vibrate();
 
 
@@ -166,10 +176,10 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
 
 
             // Create a new popup window
-            PopupWindow popupWindow = new PopupWindow(ActivityHome.this);
+            PopupWindow popupWindow = new PopupWindow(context);
             popupWindow.setBackgroundDrawable(null);
             // Set the content view of the popup window
-            View popupView = LayoutInflater.from(ActivityHome.this).inflate(R.layout.popup_layout, null);
+            View popupView = LayoutInflater.from(context).inflate(R.layout.popup_layout, null);
             popupWindow.setContentView(popupView);
 
             // Find the view inside the popup layout and set an onClickListener to it
@@ -192,7 +202,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
 
                 //popup ArcSettingsbutton
 
-                Intent intent = new Intent(ActivityHome.this, ArcSettingsActivity.class);
+                Intent intent = new Intent(context, ArcSettingsActivity.class);
                 context.startActivity(intent);
                 popupWindow.dismiss();
             });
@@ -247,11 +257,9 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
                 if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         ExpandNotificationBar();
-                    } else {
+                    }
+                    else {
                         vibrate();
-                        View mDrawerSheet = findViewById(R.id.DrawerSheet);
-                        final BottomSheetBehavior<View> mDrawerSheetBehaviour = BottomSheetBehavior.from(mDrawerSheet);
-                        mDrawerSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
                 }
             }
@@ -280,7 +288,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         @Override
         public boolean onDoubleTap(MotionEvent event) {
 
-            Intent Viewpager = new Intent(ActivityHome.this, ActivityPager.class);
+            Intent Viewpager = new Intent(context, ActivityPager.class);
             context.startActivity(Viewpager);
 
             return true;
