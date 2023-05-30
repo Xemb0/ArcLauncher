@@ -6,22 +6,23 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
 public class PaddingPageTransformer implements ViewPager2.PageTransformer {
-    private int paddingStart;
+    private int paddingBottom;
 
-    public PaddingPageTransformer(int paddingStart) {
-        this.paddingStart = paddingStart;
+    public PaddingPageTransformer(int paddingBottom) {
+        this.paddingBottom = paddingBottom;
     }
 
     @Override
     public void transformPage(@NonNull View page, float position) {
-        int pageWidth = page.getWidth();
-        float pageOffset = position * -pageWidth;
+        int pageHeight = page.getHeight();
+        float pageOffset = position * -pageHeight;
 
         if (position < 0) {
-            page.setTranslationX(pageOffset);
+            page.setTranslationY(pageOffset);
+            page.setPadding(0, 0, 0, paddingBottom);
         } else {
-            page.setTranslationX(pageOffset + paddingStart);
+            page.setTranslationY(pageOffset);
+            page.setPadding(0, 0, 0, 0);
         }
     }
 }
-

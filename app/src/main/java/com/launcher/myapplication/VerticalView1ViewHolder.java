@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,25 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         recyclerView = itemView.findViewById(R.id.CircularDrawerPager);
         seekArc = itemView.findViewById(R.id.seekArcPager);
         initializeAppDrawer();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            seekArc.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+                }
+            });
+        }
+
+        // Disable RecyclerView's touch interception for seekArc
+        seekArc.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                recyclerView.requestDisallowInterceptTouchEvent(true);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                recyclerView.requestDisallowInterceptTouchEvent(false);
+            }
+            return false;
+        });
     }
 
 
@@ -59,7 +79,6 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
         context.registerReceiver(installUninstallBroadcastReceiver, intentFilter);
-
         int AppCount = appAdapter.getItemCount();
         seekArc.setMaxProgress(AppCount - 1);
         seekArc.setOnProgressChangedListener(progress -> {
@@ -68,10 +87,11 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder {
                 previousProgress = progress;
             }
             circleLayoutManager.scrollToPosition(progress);
-
         });
         seekArc.setOnStopTrackingTouch(i -> {
         });
+
+
 
     }
 

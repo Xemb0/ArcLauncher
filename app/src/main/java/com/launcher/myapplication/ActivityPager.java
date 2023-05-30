@@ -13,7 +13,7 @@ public class ActivityPager extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private VerticalViewAdapter adapter;
-    DepthTransformation transformer;
+    StackTransformer transformer;
     PaddingPageTransformer paddingPageTransformer;
 
     @Override
@@ -25,7 +25,7 @@ public class ActivityPager extends AppCompatActivity {
         adapter = new VerticalViewAdapter();
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-        transformer = new DepthTransformation();
+        transformer = new StackTransformer();
         paddingPageTransformer = new PaddingPageTransformer(getResources().getDimensionPixelSize(R.dimen.padding_start));
         viewPager.setPageTransformer(transformer);
 

@@ -32,7 +32,8 @@ public class VerticalView2ViewHolder extends RecyclerView.ViewHolder {
         // Initialize the views and variables for Vertical View 2
         RecyclerView recyclerView = itemView.findViewById(R.id.recycalDrawerPager);
         initializeAppDrawer(recyclerView);
-    }
+
+        }
 
     private void initializeAppDrawer(RecyclerView recyclerView) {
         PackageManager pm = context.getPackageManager();
