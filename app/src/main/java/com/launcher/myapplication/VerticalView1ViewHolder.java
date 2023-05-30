@@ -57,7 +57,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
 
         itemView.setOnTouchListener((view, event) -> {
             gestureDetector.onTouchEvent(event);
-            return false;
+            return true;
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
