@@ -49,11 +49,6 @@
             android:exported="false"
             android:theme="@style/ViewPagers"
             android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".ActivityPager"
-            android:exported="false"
-            android:theme="@style/Home.Light"
-            android:label="@string/title_activity_settings" />
 
         <receiver
             android:name=".Clock"
@@ -73,7 +68,7 @@
 
             android:theme="@style/SettingsActivity"/>
         <activity
-            android:name=".ActivityHome"
+            android:name=".ActivityPager"
             android:clearTaskOnLaunch="true"
             android:exported="true"
             android:launchMode="singleTask"

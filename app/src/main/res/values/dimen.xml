@@ -8,5 +8,11 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="widget_margin">0dp</dimen>
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
+        <!-- Dimension for the page offset -->
+        <dimen name="viewpager2_page_offset">16dp</dimen>
+
+        <!-- Dimension for the scale factor -->
+        <dimen name="viewpager2_scale_factor">0.75</dimen>
+
 
 </resources>

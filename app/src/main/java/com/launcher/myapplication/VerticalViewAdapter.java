@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.launcher.myapplication.VerticalView1ViewHolder;
+import com.launcher.myapplication.VerticalView2ViewHolder;
+
 public class VerticalViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_VERTICAL_VIEW_1 = 0;
@@ -28,8 +31,6 @@ public class VerticalViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 throw new IllegalArgumentException("Invalid view type: " + viewType);
         }
     }
-
-
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -61,5 +62,4 @@ public class VerticalViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 throw new IllegalArgumentException("Invalid position: " + position);
         }
     }
-
 }
