@@ -13,6 +13,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
 
         <!-- Dimension for the scale factor -->
         <dimen name="viewpager2_scale_factor">0.75</dimen>
+    <dimen name="padding_start">100dp</dimen> <!-- Adjust the padding value as needed -->
 
 
 </resources>
