@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_320sdp"
+        android:background="@drawable/shadow_bottomsheet"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/CircularDrawerPager"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:layout_alignParentBottom="true"/>
+
+        <com.marcinmoskala.arcseekbar.ArcSeekBar
+            android:id="@+id/seekArcPager"
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_110sdp"
+            android:hapticFeedbackEnabled="true"
+
+
+            android:padding="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_14sdp"
+            app:progressBackgroundColor="@color/colorPrimary"
+            app:progressColor="#00000000"
+            app:thumb="@drawable/thumb2" />
+        <include layout="@layout/searchbar"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

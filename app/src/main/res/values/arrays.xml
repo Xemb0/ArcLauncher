@@ -1,0 +1,34 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+
+
+        <string-array name="gesture_options">
+            <item>Sleep</item>
+            <item>Show Notification</item>
+            <item>Open Drawer</item>
+            <item>Open Dialer</item>
+            <item>Open Messages</item>
+            <item>Open Camera</item>
+            <item>Custom App Open</item>
+        </string-array>
+
+        <string-array name="gesture_values">
+            <item>sleep</item>
+            <item>show_notification</item>
+            <item>open_drawer</item>
+            <item>open_dialer</item>
+            <item>open_Messages</item>
+            <item>open_Camera</item>
+            <item>custom_app_open</item>
+        </string-array>
+    </resources>
+

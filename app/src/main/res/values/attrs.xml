@@ -1,0 +1,11 @@
+<resources>
+    <declare-styleable name="AppWidgetAttrs">
+        <attr name="appWidgetPadding" format="dimension" />
+        <attr name="appWidgetInnerRadius" format="dimension" />
+        <attr name="appWidgetRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="MyPreference">
+        <attr name="textColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+    </declare-styleable>
+</resources>

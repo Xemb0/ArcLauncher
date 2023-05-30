@@ -1,106 +1,128 @@
 package com.launcher.myapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.marcinmoskala.arcseekbar.ArcSeekBar;
+import com.marcinmoskala.arcseekbar.ProgressListener;
 
 import java.util.Collections;
 import java.util.List;
 
 public class Drawer extends AppCompatActivity {
 
-    private GestureDetector gestureDetector;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer);
-        initializeDrawer();
+    private static final int DEFAULT_ICON_SPAN = 5;
 
-        BottomSheetBehaviour();
-
-
-        gestureDetector = new GestureDetector(this, new Gesture(this));
-
-
+    private int previousProgress = -1;
+    public Drawer() {
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // Pass the touch event to the GestureDetector to handle
-        gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+
+    public Drawer(int previousProgress) {
+        this.previousProgress = previousProgress;
     }
-    private  void initializeDrawer(){
+
+    public Drawer(int contentLayoutId, int previousProgress) {
+        super(contentLayoutId);
+        this.previousProgress = previousProgress;
+    }
 
 
+    void AppDrawer(){
+        Vibrate vibrate = new Vibrate();
+        RecyclerView CircularDrawer = findViewById(R.id.recycalview);
+        PackageManager pm = this.getPackageManager();
 
-
-    View mBottomSheet = findViewById(R.id.DrawerSheet);
-    RecyclerView recyclerDrawer = findViewById(R.id.recycalDrawer);
-        recyclerDrawer.setLayoutManager(new GridLayoutManager(this, 6, RecyclerView.HORIZONTAL, false));
-
-        //        mDrawerGridView.setLayoutManager(mGridLayoutManager);
-    PackageManager pm = this.getPackageManager();
-    Intent main = new Intent(Intent.ACTION_MAIN, null);
+        Intent main = new Intent(Intent.ACTION_MAIN);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
-    List<ResolveInfo> installedAppList = pm.queryIntentActivities(main,0);
-        Collections.sort(installedAppList,
-            new ResolveInfo.DisplayNameComparator(pm));
-    Adapter adapter = new Adapter(this, installedAppList, pm);
-        recyclerDrawer.setAdapter(adapter);
-    }
+        List<ResolveInfo> apps = pm.queryIntentActivities(main,0);
+        Collections.sort(apps,new ResolveInfo.DisplayNameComparator(pm));
+        Adapter appAdapter = new Adapter(this, apps, pm);
+        CircularDrawer.setAdapter(appAdapter);
+        CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this);
+        CircularDrawer.setLayoutManager(circleLayoutManager);
 
-
-
-
-
-    void BottomSheetBehaviour(){
-        View Drawer = findViewById(R.id.Drawer);
-        View bottomSheet = findViewById(R.id.DrawerSheet);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-
-
+        final BroadcastReceiver installUninstallBrodcastReciver = new BroadcastReceiver() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset == 0) {
-                    // Bottom sheet is fully expanded and user started to swipe down
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    overridePendingTransition(0, R.anim.slide_down);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-
-                } else if (slideOffset == 1) {
-                    // Bottom sheet is fully collapsed and user started to swipe up
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    overridePendingTransition(R.anim.slide_up, 0);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                String packageName = intent.getData().getSchemeSpecificPart();
+                if(Intent.ACTION_PACKAGE_ADDED.equals(action)){
+                    appAdapter.refreshAppList();
+                } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)){
+                    appAdapter.refreshAppList();
 
                 }
             }
+        };
 
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        registerReceiver(installUninstallBrodcastReciver,intentFilter);
+
+        ArcSeekBar seekArc = findViewById(R.id.seekArc);
+        int AppCount = appAdapter.getItemCount();
+        seekArc.setMaxProgress(AppCount-1);
+
+        TextView fisrtletter = findViewById(R.id.firstletter);
+        View focusAppBackground = findViewById(R.id.Icon_shadow);
+        fisrtletter.setVisibility(View.INVISIBLE);
+        focusAppBackground.setVisibility(View.INVISIBLE);
+
+
+        seekArc.setOnProgressChangedListener(new ProgressListener() {
+            @Override
+            public void invoke(int progress) {
+                if(progress!=previousProgress){
+                    vibrate.vibrate();
+                    previousProgress = progress;
+                }
+                circleLayoutManager.scrollToPosition(progress);
+                fisrtletter.setVisibility(View.VISIBLE);
+                focusAppBackground.setVisibility(View.VISIBLE);
+
+                String packageName = apps.get(progress).activityInfo.packageName;
+                String appName;
+                try {
+                    appName = pm.getApplicationLabel(pm.getApplicationInfo(packageName,PackageManager.GET_META_DATA)).toString();
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                String alphabet = String.valueOf(appName.charAt(0));
+                fisrtletter.setText(alphabet);
+            }
+        });
+        seekArc.setOnStopTrackingTouch(new ProgressListener() {
+            @Override
+            public void invoke(int i) {
+                fisrtletter.setVisibility(View.INVISIBLE);
+                focusAppBackground.setVisibility(View.INVISIBLE);
+            }
         });
 
+        int iconSpan = getIconSizeFromSharedPreferences();
+        RecyclerView recyclerDrawer = findViewById(R.id.recycalDrawer);
+        recyclerDrawer.setLayoutManager(new GridLayoutManager(this,iconSpan,RecyclerView.HORIZONTAL,false));
+        recyclerDrawer.setAdapter(appAdapter);
 
     }
 
+    private int getIconSizeFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("iconSpan", DEFAULT_ICON_SPAN);
+    }
 }

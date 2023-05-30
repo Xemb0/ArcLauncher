@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -23,6 +24,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,12 +34,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import androidx.core.content.res.ResourcesCompat;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
+
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -57,11 +62,12 @@ import static java.lang.Math.max;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
-    public  final int UNINSTALL_REQUEST_CODE = 1;
     public int position;
      List<ResolveInfo> lapps;
      Context context;
     PackageManager pm;
+    private static final int DEFAULT_ICON_SIZE = 110; // Replace 110 with your desired default size in pixels
+
 
     public Adapter(Context context, List<ResolveInfo> apps, PackageManager pn) {
         this.context = context;
@@ -75,10 +81,43 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
         return new ViewHolder(view);
     }
+
+
+    private int getIconSizeFromSharedPreferences() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("iconSize", DEFAULT_ICON_SIZE);
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder,  int position) {
+
+
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
+
+
+
+
+        int iconSize = getIconSizeFromSharedPreferences();
+
+        // Update the size of the ImageView
+            ViewGroup.LayoutParams imageLayoutParams = holder.images.getLayoutParams();
+            imageLayoutParams.width = iconSize;
+            imageLayoutParams.height = iconSize;
+            holder.images.setLayoutParams(imageLayoutParams);
+
+
+            // Update the height of the TextView
+            ViewGroup.LayoutParams textLayoutParams = holder.text.getLayoutParams();
+            textLayoutParams.height = iconSize / 3; // Adjust the height of the label based on the icon size
+            holder.text.setLayoutParams(textLayoutParams);
+            setAnimation(holder.itemlayout,position);
+
+
+            // Rest of your code...
+
+
         holder.itemlayout.setOnClickListener(view -> {
             ResolveInfo launchable = lapps.get(position);
             ActivityInfo activity = launchable.activityInfo;
@@ -97,39 +136,32 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
 
             View rootView = ((Activity) holder.itemlayout.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-            int cx = rootView.getWidth() / 2;
-            int cy = rootView.getHeight() / 2;
-            float finalRadius = (float) Math.hypot(cx, cy);
-            Animator anim = null;
-            anim = ViewAnimationUtils.createCircularReveal(rootView, cx, cy, 0, finalRadius);
 
-            anim.setDuration(200);
-            anim.start();
+// Set initial scale
+            holder.images.setScaleX(.5f);
+            holder.images.setScaleY(.5f);
 
+// Set pivot point
+            holder.images.setPivotX(holder.images.getWidth() / 2f);
+            holder.images.setPivotY(holder.images.getHeight() / 2f);
 
-            // Start the app activity after the animation has finished
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    context.startActivity(i);
-
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-            });
-
+// Create and start the animation
+            holder.images.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Start the activity after the animation has finished
+                            context.startActivity(i);
+                        }
+                    })
+                    .start();
 
         });
+
+
 
         holder.itemlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -137,12 +169,32 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
                 // Handle the long click event here
 
                 ResolveInfo launchable = lapps.get(position);
+                // Set initial scale
+                holder.images.setScaleX(0.5f);
+                holder.images.setScaleY(0.5f);
+
+// Set pivot point
+                holder.images.setPivotX(holder.images.getWidth() / 2f);
+                holder.images.setPivotY(holder.images.getHeight() / 2f);
+
+// Create and start the animation
+                holder.images.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(150)
+                        .start();
+
+
                 showPopupWindowForApp(launchable,holder.itemlayout,pm);
                 return true;
             }
         });
     }
 
+
+    private void setAnimation(View apps,int position){
+        Animation slideIn = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+    }
     @Override
     public int getItemCount() {
         return lapps.size();
@@ -173,6 +225,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
         }
     }
+    public void setIconSize(int iconSize) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("iconSize", iconSize);
+        editor.apply();
+        notifyDataSetChanged();
+    }
+
 
     private void showPopupWindowForApp(ResolveInfo resolveInfo, View anchorView,PackageManager pm) {
         // Create a new popup window
@@ -227,5 +287,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         anchorView.getLocationOnScreen(location);
         popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1]-verticalOffset);
     }
+
+
 
 }

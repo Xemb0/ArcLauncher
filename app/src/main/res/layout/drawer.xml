@@ -3,26 +3,15 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/Drawer"
+    android:background="@drawable/bottom_sheet_transition"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/DrawerSheet"
-        style="@style/Widget.Design.BottomSheet.Modal"
-        android:layout_width="match_parent"
-        android:layout_height="859dp"
-        android:background="@drawable/bg_bottomsheet"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycalDrawerPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycalDrawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-
-            android:layout_marginTop="129dp"
-            android:layout_marginBottom="123dp" />
-
-    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

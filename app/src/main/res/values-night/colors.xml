@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1a237e</color>
+    <color name="colorPrimaryDark">#0d47a1</color>
+    <color name="colorAccent">#6570EA</color>
+    <color name="colorBottomSheetExpanded">#F2212121</color>
+
+    <color name="Light.Background">#f9f9f9</color>
+    <color name="Transparent">#00000000</color>
+    <color name="Light.TextColor">#AFAFAF</color>
+    <color name="Light.TextColorSecondary">#9e9e9e</color>
+
+    <color name="Dark.Background">#212121</color>
+    <color name="Dark.TextColor">#ffffff</color>
+    <color name="Dark.TextColorSecondary">#9e9e9e</color>
+
+    <color name="Black.Background">#000000</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="shade">#B0000000</color>
+
+    <color name="materialRed">#d6552e</color>
+    <color name="materialGreen">#b4c64a</color>
+    <color name="materialBlue">#1892cc</color>
+
+    <color name="introText">#ff444444</color>
+    <color name="introButton">#7d000000</color>
+
+    <color name="darkmode_gray">#F2434343</color>
+
+    <color name="Primary_background">#EE333333</color>
+
+    <color name="Settings_Actionbar">#F0D1D1D1</color>
+    <color name="Settings_tabs">#F0393939</color>
+    <color name="textColor">#ED000000</color>
+    <color name="bg">#FFFFFF</color>
+    <color name="icon_name">#FFFFFF</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+
+
+</resources>

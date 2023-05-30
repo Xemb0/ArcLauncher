@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SettingsActivity" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:colorPrimaryDark">@color/Dark.Background</item>
+        <item name="colorPrimary">@color/materialRed</item>
+        <item name="android:statusBarColor">#F0424242</item>
+
+        <item name="colorPrimaryDark">@color/materialRed</item>
+        <item name="colorAccent">@color/materialRed</item>
+        <!--treanparent wallpaer-->
+        <item name="android:windowShowWallpaper">true</item>
+
+        <item name="android:windowBackground">@color/Settings_tabs</item>
+
+        <item name="android:navigationBarColor">@color/Settings_tabs</item>
+        <item name="android:textColorPrimary">@color/Light.TextColor</item>
+        <item name="android:textColor">@color/Light.TextColor</item>
+        <item name="android:textColorSecondary">@color/Light.TextColorSecondary</item>
+    </style>
+</resources>

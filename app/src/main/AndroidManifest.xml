@@ -1,51 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
-
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission android:name="com.google.android.googlequicksearchbox.permission.ACCESS_ASSISTANT" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         android:minSdkVersion="30"
         tools:ignore="QueryAllPackagesPermission" />
-
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:largeHeap="@bool/config_largeHeap"
         android:supportsRtl="true"
         android:theme="@style/Home.Light"
         tools:targetApi="31">
         <activity
-            android:name=".ArcSettingsActivity"
-            android:theme="@style/Home.Light"
-            android:exported="true">
-        </activity>
+            android:name=".SetttingsFragmentUpdatInfo"
+            android:exported="false"
+            android:theme="@style/ViewPagers"
+            android:label="@string/title_activity_setttings_fragment_updat_info" />
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/Home.Light"
-            android:exported="true">
+            android:name=".SettingsFragmentDrawer"
+            android:exported="false"
 
+            android:label="@string/title_activity_settings_fragment_drawer" />
+        <activity
+            android:name=".SettingsFragmentHome"
+            android:exported="false"
+            android:theme="@style/ViewPagers"
+            android:label="@string/title_activity_settings_fragment_home" />
+        <activity
+            android:name=".SettingsFragmentGesture"
+            android:exported="false"
+            android:theme="@style/ViewPagers"
+            android:label="@string/title_activity_settings" />
+
+        <receiver
+            android:name=".Clock"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/clock_info" />
+        </receiver>
+
+        <activity
+            android:name=".ArcSettingsActivity"
+            android:exported="true"
+
+            android:theme="@style/SettingsActivity"/>
+        <activity
+            android:name=".ActivityPager"
+            android:clearTaskOnLaunch="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resumeWhilePausing="true"
+            android:stateNotNeeded="true"
+            android:taskAffinity=""
+            android:theme="@style/Home.Light"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
-        <activity android:name="com.launcher.myapplication.Drawer" />
     </application>
 
 </manifest>

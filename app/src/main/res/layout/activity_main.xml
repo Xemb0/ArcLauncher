@@ -3,43 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homescreen"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ActivityHome">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+
+        android:layout_height="wrap_content">
+
+    <include layout="@layout/clock"
+
+        />
+    </LinearLayout>
 
 
     <RelativeLayout
-
-        app:behavior_peekHeight="340dp"
-
-        android:background="@drawable/shadow_bottomsheet"
-        android:id="@+id/bottomSheet"
+        app:behavior_hideable="false"
         android:layout_width="match_parent"
+        android:id="@+id/CircularSheet"
 
-        android:layout_height="@dimen/_250sdp"
-        android:layout_gravity="bottom">
-        <TextView
-            android:id="@+id/firstletter"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_120sdp"
+        style="@style/Widget.Design.BottomSheet.Modal"
+        android:background="@drawable/shadow_bottomsheet"
+        android:orientation="vertical"
+        app:layout_behavior="@string/bottom_sheet_behavior"
 
-        android:layout_centerHorizontal="true"
+        android:layout_height="@dimen/_250sdp">
 
-            android:background="@drawable/circular_backgraound"
-            android:fontFamily="sans-serif"
-            android:text="A"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="34sp"
-            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycalview"
-            android:translationY="-120dp"
             android:layout_width="match_parent"
-            android:layout_below="@id/firstletter"
-            android:layout_height="@dimen/_130sdp"
+           android:translationY="@dimen/_5sdp"
+            android:layout_height="@dimen/_140sdp"
 
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
 
 
             />
@@ -49,57 +49,134 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_gravity="bottom"
-       android:background="@drawable/bg_bottomsheet"
-        android:layout_height="180dp">
 
-        <ImageView
-            android:id="@+id/up_arrow"
-            android:translationY="-10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrow"
-            app:layout_anchor="@+id/seekArc"
-            app:layout_anchorGravity="top|center" />
+        style="@style/Widget.Design.BottomSheet.Modal"
 
+        app:layout_anchor="@id/DrawerSheet"
+        app:layout_anchorGravity="top"
+
+
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        android:background="#00000000"
+        android:layout_height="wrap_content">
 
         <com.marcinmoskala.arcseekbar.ArcSeekBar
             android:id="@+id/seekArc"
-            android:layout_width="@dimen/_280sdp"
-            android:layout_centerInParent="true"
-            android:translationY="-20dp"
+
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_110sdp"
             android:hapticFeedbackEnabled="true"
 
 
-            android:padding="@dimen/_30sdp"
-
+            android:padding="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_14sdp"
             app:progressBackgroundColor="@color/colorPrimary"
             app:progressColor="#00000000"
             app:thumb="@drawable/thumb2" />
+        <ImageView
+            android:id="@+id/up_arrow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_below="@id/seekArc"
+            android:translationY="@dimen/_minus50sdp"
+            android:src="@drawable/arrow"
+            app:layout_anchor="@+id/bottomSheettop2"
+            app:layout_anchorGravity="top|center" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/DrawerSheet"
+        style="@style/Widget.Design.BottomSheet.Modal"
+        android:background="@drawable/bottom_sheet_transition"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_peekHeight="@dimen/_40sdp"
+
+
+        android:orientation="vertical"
+
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/bottomSheettop"
+            android:orientation="vertical">
+
+
+
+            <RelativeLayout
+                android:padding="@dimen/_5sdp"
+
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <include layout="@layout/searchbar"
+                    />
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycalDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                />
+
+
+        </LinearLayout>
     </RelativeLayout>
 
+
     <LinearLayout
-        style="@style/Animation.Design.BottomSheetDialog"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:layout_width="match_parent"
-android:background="@color/white"
+        app:layout_anchor="@id/DrawerSheet"
+        app:layout_anchorGravity="top"
         android:orientation="vertical"
-        app:behavior_peekHeight="60dp"
-        android:id="@+id/bottomSheet2"
-        android:layout_height="match_parent">
-        <include layout="@layout/serachview"
-            />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycalDrawer"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
 
-            />
+        android:layout_height="@dimen/_450sdp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_315sdp">
+
+            <TextView
+
+                android:id="@+id/firstletter"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_160sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/shadow_circle"
+                android:fontFamily="sans-serif"
+                android:padding="@dimen/_5sdp"
+                android:text="A"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_101sdp"/>
+            <FrameLayout
+                android:layout_width="@dimen/_80sdp"
+                android:layout_gravity="center"
+                android:id="@+id/Icon_shadow"
+                android:background="@drawable/circular_backgraound"
+                android:layout_height="@dimen/_130sdp">
+
+            </FrameLayout>
+        </LinearLayout>
+
 
     </LinearLayout>
+
+
 
 
 
