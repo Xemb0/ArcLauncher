@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_320sdp"
+        android:layout_height="@dimen/_260sdp"
         android:background="@drawable/shadow_bottomsheet"
         android:orientation="vertical"
         android:layout_gravity="bottom">
@@ -20,16 +20,23 @@
             android:id="@+id/seekArcPager"
 
             android:layout_width="match_parent"
+            android:translationY="@dimen/_minus40sdp"
             android:layout_height="@dimen/_110sdp"
             android:hapticFeedbackEnabled="true"
 
 
             android:padding="@dimen/_25sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
             app:progressBackgroundColor="@color/colorPrimary"
             app:progressColor="#00000000"
             app:thumb="@drawable/thumb2" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:translationY="@dimen/_minus51sdp"
+
+            android:layout_height="@dimen/_40sdp">
+
         <include layout="@layout/searchbar"/>
+        </LinearLayout>
 
     </LinearLayout>
 
