@@ -2,6 +2,7 @@ package com.launcher.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
 
     private Context context;
     private List<ResolveInfo> appList;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     public DockAdapter(Context context, List<ResolveInfo> appList) {
         this.context = context;
@@ -40,17 +43,39 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchApp(appInfo.activityInfo.packageName);
-            }
+                    // Set initial scale
+                final ResolveInfo appInfo = appList.get(position);
+                final String packageName = appInfo.activityInfo.packageName;
+
+
+
+
+                    holder.iconImageView.setScaleX(0.5f);
+                    holder.iconImageView.setScaleY(0.5f);
+
+// Set pivot point
+                    holder.iconImageView.setPivotX(holder.iconImageView.getWidth() / 2f);
+                    holder.iconImageView.setPivotY(holder.iconImageView.getHeight() / 2f);
+
+// Create and start the animation
+                    holder.iconImageView.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(150)
+                            .start();
+
+                // Store the package name of the clicked item in SharedPreferences
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("AppName", packageName);
+                editor.apply();
+
+                }
+
         });
     }
 
-    private void launchApp(String packageName) {
-        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-        if (launchIntent != null) {
-            context.startActivity(launchIntent);
-        }
-    }
+
 
     @Override
     public int getItemCount() {

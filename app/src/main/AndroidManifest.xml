@@ -51,9 +51,8 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".DockAdder"
-            android:exported="false"
-            android:theme="@style/ViewPagers"
-            android:label="@string/title_activity_settings" />
+            android:exported="true"
+            android:theme="@style/ViewPagers" />
 
 
         <receiver

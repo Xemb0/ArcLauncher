@@ -215,7 +215,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView images;
-
         TextView text;
         RelativeLayout itemlayout;
         public ViewHolder(View view) {
@@ -223,7 +222,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
             images = view.findViewById(R.id.image);
             text = view.findViewById(R.id.label);
             itemlayout=view.findViewById(R.id.item);
-
         }
     }
     public void setIconSize(int iconSize) {
@@ -233,51 +231,37 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         editor.apply();
         notifyDataSetChanged();
     }
-
-
     private void showPopupWindowForApp(ResolveInfo resolveInfo, View anchorView,PackageManager pm) {
         // Create a new popup window
         PopupWindow popupWindow = new PopupWindow(context);
-
         // Set the content view of the popup window
         View popupView = LayoutInflater.from(context).inflate(R.layout.app_popup, null);
         popupWindow.setContentView(popupView);
-
         popupWindow.setBackgroundDrawable(null);
         ImageButton Appinfo = popupView.findViewById(R.id.app_info_button);
         ImageButton Uninstall = popupView.findViewById(R.id.Uninstall_button);
         ImageButton AddDock = popupView.findViewById(R.id.Add_dock);
         Appinfo.setOnClickListener(v -> {  String packageName = resolveInfo.activityInfo.packageName;
-
             // Create an intent to show the app info screen
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.setData(Uri.parse("package:" + packageName));
-
             // Launch the app info screen
             context.startActivity(intent);
             popupWindow.dismiss();
-
-
-
         });
-
         //pop uninstall when the uninstall button is clicked
         Uninstall.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
             intent.setData(Uri.parse("package:" + resolveInfo.activityInfo.packageName));
             context.startActivity(intent);
-
             popupWindow.dismiss();
             position = lapps.indexOf(resolveInfo);
-
         });       //pop uninstall when the uninstall button is clicked
         AddDock.setOnClickListener(v -> {
             Intent intent = new Intent(context, DockAdder.class);
             context.startActivity(intent);
-
             popupWindow.dismiss();
-
         });
 
 

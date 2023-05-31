@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,31 +29,22 @@ public class DockAdder extends AppCompatActivity {
 
     List<ResolveInfo> appList;
 
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    String pakagemanger;
+    GridView gridDock;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.dock_icon_selctor);
 
+
         Doclizer();
-//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-//
-//        List<ResolveInfo> selectedApps = new ArrayList<>();
-//        for (ResolveInfo resolveInfo : appList) {
-//            String packageName = resolveInfo.activityInfo.packageName;
-//            boolean isSelected = sharedPreferences.getBoolean(packageName, false);
-//
-//            if (isSelected) {
-//                selectedApps.add(resolveInfo);
-//            }
-//        }
-
-//        docklist();
-//        dockAdapter = new DockAdapter(this,docklist);
-
-
+        DockAdded();
     }
-    private void docklist(){
 
+    private void docklist(){
+        recyclerDock = findViewById(R.id.recycalDock);
         PackageManager pm = getPackageManager();
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -63,7 +56,34 @@ public class DockAdder extends AppCompatActivity {
 
 
     }
+
+    private void DockAdded() {
+        gridDock = findViewById(R.id.DockGrid);
+        List<String> packageNames = new ArrayList<>();
+        String packageName = getPackageNameFromSharedPreferences();
+        packageNames.add(packageName);
+
+        // Create an ArrayAdapter with the packageNames list
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, packageNames);
+
+        // Set the adapter to the GridView
+        gridDock.setAdapter(adapter);
+
+        // Add the package name app to the grid
+        // Here, you can use the package name to perform any specific operations, such as loading the app icon, label, etc.
+        // Add the app to the grid based on your implementation and requirements
+    }
+
+    private String getPackageNameFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String packageName = sharedPreferences.getString("AppName", ""); // Empty string is the default value if the key is not found
+        return packageName;
+    }
+
+
+
     private void Doclizer(){
+        recyclerDock = findViewById(R.id.recycalDock);
         PackageManager pm = getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -71,10 +91,10 @@ public class DockAdder extends AppCompatActivity {
         Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
 
 
-        appAdapter = new Adapter(this, apps, pm);
-        GridLayoutManager dockmanger = new GridLayoutManager(this,6, RecyclerView.VERTICAL,false);
+        dockAdapter = new DockAdapter(this, apps );
+        StaggeredGridLayoutManager dockmanger = new StaggeredGridLayoutManager(6, LinearLayoutManager.VERTICAL);
         recyclerDock.setLayoutManager(dockmanger);
-        recyclerDock.setAdapter(appAdapter);
+        recyclerDock.setAdapter(dockAdapter);
         recyclerDock.hasFixedSize();
         recyclerDock.setItemViewCacheSize(100);
     }
