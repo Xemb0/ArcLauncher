@@ -20,7 +20,7 @@ public class StackTransformer implements ViewPager2.PageTransformer {
         }
 
         if (position <= 0) {
-            view.setAlpha(1 - Math.abs(position) * 2);
+            view.setAlpha(1 - Math.abs(position) * 4);
             view.setTranslationY(view.getHeight() * -position);
             ViewCompat.setTranslationZ(view, -1f);
         }

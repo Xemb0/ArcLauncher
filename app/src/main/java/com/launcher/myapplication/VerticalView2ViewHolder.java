@@ -14,7 +14,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,7 @@ public class VerticalView2ViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
 
         // Initialize the views and variables for Vertical View 2
-        RecyclerView recyclerView = itemView.findViewById(R.id.recycalDrawerPager);
+        CustomRecyclerView recyclerView = itemView.findViewById(R.id.recycalDrawerPager);
         initializeAppDrawer(recyclerView);
 
         }
@@ -42,9 +44,10 @@ public class VerticalView2ViewHolder extends RecyclerView.ViewHolder {
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
         appAdapter = new Adapter(context, apps, pm);
-        GridLayoutManager circleLayoutManager = new GridLayoutManager(context, 7, RecyclerView.HORIZONTAL, false);
+        StaggeredGridLayoutManager circleLayoutManager = new StaggeredGridLayoutManager(6, LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(circleLayoutManager);
         recyclerView.setAdapter(appAdapter);
+        recyclerView.hasFixedSize();
         recyclerView.setItemViewCacheSize(100);
 
         // Register broadcast receiver for package install/uninstall events
