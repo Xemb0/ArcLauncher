@@ -48,7 +48,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         this.context = context;
 
         // Initialize the views and variables for Vertical View 2
-        recyclerView = itemView.findViewById(R.id.CircularDrawerPager);
+        recyclerView = itemView.findViewById(R.id.CircularDockPager);
         seekArc = itemView.findViewById(R.id.seekArcPager);
         initializeAppDrawer();
 

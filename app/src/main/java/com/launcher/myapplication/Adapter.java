@@ -246,6 +246,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         popupWindow.setBackgroundDrawable(null);
         ImageButton Appinfo = popupView.findViewById(R.id.app_info_button);
         ImageButton Uninstall = popupView.findViewById(R.id.Uninstall_button);
+        ImageButton AddDock = popupView.findViewById(R.id.Add_dock);
         Appinfo.setOnClickListener(v -> {  String packageName = resolveInfo.activityInfo.packageName;
 
             // Create an intent to show the app info screen
@@ -269,6 +270,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
 
             popupWindow.dismiss();
             position = lapps.indexOf(resolveInfo);
+
+        });       //pop uninstall when the uninstall button is clicked
+        AddDock.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DockAdder.class);
+            context.startActivity(intent);
+
+            popupWindow.dismiss();
 
         });
 

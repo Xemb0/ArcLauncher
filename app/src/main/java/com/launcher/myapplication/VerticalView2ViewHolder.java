@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,6 +45,8 @@ public class VerticalView2ViewHolder extends RecyclerView.ViewHolder {
         main.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+
+
         appAdapter = new Adapter(context, apps, pm);
         StaggeredGridLayoutManager circleLayoutManager = new StaggeredGridLayoutManager(6, LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(circleLayoutManager);
