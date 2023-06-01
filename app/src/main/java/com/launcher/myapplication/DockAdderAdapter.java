@@ -1,5 +1,6 @@
 package com.launcher.myapplication;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,18 +15,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder> {
+public class DockAdderAdapter extends RecyclerView.Adapter<DockAdderAdapter.DockViewHolder> {
 
     private Context context;
     private List<ResolveInfo> appList;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    public DockAdapter(Context context, List<ResolveInfo> appList) {
+    public DockAdderAdapter(Context context, List<String> packageNames) {
         this.context = context;
-        this.appList = appList;
+        this.appList = getResolveInfoForPackages(context, packageNames);
+
     }
 
     @NonNull
@@ -35,6 +38,8 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
         return new DockViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull DockViewHolder holder, int position) {
         final ResolveInfo appInfo = appList.get(position);
@@ -43,56 +48,45 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    // Set initial scale
+                // Set initial scale
                 final ResolveInfo appInfo = appList.get(position);
                 final String packageName = appInfo.activityInfo.packageName;
 
 
 
 
-                    holder.iconImageView.setScaleX(0.5f);
-                    holder.iconImageView.setScaleY(0.5f);
+                holder.iconImageView.setScaleX(0.5f);
+                holder.iconImageView.setScaleY(0.5f);
 
 // Set pivot point
-                    holder.iconImageView.setPivotX(holder.iconImageView.getWidth() / 2f);
-                    holder.iconImageView.setPivotY(holder.iconImageView.getHeight() / 2f);
+                holder.iconImageView.setPivotX(holder.iconImageView.getWidth() / 2f);
+                holder.iconImageView.setPivotY(holder.iconImageView.getHeight() / 2f);
 
 // Create and start the animation
-                    holder.iconImageView.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(150)
-                            .start();
+                holder.iconImageView.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(150)
+                        .start();
 
-
-               addToSharedPreferences(packageName);
-
-                onBindViewHolder(holder,position);
-
-                }
+            }
 
         });
     }
-    private void addToSharedPreferences(String packageName) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("AppName", packageName);
-        editor.apply();
 
-        // Broadcast intent to notify the BroadcastReceiver about the app change event
-        Intent intent = new Intent("com.launcher.myapplication.APP_CHANGE");
-        context.sendBroadcast(intent);
-    }
 
-    private void removeFromSharedPreferences() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("AppName");
-        editor.apply();
+    public List<ResolveInfo> getResolveInfoForPackages(Context context, List<String> packageNames) {
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> resolveInfoList = new ArrayList<>();
 
-        // Broadcast intent to notify the BroadcastReceiver about the app change event
-        Intent intent = new Intent("com.launcher.myapplication.APP_CHANGE");
-        context.sendBroadcast(intent);
+        for (String packageName : packageNames) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setPackage(packageName);
+            List<ResolveInfo> packageResolveInfo = packageManager.queryIntentActivities(intent, 0);
+            resolveInfoList.addAll(packageResolveInfo);
+        }
+
+        return resolveInfoList;
     }
 
 

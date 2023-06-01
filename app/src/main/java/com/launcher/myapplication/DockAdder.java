@@ -1,7 +1,9 @@
 package com.launcher.myapplication;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -28,16 +30,26 @@ public class DockAdder extends AppCompatActivity {
     private  DockAdapter dockAdapter;
 
     List<ResolveInfo> appList;
+    List<String> packageNames;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String pakagemanger;
-    GridView gridDock;
+    RecyclerView ReyclerDock;
+    private BroadcastReceiver addOrRemoveReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+        DockAdded();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dock_icon_selctor);
-
+        IntentFilter filter = new IntentFilter("com.launcher.myapplication.APP_CHANGE");
+        registerReceiver(addOrRemoveReceiver, filter);
 
         Doclizer();
         DockAdded();
@@ -58,16 +70,17 @@ public class DockAdder extends AppCompatActivity {
     }
 
     private void DockAdded() {
-        gridDock = findViewById(R.id.DockGrid);
-        List<String> packageNames = new ArrayList<>();
+        ReyclerDock = findViewById(R.id.DockGrid);
+        packageNames = new ArrayList<>();
         String packageName = getPackageNameFromSharedPreferences();
         packageNames.add(packageName);
 
-        // Create an ArrayAdapter with the packageNames list
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, packageNames);
+            DockAdderAdapter dockAdderAdapter = new DockAdderAdapter(this,packageNames);
+        StaggeredGridLayoutManager dockmanger = new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
 
         // Set the adapter to the GridView
-        gridDock.setAdapter(adapter);
+        ReyclerDock.setLayoutManager(dockmanger);
+        ReyclerDock.setAdapter(dockAdderAdapter);
 
         // Add the package name app to the grid
         // Here, you can use the package name to perform any specific operations, such as loading the app icon, label, etc.
