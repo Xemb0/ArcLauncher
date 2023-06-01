@@ -144,6 +144,14 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             circleLayoutManager.scrollToPosition(progress);
         });
         seekArc.setOnStopTrackingTouch(i -> {
+            String packageName = circularAdapter.getPackageName(i);
+            if (packageName != null) {
+                Intent launchIntent = pm.getLaunchIntentForPackage(packageName);
+                if (launchIntent != null) {
+                    context.startActivity(launchIntent);
+                }
+            }
+
         });
     }
 

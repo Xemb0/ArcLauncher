@@ -69,17 +69,28 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
     List<ResolveInfo> lapps;
     Context context;
     PackageManager pm;
+    List<String> packageNames;
     private static final int DEFAULT_ICON_SIZE = 110; // Replace 110 with your desired default size in pixels
 
 
     public CircularAdapter(Context context, List<String> apps, PackageManager pn) {
         this.context = context;
         lapps = getResolveInfoForPackages(context,apps);
+        this.packageNames = apps;
         pm = pn;
+    }
+
+
+    public String getPackageName(int position) {
+        if (position >= 0 && position < packageNames.size()) {
+            return packageNames.get(position);
+        }
+        return null;
     }
     public List<ResolveInfo> getResolveInfoForPackages(Context context, List<String> packageNames) {
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> resolveInfoList = new ArrayList<>();
+
 
         for (String packageName : packageNames) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -101,7 +112,6 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
 
         return resolveInfoList;
     }
-
 
     @NonNull
     @Override
