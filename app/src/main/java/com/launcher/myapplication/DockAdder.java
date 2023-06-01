@@ -77,13 +77,12 @@ public class DockAdder extends AppCompatActivity {
         String packageName = getPackageNameFromSharedPreferences();
         packageNames.addAll(savePackageNamesToSharedPreferences(packageNames));
         packageNames.add(packageName);
-
         DockAdderAdapter dockAdderAdapter = new DockAdderAdapter(this, packageNames);
-        StaggeredGridLayoutManager dockmanger = new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
-
-        // Set the adapter to the GridView
-        ReyclerDock.setLayoutManager(dockmanger);
+        StaggeredGridLayoutManager dockLayoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
+        dockLayoutManager.setReverseLayout(true); // Set reverse layout to add items from the right side
+        ReyclerDock.setLayoutManager(dockLayoutManager);
         ReyclerDock.setAdapter(dockAdderAdapter);
+
 
         // Save the package names to another shared preference as a set
         savePackageNamesToSharedPreferences(packageNames);

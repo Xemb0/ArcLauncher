@@ -14,18 +14,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
-public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder> {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder> {
 
     private Context context;
     private List<ResolveInfo> appList;
+    private List<Boolean> clickedStates; // Track clicked state for each item
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
     public DockAdapter(Context context, List<ResolveInfo> appList) {
         this.context = context;
         this.appList = appList;
+        clickedStates = new ArrayList<>(Collections.nCopies(appList.size(), false)); // Initialize all states to false
     }
 
     @NonNull
@@ -34,45 +36,41 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
         View view = LayoutInflater.from(context).inflate(R.layout.item_app, parent, false);
         return new DockViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull DockViewHolder holder, int position) {
         final ResolveInfo appInfo = appList.get(position);
         holder.iconImageView.setImageDrawable(appInfo.loadIcon(context.getPackageManager()));
         holder.labelTextView.setText(appInfo.loadLabel(context.getPackageManager()));
+
+        final boolean isClicked = clickedStates.get(position); // Get clicked state for this item
+
+        // Set scale based on clicked state
+        float scale = isClicked ? 0.5f : 1f;
+        holder.iconImageView.setScaleX(scale);
+        holder.iconImageView.setScaleY(scale);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    // Set initial scale
-                final ResolveInfo appInfo = appList.get(position);
-                final String packageName = appInfo.activityInfo.packageName;
+                // Toggle the clicked state for this item
+                boolean isClicked = clickedStates.get(position);
+                clickedStates.set(position, !isClicked);
 
+                // Notify the adapter that the data has changed for this item
+                notifyItemChanged(position);
 
-
-
-                    holder.iconImageView.setScaleX(0.5f);
-                    holder.iconImageView.setScaleY(0.5f);
-
-// Set pivot point
-                    holder.iconImageView.setPivotX(holder.iconImageView.getWidth() / 2f);
-                    holder.iconImageView.setPivotY(holder.iconImageView.getHeight() / 2f);
-
-// Create and start the animation
-                    holder.iconImageView.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(150)
-                            .start();
-
-
-               addToSharedPreferences(packageName);
-
-                onBindViewHolder(holder,position);
-
+                // Add or remove from SharedPreferences
+                String packageName = appInfo.activityInfo.packageName;
+                if (isClicked) {
+                    removeFromSharedPreferences();
+                } else {
+                    addToSharedPreferences(packageName);
                 }
-
+            }
         });
     }
+
+
     private void addToSharedPreferences(String packageName) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -94,13 +92,6 @@ public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder
         Intent intent = new Intent("com.launcher.myapplication.APP_CHANGE");
         context.sendBroadcast(intent);
     }
-
-
-
-    private  void refresh(){
-        notifyDataSetChanged();
-    }
-
 
     @Override
     public int getItemCount() {
