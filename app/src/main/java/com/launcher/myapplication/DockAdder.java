@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DockAdder extends AppCompatActivity {
     Adapter appAdapter;
@@ -73,19 +75,41 @@ public class DockAdder extends AppCompatActivity {
         ReyclerDock = findViewById(R.id.DockGrid);
         packageNames = new ArrayList<>();
         String packageName = getPackageNameFromSharedPreferences();
+        packageNames.addAll(savePackageNamesToSharedPreferences(packageNames));
         packageNames.add(packageName);
 
-            DockAdderAdapter dockAdderAdapter = new DockAdderAdapter(this,packageNames);
+        DockAdderAdapter dockAdderAdapter = new DockAdderAdapter(this, packageNames);
         StaggeredGridLayoutManager dockmanger = new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
 
         // Set the adapter to the GridView
         ReyclerDock.setLayoutManager(dockmanger);
         ReyclerDock.setAdapter(dockAdderAdapter);
 
-        // Add the package name app to the grid
-        // Here, you can use the package name to perform any specific operations, such as loading the app icon, label, etc.
-        // Add the app to the grid based on your implementation and requirements
+        // Save the package names to another shared preference as a set
+        savePackageNamesToSharedPreferences(packageNames);
     }
+
+    private List<String> savePackageNamesToSharedPreferences(List<String> packageNames) {
+        // Get the shared preference for the permanent storage
+        SharedPreferences permanentPrefs = getSharedPreferences("PermanentPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = permanentPrefs.edit();
+
+        // Retrieve the existing set of package names from the shared preference
+        Set<String> existingPackageNamesSet = permanentPrefs.getStringSet("PackageNames", new HashSet<>());
+
+        // Add the new package names from the list
+        existingPackageNamesSet.addAll(packageNames);
+
+        // Convert the set to a list
+        List<String> existingPackageNamesList = new ArrayList<>(existingPackageNamesSet);
+
+        // Save the updated list of package names back to the shared preference
+        editor.putStringSet("PackageNames", new HashSet<>(existingPackageNamesList));
+        editor.apply();
+        return existingPackageNamesList;
+    }
+
+
 
     private String getPackageNameFromSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
