@@ -25,7 +25,8 @@
             android:hapticFeedbackEnabled="true"
 
 
-            android:padding="@dimen/_25sdp"
+            android:padding="@dimen/_30sdp"
+            android:layout_marginHorizontal="@dimen/_30sdp"
             app:progressBackgroundColor="@color/colorPrimary"
             app:progressColor="#00000000"
             app:thumb="@drawable/thumb2" />

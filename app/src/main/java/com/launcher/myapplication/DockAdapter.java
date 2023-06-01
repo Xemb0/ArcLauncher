@@ -16,18 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder> {
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class DockAdapter extends RecyclerView.Adapter<DockAdapter.DockViewHolder> {
 
     private Context context;
     private List<ResolveInfo> appList;
-    private List<Boolean> clickedStates; // Track clicked state for each item
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    private Set<String> selectedApps;
+    private SharedPreferences sharedPreferences;
 
     public DockAdapter(Context context, List<ResolveInfo> appList) {
         this.context = context;
         this.appList = appList;
-        clickedStates = new ArrayList<>(Collections.nCopies(appList.size(), false)); // Initialize all states to false
+        sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        selectedApps = loadSelectedApps();
     }
 
     @NonNull
@@ -36,13 +40,15 @@ import java.util.List;public class DockAdapter extends RecyclerView.Adapter<Dock
         View view = LayoutInflater.from(context).inflate(R.layout.item_app, parent, false);
         return new DockViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull DockViewHolder holder, int position) {
         final ResolveInfo appInfo = appList.get(position);
         holder.iconImageView.setImageDrawable(appInfo.loadIcon(context.getPackageManager()));
         holder.labelTextView.setText(appInfo.loadLabel(context.getPackageManager()));
 
-        final boolean isClicked = clickedStates.get(position); // Get clicked state for this item
+        final String packageName = appInfo.activityInfo.packageName;
+        final boolean isClicked = selectedApps.contains(packageName);
 
         // Set scale based on clicked state
         float scale = isClicked ? 0.5f : 1f;
@@ -52,25 +58,32 @@ import java.util.List;public class DockAdapter extends RecyclerView.Adapter<Dock
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the clicked state for this item
-                boolean isClicked = clickedStates.get(position);
-                clickedStates.set(position, !isClicked);
+                if (isClicked) {
+                    removeFromSharedPreferences();
+                    selectedApps.remove(packageName);
+                } else {
+                    addToSharedPreferences(packageName);
+                    saveSelectedApps();
+                    selectedApps.add(packageName);
+                }
+
 
                 // Notify the adapter that the data has changed for this item
                 notifyItemChanged(position);
 
-                // Add or remove from SharedPreferences
-                String packageName = appInfo.activityInfo.packageName;
-                if (isClicked) {
-                    removeFromSharedPreferences();
-                } else {
-                    addToSharedPreferences(packageName);
-                }
             }
         });
     }
 
+    private Set<String> loadSelectedApps() {
+        return sharedPreferences.getStringSet("SelectedApps", new HashSet<String>());
+    }
 
+    private void saveSelectedApps() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet("SelectedApps", selectedApps);
+        editor.apply();
+    }
     private void addToSharedPreferences(String packageName) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
