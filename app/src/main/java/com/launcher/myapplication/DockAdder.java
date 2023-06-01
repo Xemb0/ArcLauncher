@@ -94,20 +94,18 @@ public class DockAdder extends AppCompatActivity {
         SharedPreferences permanentPrefs = getSharedPreferences("PermanentPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = permanentPrefs.edit();
 
-        // Retrieve the existing set of package names from the shared preference
-        Set<String> existingPackageNamesSet = permanentPrefs.getStringSet("PackageNames", new HashSet<>());
+        // Retrieve the existing list of package names from the shared preference
+        List<String> existingPackageNamesList = new ArrayList<>(permanentPrefs.getStringSet("PackageNames", new HashSet<>()));
 
-        // Add the new package names from the list
-        existingPackageNamesSet.addAll(packageNames);
-
-        // Convert the set to a list
-        List<String> existingPackageNamesList = new ArrayList<>(existingPackageNamesSet);
+        // Add the new package names to the existing list
+        existingPackageNamesList.addAll(packageNames);
 
         // Save the updated list of package names back to the shared preference
         editor.putStringSet("PackageNames", new HashSet<>(existingPackageNamesList));
         editor.apply();
         return existingPackageNamesList;
     }
+
 
 
 

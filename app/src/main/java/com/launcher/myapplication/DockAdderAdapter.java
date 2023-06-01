@@ -82,8 +82,19 @@ public class DockAdderAdapter extends RecyclerView.Adapter<DockAdderAdapter.Dock
         for (String packageName : packageNames) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setPackage(packageName);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
             List<ResolveInfo> packageResolveInfo = packageManager.queryIntentActivities(intent, 0);
-            resolveInfoList.addAll(packageResolveInfo);
+
+            // Filter out non-launcher apps
+            List<ResolveInfo> launcherResolveInfo = new ArrayList<>();
+            for (ResolveInfo resolveInfo : packageResolveInfo) {
+                if (resolveInfo.activityInfo != null && resolveInfo.activityInfo.exported) {
+                    launcherResolveInfo.add(resolveInfo);
+                }
+            }
+
+            resolveInfoList.addAll(launcherResolveInfo);
         }
 
         return resolveInfoList;
