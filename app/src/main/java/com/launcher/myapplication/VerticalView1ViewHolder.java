@@ -23,13 +23,17 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.marcinmoskala.arcseekbar.ArcSeekBar;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
@@ -38,10 +42,19 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
 
     private int previousProgress = -1;
     private Adapter appAdapter;
+    private  CircularAdapter circularAdapter;
     RecyclerView recyclerView;
     ArcSeekBar seekArc;
     Vibrator vibrator;
     GestureDetector gestureDetector;
+    private final BroadcastReceiver addOrRemoveReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            initializeAppDrawer();
+        }
+    };
+
 
     public VerticalView1ViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
@@ -50,7 +63,10 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         // Initialize the views and variables for Vertical View 2
         recyclerView = itemView.findViewById(R.id.CircularDockPager);
         seekArc = itemView.findViewById(R.id.seekArcPager);
+        IntentFilter filter = new IntentFilter("com.launcher.myapplication.APP_CHANGE");
+        context.registerReceiver(addOrRemoveReceiver, filter);
         initializeAppDrawer();
+
 
 
          gestureDetector = new GestureDetector(context, new GestureListener());
@@ -80,18 +96,36 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         });
     }
 
+    private List<String> savePackageNamesToSharedPreferences() {
+        SharedPreferences permanentPrefs = context.getSharedPreferences("PermanentPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = permanentPrefs.edit();
 
+// Retrieve the existing list of package names from the shared preference
+        List<String> existingPackageNamesList = new ArrayList<>(permanentPrefs.getStringSet("PackageNames", new HashSet<>()));
+
+// Add the default apps (dialer and message) if they are not already present in the list
+        if (!existingPackageNamesList.contains("com.android.dialer")) {
+            existingPackageNamesList.add("com.android.dialer");
+        }
+        if (!existingPackageNamesList.contains("com.android.messaging")) {
+            existingPackageNamesList.add("com.android.messaging");
+        }
+
+// Save the updated list of package names back to the shared preference
+        editor.putStringSet("PackageNames", new HashSet<>(existingPackageNamesList));
+        editor.apply();
+
+        return existingPackageNamesList;
+
+    }
     private void initializeAppDrawer() {
         PackageManager pm = context.getPackageManager();
-        Intent main = new Intent(Intent.ACTION_MAIN);
-        main.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
-        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
-        appAdapter = new Adapter(context, apps, pm);
+
+        List<String> packageNames = new ArrayList<>(savePackageNamesToSharedPreferences());
+        circularAdapter = new CircularAdapter(context, packageNames, pm); // Initialize the appAdapter
         CircleLayoutManager circleLayoutManager = new CircleLayoutManager(context);
+        recyclerView.setAdapter(circularAdapter);
         recyclerView.setLayoutManager(circleLayoutManager);
-        recyclerView.setAdapter(appAdapter);
-        recyclerView.setItemViewCacheSize(100);
 
         // Register broadcast receiver for package install/uninstall events
         IntentFilter intentFilter = new IntentFilter();
@@ -99,8 +133,9 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
         context.registerReceiver(installUninstallBroadcastReceiver, intentFilter);
-        int AppCount = appAdapter.getItemCount();
-        seekArc.setMaxProgress(AppCount - 1);
+
+        int appCount = circularAdapter.getItemCount(); // Use the appAdapter to get the item count
+        seekArc.setMaxProgress(appCount - 1);
         seekArc.setOnProgressChangedListener(progress -> {
             if (progress != previousProgress) {
                 vibrate();
@@ -110,11 +145,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         });
         seekArc.setOnStopTrackingTouch(i -> {
         });
-
-
-
     }
-
 
     private BroadcastReceiver installUninstallBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -125,6 +156,7 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             }
         }
     };
+
 
 
 
