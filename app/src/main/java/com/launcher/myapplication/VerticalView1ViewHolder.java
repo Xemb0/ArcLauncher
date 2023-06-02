@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -47,6 +49,9 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
     ArcSeekBar seekArc;
     Vibrator vibrator;
     GestureDetector gestureDetector;
+    ImageView selectedApp;
+    ImageView selectedAppBg;
+
     private final BroadcastReceiver addOrRemoveReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -63,6 +68,10 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         // Initialize the views and variables for Vertical View 2
         recyclerView = itemView.findViewById(R.id.CircularDockPager);
         seekArc = itemView.findViewById(R.id.seekArcPager);
+        selectedApp = itemView.findViewById(R.id.selected_app_icon);
+        selectedAppBg= itemView.findViewById(R.id.select_app_bg);
+        selectedAppBg.setImageAlpha(0);
+        selectedAppBg.setVisibility(View.INVISIBLE);
         IntentFilter filter = new IntentFilter("com.launcher.myapplication.APP_CHANGE");
         context.registerReceiver(addOrRemoveReceiver, filter);
         initializeAppDrawer();
@@ -83,6 +92,11 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
 
                 }
             });
+        }
+
+        ArcSeekBar seekArcPager = itemView.findViewById(R.id.seekArcPager);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            Drawable thumbView = seekArcPager.getHorizontalScrollbarThumbDrawable();
         }
 
         // Disable RecyclerView's touch interception for seekArc
@@ -140,11 +154,33 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             if (progress != previousProgress) {
                 vibrate();
                 previousProgress = progress;
+                String packageName = circularAdapter.getPackageName(progress);
+
+                if (packageName != null) {
+                    // Retrieve the application icon based on the package name
+                    Drawable appIcon = null;
+                    try {
+                        appIcon = pm.getApplicationIcon(packageName);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    selectedApp.setImageAlpha(1000);
+                    selectedAppBg.setImageAlpha(225);
+                    selectedAppBg.setVisibility(View.VISIBLE);
+
+                    // Set the app's icon to the desired image view
+                    selectedApp.setImageDrawable(appIcon);}
+
+
             }
             circleLayoutManager.scrollToPosition(progress);
         });
         seekArc.setOnStopTrackingTouch(i -> {
-            String packageName = circularAdapter.getPackageName(i);
+            selectedApp.setImageAlpha(0);
+            selectedAppBg.setImageAlpha(0);
+            selectedAppBg.setVisibility(View.INVISIBLE);
+
+            String packageName = circularAdapter.getPackageName(i+1);
             if (packageName != null) {
                 Intent launchIntent = pm.getLaunchIntentForPackage(packageName);
                 if (launchIntent != null) {

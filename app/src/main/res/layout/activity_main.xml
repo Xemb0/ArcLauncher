@@ -79,7 +79,7 @@
             android:layout_height="@dimen/_20sdp"
             android:layout_below="@id/seekArc"
             android:translationY="@dimen/_minus50sdp"
-            android:src="@drawable/arrow"
+
             app:layout_anchor="@+id/bottomSheettop2"
             app:layout_anchorGravity="top|center" />
     </RelativeLayout>

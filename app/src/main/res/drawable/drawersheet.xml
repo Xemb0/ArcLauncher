@@ -1,6 +1,4 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Gradient -->
     <gradient
         android:type="linear"
@@ -9,13 +7,24 @@
         android:centerColor="#68050000"
         android:endColor="#00FFFFFF" />
 
-    <!-- Curved corners -->
-    <corners android:radius="@dimen/_56sdp" />
+    <!-- Triangle shape -->
+    <corners android:radius="0dp" />
 
-    <!-- Set the size -->
     <size android:width="@dimen/_8sdp" android:height="@dimen/_42sdp" />
 
-    <!-- Add transparent padding at the top -->
-
-
+    <item android:top="-100dp">
+        <rotate
+            android:fromDegrees="45"
+            android:toDegrees="45"
+            android:pivotX="50%"
+            android:pivotY="0%">
+            <shape android:shape="rectangle">
+                <solid android:color="#00000000" />
+                <stroke
+                    android:color="#00000000"
+                    android:width="0dp" />
+                <size android:width="1000dp" android:height="1000dp" />
+            </shape>
+        </rotate>
+    </item>
 </shape>

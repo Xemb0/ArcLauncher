@@ -1,45 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_260sdp"
-        android:background="@drawable/shadow_bottomsheet"
         android:orientation="vertical"
-        android:layout_gravity="bottom">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/CircularDockPager"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_150sdp"
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="@dimen/_300sdp"
+            app:layout_constraintBottom_toTopOf="@+id/dock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_anchorGravity="top|center"
+            android:translationY="@dimen/_150sdp"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/selected_app_icon"
 
-        <com.marcinmoskala.arcseekbar.ArcSeekBar
-            android:id="@+id/seekArcPager"
+                android:layout_centerInParent="true"
+                android:translationY="@dimen/_minus60sdp"
+                android:layout_width="@dimen/_170sdp"
+                android:layout_height="@dimen/_170sdp"
 
-            android:layout_width="match_parent"
-            android:translationY="@dimen/_minus40sdp"
-            android:layout_height="@dimen/_110sdp"
-            android:hapticFeedbackEnabled="true"
+                />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:id="@+id/select_app_bg"
+                android:background="@drawable/tiganlefade"
+                android:layout_height="@dimen/_300sdp"/>
 
 
-            android:padding="@dimen/_30sdp"
-            android:layout_marginHorizontal="@dimen/_30sdp"
-            app:progressBackgroundColor="@color/colorPrimary"
-            app:progressColor="#00000000"
-            app:thumb="@drawable/thumb2" />
+
+        </RelativeLayout>
+
         <LinearLayout
+            android:id="@+id/dock"
             android:layout_width="match_parent"
-            android:translationY="@dimen/_minus51sdp"
+            android:layout_height="@dimen/_230sdp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/shadow_bottomsheet"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1">
 
-            android:layout_height="@dimen/_40sdp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/CircularDockPager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_alignParentBottom="true"
+                android:translationY="@dimen/_35sdp" />
 
-        <include layout="@layout/searchbar"/>
+            <com.marcinmoskala.arcseekbar.ArcSeekBar
+                android:id="@+id/seekArcPager"
+
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_110sdp"
+                android:layout_marginHorizontal="@dimen/_30sdp"
+                android:hapticFeedbackEnabled="true"
+
+
+                android:padding="@dimen/_30sdp"
+                android:translationY="@dimen/_minus20sdp"
+                app:progressBackgroundColor="@color/colorPrimary"
+                app:progressColor="#00000000"
+                app:thumb="@drawable/thumb2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+
+                android:translationY="@dimen/_minus32sdp">
+
+                <include layout="@layout/searchbar" />
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
