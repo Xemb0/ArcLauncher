@@ -43,6 +43,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -87,10 +88,22 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
         }
         return null;
     }
+    public String getActivityName(int position) {
+        if (position >= 0 && position < packageNames.size()) {
+            String packageName = packageNames.get(position);
+            PackageManager packageManager = context.getPackageManager();
+            Intent launchIntent = packageManager.getLaunchIntentForPackage(packageName);
+            if (launchIntent != null) {
+                ComponentName componentName = launchIntent.getComponent();
+                return componentName.getClassName();
+            }
+        }
+        return null;
+    }
+
     public List<ResolveInfo> getResolveInfoForPackages(Context context, List<String> packageNames) {
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> resolveInfoList = new ArrayList<>();
-
 
         for (String packageName : packageNames) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -110,8 +123,53 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
             resolveInfoList.addAll(launcherResolveInfo);
         }
 
+
+
         return resolveInfoList;
     }
+
+    public ResolveInfo getResolveInfo(int position) {
+        if (position >= 0 && position < lapps.size()) {
+
+            return lapps.get(position);
+        }
+        else {
+          return getResolveInfoForEmptyActivity();
+        }
+
+    }
+    private ResolveInfo getResolveInfoForEmptyActivity() {
+        PackageManager packageManager = context.getPackageManager();
+
+        // Get the package name of the application
+        String packageName = context.getPackageName();
+
+        // Create an intent for the EmptyActivity
+        Intent intent = new Intent(context, EmptyActivity.class);
+        ResolveInfo resolveInfo = packageManager.resolveActivity(intent, 0);
+
+        if (resolveInfo != null) {
+            // Set the package name for the resolve info
+            resolveInfo.activityInfo.packageName = packageName;
+        }
+
+        return resolveInfo;
+    }
+
+    private void launchEmptyActivity() {
+        ResolveInfo emptyActivityResolveInfo = getResolveInfoForEmptyActivity();
+
+        if (emptyActivityResolveInfo != null) {
+            ComponentName componentName = new ComponentName(emptyActivityResolveInfo.activityInfo.packageName, emptyActivityResolveInfo.activityInfo.name);
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setComponent(componentName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+
+            context.startActivity(intent);
+        }
+    }
+
 
     @NonNull
     @Override
@@ -124,8 +182,12 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
 
+
+
+
         holder.images.setImageDrawable(lapps.get(position).loadIcon(pm));
         holder.text.setText(lapps.get(position).loadLabel(pm));
+
 
 
 
@@ -224,6 +286,7 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
     }
 
 
+
     private int getIconSizeFromSharedPreferences() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         return sharedPreferences.getInt("iconSize", DEFAULT_ICON_SIZE);
@@ -256,11 +319,14 @@ public class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ViewHo
         ImageView images;
         TextView text;
         RelativeLayout itemlayout;
+        ImageView selectedIcon;
+
         public ViewHolder(View view) {
             super(view);
             images = view.findViewById(R.id.image);
             text = view.findViewById(R.id.label);
             itemlayout=view.findViewById(R.id.item);
+
         }
     }
     public void setIconSize(int iconSize) {
