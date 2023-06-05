@@ -338,7 +338,8 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
                         ExpandNotificationBar();
                     }
                     else {
-                        vibrate();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
                     }
                 }
             }
@@ -366,16 +367,17 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
 
         @Override
         public boolean onDoubleTap(MotionEvent event) {
-
-            Intent Viewpager = new Intent(context, ActivityPager.class);
-            context.startActivity(Viewpager);
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
 
             return true;
         }
 
         @Override
         public boolean onDoubleTapEvent(MotionEvent event) {
+
             return true;
+
         }
 
         @Override
