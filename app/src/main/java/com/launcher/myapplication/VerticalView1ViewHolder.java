@@ -2,10 +2,12 @@ package com.launcher.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -52,14 +54,6 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
     ImageView selectedApp;
     ImageView selectedAppBg;
 
-    private final BroadcastReceiver addOrRemoveReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            initializeAppDrawer();
-        }
-    };
-
 
     public VerticalView1ViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
@@ -73,6 +67,13 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         selectedAppBg.setImageAlpha(0);
         selectedAppBg.setVisibility(View.INVISIBLE);
         IntentFilter filter = new IntentFilter("com.launcher.myapplication.APP_CHANGE");
+        BroadcastReceiver addOrRemoveReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                initializeAppDrawer();
+            }
+        };
         context.registerReceiver(addOrRemoveReceiver, filter);
         initializeAppDrawer();
 
@@ -94,10 +95,6 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             });
         }
 
-        ArcSeekBar seekArcPager = itemView.findViewById(R.id.seekArcPager);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            Drawable thumbView = seekArcPager.getHorizontalScrollbarThumbDrawable();
-        }
 
         // Disable RecyclerView's touch interception for seekArc
         seekArc.setOnTouchListener((v, event) -> {
@@ -109,34 +106,43 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             return false;
         });
     }
-
     private List<String> savePackageNamesToSharedPreferences() {
         SharedPreferences permanentPrefs = context.getSharedPreferences("PermanentPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = permanentPrefs.edit();
 
-// Retrieve the existing list of package names from the shared preference
+        // Retrieve the existing list of package names from the shared preference
         List<String> existingPackageNamesList = new ArrayList<>(permanentPrefs.getStringSet("PackageNames", new HashSet<>()));
 
-// Add the default apps (dialer and message) if they are not already present in the list
+        // Add "Dialer" package name at the beginning of the list if it doesn't exist
         if (!existingPackageNamesList.contains("com.android.dialer")) {
-            existingPackageNamesList.add("com.android.dialer");
+            existingPackageNamesList.add(0, "com.android.dialer");
         }
-        if (!existingPackageNamesList.contains("com.android.messaging")) {
-            existingPackageNamesList.add("com.android.messaging");
-        }
+        // Remove "Dialer" package name if it exists in the list
+        existingPackageNamesList.remove("com.android.dialer");
 
-// Save the updated list of package names back to the shared preference
+        // Add "Dialer" package name at the beginning of the list
+        existingPackageNamesList.add(0, "com.android.dialer");
+
+        // Add "refresh" package name at the last position of the list
+        String currentPackageName = context.getPackageName();
+        existingPackageNamesList.add(currentPackageName);
+
+        // Save the updated list of package names back to the shared preference
         editor.putStringSet("PackageNames", new HashSet<>(existingPackageNamesList));
         editor.apply();
 
         return existingPackageNamesList;
-
     }
+
+
+
     private void initializeAppDrawer() {
         PackageManager pm = context.getPackageManager();
 
         List<String> packageNames = new ArrayList<>(savePackageNamesToSharedPreferences());
-        circularAdapter = new CircularAdapter(context, packageNames, pm); // Initialize the appAdapter
+//        Collections.sort(packageNames);
+
+        circularAdapter = new CircularAdapter(context, packageNames, pm);
         CircleLayoutManager circleLayoutManager = new CircleLayoutManager(context);
         recyclerView.setAdapter(circularAdapter);
         recyclerView.setLayoutManager(circleLayoutManager);
@@ -149,27 +155,22 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
         context.registerReceiver(installUninstallBroadcastReceiver, intentFilter);
 
         int appCount = circularAdapter.getItemCount(); // Use the appAdapter to get the item count
-        seekArc.setMaxProgress(appCount - 1);
+        seekArc.setMaxProgress(appCount );
         seekArc.setOnProgressChangedListener(progress -> {
             if (progress != previousProgress) {
                 vibrate();
                 previousProgress = progress;
-                String packageName = circularAdapter.getPackageName(progress);
+                ResolveInfo resolveInfo = circularAdapter.getResolveInfo(progress);
+                  selectedApp.setImageDrawable(resolveInfo.loadIcon(pm));
 
-                if (packageName != null) {
-                    // Retrieve the application icon based on the package name
-                    Drawable appIcon = null;
-                    try {
-                        appIcon = pm.getApplicationIcon(packageName);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
+
+
                     selectedApp.setImageAlpha(1000);
                     selectedAppBg.setImageAlpha(225);
                     selectedAppBg.setVisibility(View.VISIBLE);
 
                     // Set the app's icon to the desired image view
-                    selectedApp.setImageDrawable(appIcon);}
+
 
 
             }
@@ -179,19 +180,21 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
             selectedApp.setImageAlpha(0);
             selectedAppBg.setImageAlpha(0);
             selectedAppBg.setVisibility(View.INVISIBLE);
+            ResolveInfo resolveInfo = circularAdapter.getResolveInfo(i);
 
-            String packageName = circularAdapter.getPackageName(i+1);
-            if (packageName != null) {
-                Intent launchIntent = pm.getLaunchIntentForPackage(packageName);
+
+
+                Intent launchIntent = pm.getLaunchIntentForPackage(resolveInfo.activityInfo.packageName);
                 if (launchIntent != null) {
                     context.startActivity(launchIntent);
                 }
-            }
+
 
         });
     }
 
-    private BroadcastReceiver installUninstallBroadcastReceiver = new BroadcastReceiver() {
+
+    private final BroadcastReceiver installUninstallBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -335,7 +338,8 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
                         ExpandNotificationBar();
                     }
                     else {
-                        vibrate();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
                     }
                 }
             }
@@ -363,16 +367,17 @@ public class VerticalView1ViewHolder extends RecyclerView.ViewHolder implements 
 
         @Override
         public boolean onDoubleTap(MotionEvent event) {
-
-            Intent Viewpager = new Intent(context, ActivityPager.class);
-            context.startActivity(Viewpager);
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
 
             return true;
         }
 
         @Override
         public boolean onDoubleTapEvent(MotionEvent event) {
+
             return true;
+
         }
 
         @Override
